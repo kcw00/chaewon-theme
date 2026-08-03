@@ -493,6 +493,20 @@ p {
   pointer-events: none;
 }
 
+/* The pill floats 12px below the top of the viewport, and content used to
+   stay visible in that gap on its way out — the top serifs of the hero
+   name would slide across the very top of the screen. This fills the gap
+   with the page colour. It is paper on paper, so it is invisible; it just
+   gives scrolling content somewhere to disappear before it reaches the
+   edge. Only while scrolled, so it never covers anything at rest. */
+.site-header.is-scrolled::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 0.75rem;
+  background: var(--wp--preset--color--paper);
+}
+
 /* The pill is exactly as wide as the content column beneath it.
 
    At 1150px it was 15px narrower than the 1180px content on each side,
