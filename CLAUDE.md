@@ -25,6 +25,30 @@ Start and stop the stack:
 
 `docker compose down -v` destroys the database. Never run it without asking.
 
+### Pretty permalinks need two container fixes
+
+`/projects/` and every other pretty URL 404s unless all three hold:
+
+1. Settings → Permalinks is not "Plain".
+2. Apache allows `.htaccess` for the docroot. The base image ships
+   `AllowOverride None`, so this theme's URLs do not work out of the box.
+3. `/var/www/html/.htaccess` actually contains the WordPress rewrite
+   block. WordPress writes only the BEGIN/END markers when it cannot
+   detect mod_rewrite.
+
+Items 2 and 3 were applied inside the running container and are lost on
+`docker compose up --force-recreate`. To make them permanent, add to
+`~/chaewon-wp/docker-compose.yml`:
+
+    volumes:
+      - ./apache-allow-override.conf:/etc/apache2/conf-enabled/wp-allow-override.conf:ro
+
+containing:
+
+    <Directory /var/www/html>
+        AllowOverride All
+    </Directory>
+
 ## The folder name is load-bearing
 
 WordPress identifies a theme by its directory name. It must stay
@@ -37,11 +61,37 @@ Rename either one and translations stop loading.
 |---|---|
 | Colors, type scale, spacing, block defaults | `theme.json` |
 | Dark scheme, layout, transitions, pseudo-elements | `style.css` |
-| Asset loading, block styles, pattern categories | `functions.php` |
+| Asset loading, post types, block styles | `functions.php` |
 | Page shells | `templates/*.html` |
 | Header and footer | `parts/*.html` |
 | Editable content sections | `patterns/*.php` |
 | Behavior | `assets/js/*.js` |
+
+## Projects
+
+Projects are a `project` post type, not pages, because they need an
+archive at `/projects/` and a shared single template.
+
+| Piece | Where |
+|---|---|
+| Post type, taxonomies, `tagline` meta | `functions.php` |
+| Card markup, shared by homepage and archive | `patterns/project-card.php` |
+| `/projects/` | `templates/archive-project.html` |
+| `/projects/<slug>/` | `templates/single-project.html` |
+
+`project_type` is the card eyebrow, `project_tech` the chips, and
+`tagline` the italic line under the title — a meta field read through a
+block binding, so it stays a field rather than typed prose.
+
+Registering a post type does **not** create its URLs. The rewrite rules
+are cached in the database; without a flush `/projects/` 404s while every
+line of configuration looks correct. `chaewon_maybe_flush_rewrites()`
+handles this, keyed to `CHAEWON_REWRITE_VERSION` — bump that constant
+whenever a URL shape changes.
+
+Card sizes are positional. A query loop emits identical markup for every
+post, so the bento comes from `nth-child` on the `<li>` wrappers that
+`core/post-template` produces, not from a modifier class per card.
 
 Anything expressible as a design token goes in `theme.json`, not `style.css`.
 WordPress turns those tokens into CSS custom properties *and* into the controls
