@@ -181,3 +181,123 @@ function chaewon_register_block_styles(): void {
 	);
 }
 add_action( 'init', 'chaewon_register_block_styles' );
+
+/**
+ * Bump this when the rewrite rules change shape.
+ *
+ * Registering a post type does not by itself teach WordPress the URLs for
+ * it — the rewrite rules are cached in the database. Without a flush,
+ * /projects/ returns 404 while every line of configuration looks correct,
+ * which is a genuinely confusing hour to lose.
+ */
+define( 'CHAEWON_REWRITE_VERSION', '1' );
+
+/**
+ * The project post type, its two taxonomies, and its tagline field.
+ *
+ * Projects are a post type rather than pages because they need an archive
+ * (/projects/) and a consistent single template. Making them pages would
+ * mean hand-maintaining a list somewhere, which is the thing a CMS is
+ * supposed to remove.
+ *
+ * project_type  — one term, the card eyebrow ("SaaS platform").
+ * project_tech  — many terms, the chips at the bottom of a card.
+ * tagline       — the italic line under the title. A meta field rather
+ *                 than a taxonomy because it is prose, not a category,
+ *                 and show_in_rest makes it available to block bindings.
+ */
+function chaewon_register_project_type(): void {
+	register_post_type(
+		'project',
+		array(
+			'labels'        => array(
+				'name'          => __( 'Projects', 'chaewon-theme' ),
+				'singular_name' => __( 'Project', 'chaewon-theme' ),
+				'add_new_item'  => __( 'Add Project', 'chaewon-theme' ),
+				'edit_item'     => __( 'Edit Project', 'chaewon-theme' ),
+			),
+			'public'        => true,
+			'has_archive'   => 'projects',
+			'rewrite'       => array( 'slug' => 'projects', 'with_front' => false ),
+			'menu_icon'     => 'dashicons-portfolio',
+			'menu_position' => 5,
+			'supports'      => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'revisions' ),
+			// Required for the block editor and for block bindings to see
+			// the tagline field.
+			'show_in_rest'  => true,
+		)
+	);
+
+	register_taxonomy(
+		'project_type',
+		'project',
+		array(
+			'labels'            => array(
+				'name'          => __( 'Project types', 'chaewon-theme' ),
+				'singular_name' => __( 'Project type', 'chaewon-theme' ),
+			),
+			'public'            => true,
+			'hierarchical'      => true,
+			'show_in_rest'      => true,
+			'show_admin_column' => true,
+			'rewrite'           => array( 'slug' => 'project-type' ),
+		)
+	);
+
+	register_taxonomy(
+		'project_tech',
+		'project',
+		array(
+			'labels'            => array(
+				'name'          => __( 'Technologies', 'chaewon-theme' ),
+				'singular_name' => __( 'Technology', 'chaewon-theme' ),
+			),
+			'public'            => true,
+			'hierarchical'      => false,
+			'show_in_rest'      => true,
+			'show_admin_column' => true,
+			'rewrite'           => array( 'slug' => 'tech' ),
+		)
+	);
+
+	register_post_meta(
+		'project',
+		'tagline',
+		array(
+			'type'          => 'string',
+			'single'        => true,
+			'default'       => '',
+			'show_in_rest'  => true,
+			'auth_callback' => static function () {
+				return current_user_can( 'edit_posts' );
+			},
+		)
+	);
+}
+add_action( 'init', 'chaewon_register_project_type' );
+
+/**
+ * Flush rewrite rules once per rewrite version.
+ *
+ * flush_rewrite_rules() is expensive, so it must not run on every request.
+ * Keying it to an option means it runs exactly once after a deploy that
+ * changes URL shapes, and heals itself if the database is ever restored
+ * from before the post type existed.
+ *
+ * Priority 20 so it runs after the post type is registered on init.
+ */
+function chaewon_maybe_flush_rewrites(): void {
+	if ( get_option( 'chaewon_rewrite_version' ) === CHAEWON_REWRITE_VERSION ) {
+		return;
+	}
+
+	flush_rewrite_rules();
+	update_option( 'chaewon_rewrite_version', CHAEWON_REWRITE_VERSION );
+}
+add_action( 'init', 'chaewon_maybe_flush_rewrites', 20 );
+
+/**
+ * Also flush when the theme is activated, since that is the other moment
+ * the rules can be stale.
+ */
+add_action( 'after_switch_theme', 'flush_rewrite_rules' );

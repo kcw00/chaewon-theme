@@ -1,0 +1,49 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","metadata":{"name":"Content"},"layout":{"type":"constrained"}} -->
+<main id="content" class="wp-block-group">
+
+	<!-- wp:group {"tagName":"article","align":"wide","className":"chapter chapter--first project","layout":{"type":"default"}} -->
+	<article class="wp-block-group alignwide chapter chapter--first project">
+
+		<!-- wp:paragraph {"className":"project__back"} -->
+		<p class="project__back"><a href="/projects/">Back to projects</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:group {"className":"chapter-rule","layout":{"type":"default"}} -->
+		<div class="wp-block-group chapter-rule">
+			<!-- wp:post-date {"format":"Y","isLink":false,"className":"chapter-rule__num"} /-->
+
+			<!-- wp:post-terms {"term":"project_type","className":"chapter-rule__label"} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:post-title {"level":1,"className":"project__title"} /-->
+
+		<!-- wp:paragraph {"className":"project__tagline","metadata":{"bindings":{"content":{"source":"core/post-meta","args":{"key":"tagline"}}}}} -->
+		<p class="project__tagline"></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:post-content {"className":"project__body prose","layout":{"type":"constrained"}} /-->
+
+		<!-- wp:separator {"className":"project__rule is-style-wide"} -->
+		<hr class="wp-block-separator has-alpha-channel-opacity project__rule is-style-wide" />
+		<!-- /wp:separator -->
+
+		<!-- wp:group {"className":"project__footer","layout":{"type":"default"}} -->
+		<div class="wp-block-group project__footer">
+			<!-- wp:post-terms {"term":"project_tech","className":"work-card__tags","separator":""} /-->
+
+			<!-- wp:paragraph {"className":"project__next"} -->
+			<p class="project__next"><a class="link-arrow" href="/projects/">All projects</a></p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+	</article>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

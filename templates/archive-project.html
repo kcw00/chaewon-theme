@@ -1,0 +1,56 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","metadata":{"name":"Content"},"layout":{"type":"constrained"}} -->
+<main id="content" class="wp-block-group">
+
+	<!-- wp:group {"tagName":"section","align":"wide","className":"chapter chapter--first","layout":{"type":"default"}} -->
+	<section class="wp-block-group alignwide chapter chapter--first">
+
+		<!-- wp:group {"className":"chapter-rule","layout":{"type":"default"}} -->
+		<div class="wp-block-group chapter-rule">
+			<!-- wp:paragraph {"className":"chapter-rule__num"} -->
+			<p class="chapter-rule__num">&mdash;</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph {"className":"chapter-rule__label"} -->
+			<p class="chapter-rule__label">All work</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:heading {"className":"chapter-title"} -->
+		<h1 class="wp-block-heading chapter-title">Things I&rsquo;ve built</h1>
+		<!-- /wp:heading -->
+
+		<!-- wp:paragraph {"className":"chapter-lead"} -->
+		<p class="chapter-lead">Projects I&rsquo;ve been building.</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:query {"queryId":2,"query":{"perPage":8,"pages":0,"offset":0,"postType":"project","order":"desc","orderBy":"date","inherit":false},"layout":{"type":"default"}} -->
+		<div class="wp-block-query">
+
+			<!-- wp:post-template {"className":"work-grid work-grid--archive"} -->
+				<!-- wp:pattern {"slug":"chaewon/project-card"} /-->
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"textColor":"muted"} -->
+				<p class="has-muted-color has-text-color">No projects yet. Add one under Projects &rarr; Add Project and it will appear here.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+
+			<!-- wp:query-pagination {"className":"work-pagination","layout":{"type":"flex","justifyContent":"space-between"}} -->
+				<!-- wp:query-pagination-previous /-->
+				<!-- wp:query-pagination-next /-->
+			<!-- /wp:query-pagination -->
+
+		</div>
+		<!-- /wp:query -->
+
+	</section>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

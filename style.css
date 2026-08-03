@@ -37,6 +37,7 @@ Tags: portfolio, full-site-editing, block-theme, one-column, dark-mode-support
      10  Notes and writing
      11  Memories
      12  Contact
+     13  Projects archive and single
      99  Motion and accessibility floor
    =================================================================== */
 
@@ -937,7 +938,26 @@ body:has(.site-header.is-scrolled) .hero__cue {
 .work-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  /* Lets a short card backfill the gap a two-row card leaves beside it,
+     instead of the board showing a hole. */
+  grid-auto-flow: dense;
   gap: var(--wp--preset--spacing--30);
+  /* core/post-template renders a <ul>. */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* The grid children are the <li> wrappers post-template emits, not the
+   cards. The card has to stretch to fill its cell, or a short card in a
+   two-row track floats at the top of a tall empty box. */
+.work-grid > * {
+  display: flex;
+  grid-column: span 3;
+}
+
+.work-grid > * > .work-card {
+  flex: 1 1 auto;
 }
 
 .work-card {
@@ -945,7 +965,6 @@ body:has(.site-header.is-scrolled) .hero__cue {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  grid-column: span 3;
   padding: var(--wp--preset--spacing--30);
   border: 1px solid var(--wp--preset--color--rule);
   border-radius: var(--wp--custom--radius--lg);
@@ -1070,13 +1089,15 @@ body:has(.site-header.is-scrolled) .hero__cue {
   }
 }
 
-.work-card--feature { grid-column: span 4; grid-row: span 2; }
-.work-card--tall    { grid-column: span 2; grid-row: span 2; }
-.work-card--narrow  { grid-column: span 2; }
-.work-card--wide    { grid-column: span 4; }
+/* Homepage bento. Four projects, four footprints. A query loop emits
+   identical markup for every post, so the arrangement has to be
+   positional rather than a modifier class per card. */
+.work-grid--home > *:nth-child(1) { grid-column: span 4; grid-row: span 2; }
+.work-grid--home > *:nth-child(2) { grid-column: span 2; grid-row: span 2; }
+.work-grid--home > *:nth-child(3) { grid-column: span 2; }
+.work-grid--home > *:nth-child(4) { grid-column: span 4; }
 
-/* The feature card gets the extra room, so it gets the bigger title. */
-.work-card--feature .work-card__title {
+.work-grid--home > *:nth-child(1) .work-card__title {
   font-size: var(--wp--preset--font-size--xx-large);
 }
 
@@ -1132,30 +1153,20 @@ body:has(.site-header.is-scrolled) .hero__cue {
 /* Two columns at tablet, one on phones. Keeping the feature card double
    height on a single-column layout just makes it a tall empty box. */
 @media (max-width: 900px) {
-  .work-card--feature,
-  .work-card--tall {
-    grid-row: auto;
-  }
-
-  .work-card,
-  .work-card--feature,
-  .work-card--tall,
-  .work-card--narrow,
-  .work-card--wide {
+  .work-grid > *,
+  .work-grid--home > *:nth-child(n) {
     grid-column: span 3;
+    grid-row: auto;
   }
 }
 
 @media (max-width: 600px) {
-  .work-card,
-  .work-card--feature,
-  .work-card--tall,
-  .work-card--narrow,
-  .work-card--wide {
+  .work-grid > *,
+  .work-grid--home > *:nth-child(n) {
     grid-column: span 6;
   }
 
-  .work-card--feature .work-card__title {
+  .work-grid--home > *:nth-child(1) .work-card__title {
     font-size: var(--wp--preset--font-size--x-large);
   }
 }
@@ -1580,4 +1591,164 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   font-size: var(--wp--preset--font-size--x-large);
   line-height: 1.2;
   margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+
+/* ===================================================================
+   13  PROJECTS ARCHIVE AND SINGLE
+   ===================================================================
+
+   /projects/ reuses the homepage's six-column bento. The difference is
+   that the homepage hand-picks four sizes while the archive has to cope
+   with any number of projects, so the sizes come from nth-child on an
+   eight-step cycle rather than from a modifier class per card.
+
+   grid-auto-flow: dense lets a later short card backfill a gap a taller
+   one left behind. Without it a 2-row card leaves a hole beside it and
+   the board reads as broken rather than arranged.
+   ------------------------------------------------------------------- */
+
+.work-grid--archive {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-flow: dense;
+  gap: var(--wp--preset--spacing--30);
+}
+
+/* Every card in the cycle claims a different footprint. Eight steps so a
+   full page of eight never repeats a size in the same position. */
+.work-grid--archive > *:nth-child(8n + 1) { grid-column: span 4; grid-row: span 2; }
+.work-grid--archive > *:nth-child(8n + 2) { grid-column: span 2; grid-row: span 2; }
+.work-grid--archive > *:nth-child(8n + 3) { grid-column: span 2; }
+.work-grid--archive > *:nth-child(8n + 4) { grid-column: span 4; }
+.work-grid--archive > *:nth-child(8n + 5) { grid-column: span 3; }
+.work-grid--archive > *:nth-child(8n + 6) { grid-column: span 3; }
+.work-grid--archive > *:nth-child(8n + 7) { grid-column: span 2; }
+.work-grid--archive > *:nth-child(8n + 8) { grid-column: span 4; }
+
+/* The first card in the cycle gets the extra room, so it gets the
+   bigger title — the same rule the homepage feature card follows. */
+.work-grid--archive > *:nth-child(8n + 1) .work-card__title {
+  font-size: var(--wp--preset--font-size--xx-large);
+}
+
+@media (max-width: 900px) {
+  .work-grid--archive > * { grid-column: span 3 !important; grid-row: auto !important; }
+}
+
+@media (max-width: 600px) {
+  .work-grid--archive > * { grid-column: span 6 !important; }
+
+  .work-grid--archive > *:nth-child(8n + 1) .work-card__title {
+    font-size: var(--wp--preset--font-size--x-large);
+  }
+}
+
+/* A chapter that opens a page rather than following one needs less air
+   above it — the fixed header is already holding that space. */
+.chapter--first {
+  padding-top: var(--wp--preset--spacing--50);
+}
+
+.work-pagination {
+  margin-top: var(--wp--preset--spacing--50);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* --- Single project ------------------------------------------------- */
+
+.project__back {
+  margin-block: 0 var(--wp--preset--spacing--40);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project__back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--wp--preset--color--muted);
+  transition: color var(--wp--custom--duration--fast) ease;
+}
+
+.project__back a::before {
+  content: "\2190";
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.project__back a:hover {
+  color: var(--wp--preset--color--ink);
+}
+
+.project__back a:hover::before {
+  transform: translateX(-0.35rem);
+}
+
+.project__title {
+  margin-block: 0 var(--wp--preset--spacing--20);
+  font-size: var(--wp--preset--font-size--display);
+}
+
+.project__tagline {
+  margin-block: 0 var(--wp--preset--spacing--70);
+  font-family: var(--wp--preset--font-family--lead);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--x-large);
+  line-height: 1.35;
+  color: var(--wp--preset--color--muted);
+  max-width: 34ch;
+}
+
+/* The body is authored in the editor, so it has to look right without
+   anyone applying classes: prose measure, the ink-soft text colour the
+   About section uses, and headings that read as the numbered chapter
+   rules used everywhere else. */
+.project__body > p,
+.project__body > ul,
+.project__body > ol {
+  max-width: 60ch;
+  color: var(--wp--preset--color--ink-soft);
+  line-height: 1.7;
+}
+
+.project__body > ul,
+.project__body > ol {
+  padding-left: 1.1rem;
+}
+
+.project__body > ul li,
+.project__body > ol li {
+  margin-bottom: 0.75rem;
+}
+
+.project__body > ul li::marker {
+  color: var(--wp--preset--color--signal);
+}
+
+.project__rule {
+  margin-block: var(--wp--preset--spacing--70) var(--wp--preset--spacing--40);
+  border: 0;
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.project__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--30);
+}
+
+.project__footer > * {
+  margin-block: 0;
+}
+
+.project__next {
+  margin: 0;
 }

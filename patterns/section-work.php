@@ -3,11 +3,16 @@
  * Title: Chapter 02 — Selected work
  * Slug: chaewon/section-work
  * Categories: chaewon
- * Description: Bento grid of project cards — one feature, one tall, two smaller.
+ * Description: The four most recent projects as a bento grid, linking through to /projects/.
  *
- * Card size is set by a modifier class on the group: --feature, --tall,
- * --narrow, or --wide. Change the modifier to rearrange the grid; the
- * spans are defined once in section 09 of style.css.
+ * Driven by the `project` post type rather than hand-written cards, so
+ * adding a project in wp-admin puts it here and on the archive at once.
+ * The card itself lives in chaewon/project-card and is shared with
+ * /projects/, so the two can never drift apart.
+ *
+ * Card sizes come from the modifier classes in section 09 of style.css,
+ * applied by nth-child on .work-grid--home. A query loop emits identical
+ * markup for every post, so the bento has to be positional.
  *
  * @package Chaewon
  */
@@ -37,165 +42,24 @@
 	<p class="chapter-lead">The ones I would actually walk you through, not the ones that pad a list.</p>
 	<!-- /wp:paragraph -->
 
-	<!-- wp:group {"className":"work-grid reveal-stagger","layout":{"type":"default"}} -->
-	<div class="wp-block-group work-grid reveal-stagger">
+	<!-- wp:query {"queryId":3,"query":{"perPage":4,"pages":1,"offset":0,"postType":"project","order":"desc","orderBy":"date","inherit":false},"layout":{"type":"default"}} -->
+	<div class="wp-block-query">
 
-		<!-- wp:group {"className":"work-card work-card--feature","layout":{"type":"default"}} -->
-		<div class="wp-block-group work-card work-card--feature">
-			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__meta-row">
-				<!-- wp:paragraph {"className":"work-card__meta label label--dot"} -->
-				<p class="work-card__meta label label--dot">Booking platform &middot; 2024&ndash;</p>
-				<!-- /wp:paragraph -->
+		<!-- wp:post-template {"className":"work-grid work-grid--home reveal-stagger"} -->
+			<!-- wp:pattern {"slug":"chaewon/project-card"} /-->
+		<!-- /wp:post-template -->
 
-				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
-				<!-- /wp:html -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">Booking Platform</a></h3>
-			<!-- /wp:heading -->
-
-			<!-- wp:paragraph {"className":"work-card__tagline"} -->
-			<p class="work-card__tagline">Scheduling that survives the double-book.</p>
+		<!-- wp:query-no-results -->
+			<!-- wp:paragraph {"textColor":"muted"} -->
+			<p class="has-muted-color has-text-color">No projects yet. Add one under Projects &rarr; Add Project and it will appear here.</p>
 			<!-- /wp:paragraph -->
-
-			<!-- wp:paragraph {"className":"work-card__body"} -->
-			<p class="work-card__body">Replace this with the problem you were solving. What broke, what you tried first, and what you would do differently. Lead with the problem, not the stack &mdash; anyone can list technologies, and nobody remembers them.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:group {"className":"work-card__tags","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__tags">
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">Django REST</p>
-				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">PostgreSQL</p>
-				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">React</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:group -->
-
-		<!-- wp:group {"className":"work-card work-card--tall","layout":{"type":"default"}} -->
-		<div class="wp-block-group work-card work-card--tall">
-			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__meta-row">
-				<!-- wp:paragraph {"className":"work-card__meta label"} -->
-				<p class="work-card__meta label">Full stack &middot; 2023&ndash;</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
-				<!-- /wp:html -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">NoteApp</a></h3>
-			<!-- /wp:heading -->
-
-			<!-- wp:paragraph {"className":"work-card__tagline"} -->
-			<p class="work-card__tagline">Notes that stay where you put them.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:paragraph {"className":"work-card__body"} -->
-			<p class="work-card__body">What it does, and the one decision you are still not sure about.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:group {"className":"work-card__tags","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__tags">
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">Node</p>
-				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">Postgres</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:group -->
-
-		<!-- wp:group {"className":"work-card work-card--narrow","layout":{"type":"default"}} -->
-		<div class="wp-block-group work-card work-card--narrow">
-			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__meta-row">
-				<!-- wp:paragraph {"className":"work-card__meta label"} -->
-				<p class="work-card__meta label">Orchestration &middot; 2025</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
-				<!-- /wp:html -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">NoteApp Minion</a></h3>
-			<!-- /wp:heading -->
-
-			<!-- wp:paragraph {"className":"work-card__body"} -->
-			<p class="work-card__body">Background jobs I can trigger and watch from Discord, because that is where I already am.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:group {"className":"work-card__tags","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__tags">
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">Kubernetes</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:group -->
-
-		<!-- wp:group {"className":"work-card work-card--wide","layout":{"type":"default"}} -->
-		<div class="wp-block-group work-card work-card--wide">
-			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__meta-row">
-				<!-- wp:paragraph {"className":"work-card__meta label"} -->
-				<p class="work-card__meta label">Infrastructure &middot; ongoing</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
-				<!-- /wp:html -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">Home Cluster</a></h3>
-			<!-- /wp:heading -->
-
-			<!-- wp:paragraph {"className":"work-card__body"} -->
-			<p class="work-card__body">A hybrid k3s cluster I run at home and break on purpose. Everything I know about failure modes I learned here first and in production second.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:group {"className":"work-card__tags","layout":{"type":"default"}} -->
-			<div class="wp-block-group work-card__tags">
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">k3s</p>
-				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">Docker</p>
-				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"className":"label label--chip"} -->
-				<p class="label label--chip">Nginx</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:group -->
+		<!-- /wp:query-no-results -->
 
 	</div>
-	<!-- /wp:group -->
+	<!-- /wp:query -->
 
 	<!-- wp:paragraph {"className":"work-more"} -->
-	<p class="work-more"><a class="link-arrow" href="https://github.com/kcw00">Everything else on GitHub</a></p>
+	<p class="work-more"><a class="link-arrow" href="/projects/">See all projects</a></p>
 	<!-- /wp:paragraph -->
 
 </section>
