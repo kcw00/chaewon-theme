@@ -1,66 +1,66 @@
 <?php
 /**
- * Title: Section — Selected work
+ * Title: Chapter 02 — Selected work
  * Slug: chaewon/section-work
- * Categories: featured
- * Description: A numbered section heading followed by project entries.
+ * Categories: chaewon
+ * Description: The four most recent projects as a bento grid, linking through to /projects/.
  *
- * Patterns are reusable chunks of block markup. The header comment
- * above is parsed by WordPress the same way style.css is — Slug and
- * Title are required. Once this file exists, the pattern appears in
- * the editor inserter under "Patterns", and can be referenced from a
- * template with <!-- wp:pattern {"slug":"chaewon/section-work"} /-->
+ * Driven by the `project` post type rather than hand-written cards, so
+ * adding a project in wp-admin puts it here and on the archive at once.
+ * The card itself lives in chaewon/project-card and is shared with
+ * /projects/, so the two can never drift apart.
  *
- * Because this is a .php file you can use translation functions and
- * esc_url( get_template_directory_uri() ) for image paths.
+ * Card sizes come from the modifier classes in section 09 of style.css,
+ * applied by nth-child on .work-grid--home. A query loop emits identical
+ * markup for every post, so the bento has to be positional.
  *
  * @package Chaewon
  */
 
 ?>
 
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
+<!-- wp:group {"tagName":"section","align":"wide","className":"chapter","anchor":"work","layout":{"type":"default"}} -->
+<section id="work" class="wp-block-group alignwide chapter">
 
-	<!-- wp:paragraph {"className":"section-eyebrow"} -->
-	<p class="section-eyebrow">01 — Selected work</p>
-	<!-- /wp:paragraph -->
+	<!-- wp:group {"className":"chapter-rule","layout":{"type":"default"}} -->
+	<div class="wp-block-group chapter-rule">
+		<!-- wp:paragraph {"className":"chapter-rule__num"} -->
+		<p class="chapter-rule__num">02</p>
+		<!-- /wp:paragraph -->
 
-	<!-- wp:heading -->
-	<h2 class="wp-block-heading">Things I've built</h2>
+		<!-- wp:paragraph {"className":"chapter-rule__label"} -->
+		<p class="chapter-rule__label">Selected work</p>
+		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:heading {"className":"chapter-title"} -->
+	<h2 class="wp-block-heading chapter-title">Things I&rsquo;ve built</h2>
 	<!-- /wp:heading -->
 
-	<!-- wp:group {"className":"project-card reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group project-card reveal" style="margin-top:var(--wp--preset--spacing--40)">
-		<!-- wp:paragraph {"fontSize":"small","textColor":"muted"} -->
-		<p class="has-muted-color has-text-color has-small-font-size">Booking platform · Django REST, PostgreSQL, React</p>
-		<!-- /wp:paragraph -->
+	<!-- wp:paragraph {"className":"chapter-lead"} -->
+	<p class="chapter-lead">The ones I would actually walk you through, not the ones that pad a list.</p>
+	<!-- /wp:paragraph -->
 
-		<!-- wp:heading {"level":3} -->
-		<h3 class="wp-block-heading">Sysbox</h3>
-		<!-- /wp:heading -->
+	<!-- wp:query {"queryId":3,"query":{"perPage":4,"pages":1,"offset":0,"postType":"project","order":"desc","orderBy":"date","inherit":false},"layout":{"type":"default"}} -->
+	<div class="wp-block-query">
 
-		<!-- wp:paragraph -->
-		<p>Replace this with the problem you were solving, what broke, and what you learned. Lead with the problem, not the stack.</p>
-		<!-- /wp:paragraph -->
+		<!-- wp:post-template {"className":"work-grid work-grid--home reveal-stagger"} -->
+			<!-- wp:pattern {"slug":"chaewon/project-card"} /-->
+		<!-- /wp:post-template -->
+
+		<!-- wp:query-no-results -->
+			<!-- wp:paragraph {"textColor":"muted"} -->
+			<p class="has-muted-color has-text-color">No projects yet. Add one under Projects &rarr; Add Project and it will appear here.</p>
+			<!-- /wp:paragraph -->
+		<!-- /wp:query-no-results -->
+
 	</div>
-	<!-- /wp:group -->
+	<!-- /wp:query -->
 
-	<!-- wp:group {"className":"project-card reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
-	<div class="wp-block-group project-card reveal" style="margin-top:var(--wp--preset--spacing--40)">
-		<!-- wp:paragraph {"fontSize":"small","textColor":"muted"} -->
-		<p class="has-muted-color has-text-color has-small-font-size">Job orchestration · Kubernetes, Discord bot interface</p>
-		<!-- /wp:paragraph -->
+	<!-- wp:paragraph {"className":"work-more"} -->
+	<p class="work-more"><a class="link-arrow" href="/projects/">See all projects</a></p>
+	<!-- /wp:paragraph -->
 
-		<!-- wp:heading {"level":3} -->
-		<h3 class="wp-block-heading">NoteApp Minion</h3>
-		<!-- /wp:heading -->
-
-		<!-- wp:paragraph -->
-		<p>Replace this with the problem you were solving, what broke, and what you learned.</p>
-		<!-- /wp:paragraph -->
-	</div>
-	<!-- /wp:group -->
-
-</div>
+</section>
 <!-- /wp:group -->

@@ -1,10 +1,40 @@
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30)">
-	<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->
-	<div class="wp-block-group">
-		<!-- wp:site-title {"level":0,"fontSize":"medium"} /-->
-		<!-- wp:navigation {"overlayMenu":"mobile","fontSize":"small"} /-->
+<!-- wp:html -->
+<div class="site-rail" aria-hidden="true">
+	<p class="site-rail__label site-rail__label--start">Seoul<br>37.5&deg;N</p>
+	<p class="site-rail__label site-rail__label--end">Vancouver<br>49.3&deg;N</p>
+</div>
+<!-- /wp:html -->
+
+<!-- wp:group {"tagName":"div","className":"site-header","layout":{"type":"default"}} -->
+<div class="wp-block-group site-header">
+
+	<!-- wp:group {"className":"site-header__pill","layout":{"type":"default"}} -->
+	<div class="wp-block-group site-header__pill">
+
+		<!-- wp:site-title {"level":0} /-->
+
+		<!-- wp:group {"className":"site-header__end","layout":{"type":"default"}} -->
+		<div class="wp-block-group site-header__end">
+
+			<!-- wp:navigation {"overlayMenu":"mobile","icon":"menu","layout":{"type":"flex","orientation":"horizontal"}} -->
+				<!-- wp:navigation-link {"label":"Work","url":"/projects/","kind":"custom","isTopLevelLink":true} /-->
+				<!-- wp:navigation-link {"label":"Notes","url":"/writing/","kind":"custom","isTopLevelLink":true} /-->
+				<!-- wp:navigation-link {"label":"Memories","url":"/#memories","kind":"custom","isTopLevelLink":true} /-->
+				<!-- wp:navigation-link {"label":"Contact","url":"/#contact","kind":"custom","isTopLevelLink":true} /-->
+			<!-- /wp:navigation -->
+
+			<!-- wp:html -->
+			<button type="button" class="scheme-toggle" data-scheme-toggle aria-pressed="false" aria-label="Switch to dark theme">
+				<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+				<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+			</button>
+			<!-- /wp:html -->
+
+		</div>
+		<!-- /wp:group -->
+
 	</div>
 	<!-- /wp:group -->
+
 </div>
 <!-- /wp:group -->

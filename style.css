@@ -1,90 +1,296 @@
 /*
 Theme Name: Chaewon
-Theme URI: https://chaewon.ca
+Theme URI: https://github.com/kcw00/chaewon-theme
 Author: Chaewon Kim
-Author URI: https://chaewon.ca
-Description: A custom block theme for an engineering portfolio. Built from scratch, no page builder.
+Author URI: https://github.com/kcw00
+Description: A custom block theme for an engineering portfolio. Built from scratch — no parent theme, no page builder, no build step.
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 0.1.0
+Version: 0.2.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: chaewon
-Tags: portfolio, full-site-editing, block-theme, one-column
+Text Domain: chaewon-theme
+Tags: portfolio, full-site-editing, block-theme, one-column, dark-mode-support
 */
 
-/* ---------------------------------------------------------------
+/* ===================================================================
    The comment block above is not decoration. WordPress parses it to
    populate Appearance > Themes. Remove "Theme Name" and the theme
    disappears from the admin entirely.
 
-   Everything below is normal CSS. Most of your colors, fonts, and
-   spacing should live in theme.json instead, which generates CSS
-   custom properties automatically. Use this file for the things
-   theme.json cannot express: pseudo-elements, transitions,
-   keyframes, and media queries.
-   --------------------------------------------------------------- */
+   Everything below is normal CSS. Colors, type, and spacing live in
+   theme.json, which generates CSS custom properties automatically.
+   This file is for what theme.json cannot express: the dark scheme,
+   layout, pseudo-elements, transitions, and media queries.
+
+   Contents
+     01  Dark scheme
+     02  Base
+     03  Chapter system
+     04  Site rail
+     05  Site header
+     06  Site footer
+     07  Hero
+     08  About
+     09  Selected work
+     10  Notes and writing
+     11  Memories
+     12  Contact
+     13  Projects archive and single
+     14  Writing archive
+     99  Motion and accessibility floor
+   =================================================================== */
 
 
-/* --- Scroll reveal ------------------------------------------------
-   Add the class "reveal" to any block via Advanced > Additional CSS
-   class(es). assets/js/reveal.js adds "is-visible" when it scrolls
-   into view. Elements start hidden ONLY when JS is present, so the
-   content stays readable if the script fails.
-   ------------------------------------------------------------------ */
+/* ===================================================================
+   01  DARK SCHEME
+   ===================================================================
 
-.js-reveal-ready .reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+   theme.json emits the palette as --wp--preset--color--* on :root.
+   Rather than write a dark rule for every component, we redefine those
+   same properties inside a dark scope. Every block that references a
+   palette slug — including core blocks we never touch — flips for free.
+
+   The selector is html[data-theme="dark"] and not [data-theme="dark"]
+   on purpose. Specificity (0,1,1) beats :root's (0,1,0), so this wins
+   regardless of whether our stylesheet loads before or after the inline
+   global styles WordPress prints in <head>. Weaken it to a bare
+   attribute selector and dark mode becomes a load-order coin flip.
+   ------------------------------------------------------------------- */
+
+html[data-theme="dark"] {
+  --wp--preset--color--paper:    #14120F;
+  --wp--preset--color--ink:      #F2EBE0;
+  --wp--preset--color--ink-soft: #C9BFB0;
+  --wp--preset--color--muted:    #9A9187;
+  --wp--preset--color--rule:     #2C2721;
+  --wp--preset--color--signal:   #7FB79E;
+  --wp--preset--color--surface:  #1D1A16;
+
+  /* Shadows tuned for light backgrounds read as grey smudges on dark.
+     Deepen them and let the surface tint carry the elevation instead. */
+  --wp--preset--shadow--lift:  0 1px 2px rgb(0 0 0 / 0.30), 0 8px 24px -12px rgb(0 0 0 / 0.55);
+  --wp--preset--shadow--raise: 0 2px 4px rgb(0 0 0 / 0.35), 0 20px 48px -20px rgb(0 0 0 / 0.70);
+
+  /* Tells the browser to render form controls and scrollbars dark too. */
+  color-scheme: dark;
 }
 
-.js-reveal-ready .reveal.is-visible {
-  opacity: 1;
-  transform: none;
+/* Semantic aliases. Component rules reference these rather than the
+   preset variables directly, so a rule reads as "translucent page
+   background" instead of "paper at 96 percent".
+
+   --c-glass is near-opaque on purpose. The header pill has to actually
+   hide what scrolls under it; at the 0.86 it started with, headline-sized
+   type stayed legible through the blur and read as a smudge rather than
+   as depth. The remaining 4% plus the backdrop blur is enough to keep it
+   feeling like a floating pane instead of a solid bar. */
+:root {
+  --c-glass: rgb(253 246 237 / 0.96);
+  --c-tint:  rgb(47 111 94 / 0.06);
 }
 
-/* Children stagger in sequence rather than all at once. */
-.js-reveal-ready .reveal-stagger > * {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+html[data-theme="dark"] {
+  --c-glass: rgb(20 18 15 / 0.96);
+  --c-tint:  rgb(127 183 158 / 0.07);
 }
 
-.js-reveal-ready .reveal-stagger.is-visible > * {
-  opacity: 1;
-  transform: none;
+
+/* ===================================================================
+   02  BASE
+   =================================================================== */
+
+html {
+  scroll-behavior: smooth;
+  /* Anchor targets otherwise land underneath the fixed header. */
+  scroll-padding-top: calc(var(--wp--custom--header--height) + 2rem);
+  -webkit-text-size-adjust: 100%;
 }
 
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 60ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 120ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 180ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 240ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 300ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 360ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 420ms; }
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* The scheme swap is a deliberate, user-triggered change. Easing it
+     stops the whole page from snapping. */
+  transition: background-color var(--wp--custom--duration--base) ease,
+              color var(--wp--custom--duration--base) ease;
+}
+
+::selection {
+  background: var(--wp--preset--color--signal);
+  color: var(--wp--preset--color--paper);
+}
+
+/* Optical sizing is what makes Instrument Serif look drawn rather than
+   scaled at display sizes. */
+h1, h2, h3 {
+  text-wrap: balance;
+  font-optical-sizing: auto;
+}
+
+p {
+  text-wrap: pretty;
+}
 
 
-/* --- Section eyebrow ----------------------------------------------
-   The small "01 / SELECTED WORK" label. Uses the mono font so it
-   reads as metadata rather than prose.
-   ------------------------------------------------------------------ */
+/* --- Link underline ------------------------------------------------
+   theme.json turns off text-decoration so we can animate a real line.
+   A background-image underline can be positioned and eased; the native
+   one cannot. Scoped to prose so it never touches nav or buttons.
+   ------------------------------------------------------------------- */
 
-.section-eyebrow {
+.entry-content a:where(:not(.wp-element-button)),
+.prose a:where(:not(.wp-element-button)) {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  padding-bottom: 0.12em;
+  transition: background-size var(--wp--custom--duration--base) var(--wp--custom--ease--out),
+              color var(--wp--custom--duration--fast) ease;
+}
+
+.entry-content a:where(:not(.wp-element-button)):hover,
+.prose a:where(:not(.wp-element-button)):hover {
+  background-size: 0% 1px;
+}
+
+
+/* --- Arrow link ----------------------------------------------------
+   "Field notes →". The arrow slides on hover. The glyph is generated
+   content, so assistive tech skips it and the link text stays clean.
+   ------------------------------------------------------------------- */
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--wp--preset--font-size--medium);
+}
+
+.link-arrow::after {
+  content: "→";
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.link-arrow:hover::after {
+  transform: translateX(0.35rem);
+}
+
+
+/* --- Flex rows built from group blocks -----------------------------
+   WordPress's flow layout emits
+
+       .wp-block-group > * + * { margin-block-start: <blockGap> }
+
+   on every group block. Inside a flex or grid container that margin is
+   not collapsed or ignored — it offsets the item. A row of tag chips
+   staircases; a vertically centred button sits low, because in flexbox
+   a block margin shifts the item even under align-items: center.
+
+   Every custom flex or grid row assembled from a group block belongs in
+   this list. Three separate visual bugs have come from forgetting it,
+   so it lives in one place rather than being rediscovered per component.
+   ------------------------------------------------------------------- */
+
+.chapter-rule > *,
+.site-header__pill > *,
+.site-header__end > *,
+.hero__actions > *,
+.work-card__meta-row > *,
+.work-card__tags > *,
+.contact__actions > * {
+  margin-block: 0;
+}
+
+
+/* --- Mono label ----------------------------------------------------
+   Small tracked uppercase type. Used for anything that is data rather
+   than prose: coordinates, years, section names, tags. Mono is the
+   signal that says "this is metadata," so it is worth being strict
+   about where it appears.
+   ------------------------------------------------------------------- */
+
+.label {
   font-family: var(--wp--preset--font-family--mono);
   font-size: var(--wp--preset--font-size--small);
-  letter-spacing: 0.14em;
+  letter-spacing: var(--wp--custom--tracking--label);
   text-transform: uppercase;
   color: var(--wp--preset--color--muted);
+  line-height: 1.4;
+}
+
+/* A label with a small dot in front, for status-like metadata. */
+.label--dot::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 0.6rem;
+  border-radius: 50%;
+  background: var(--wp--preset--color--signal);
+  vertical-align: middle;
+}
+
+/* Boxed variant — reads as a chip or a stamp. */
+.label--chip {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--sm);
+  letter-spacing: 0.08em;
+}
+
+
+/* ===================================================================
+   03  CHAPTER SYSTEM
+   ===================================================================
+
+   Every section opens with a numbered rule:
+
+     01 ──────────────────────────────────────────────  ABOUT ME
+
+   The number sits left, a hairline stretches across, the label sits
+   right. The line is a pseudo-element on the label, so it always fills
+   exactly the space between the two, at any viewport, with no
+   JavaScript.
+   ------------------------------------------------------------------- */
+
+.chapter {
+  padding-block: var(--wp--preset--spacing--60);
+  position: relative;
+}
+
+.chapter-rule {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-bottom: var(--wp--preset--spacing--50);
 }
 
-.section-eyebrow::after {
+.chapter-rule__num {
+  flex: none;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chapter-rule__label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: var(--wp--custom--tracking--label);
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+}
+
+.chapter-rule__label::before {
   content: "";
   flex: 1;
   height: 1px;
@@ -92,45 +298,201 @@ Tags: portfolio, full-site-editing, block-theme, one-column
 }
 
 
-/* --- Skill icons ---------------------------------------------------
-   Full colour at rest. Motion is the reward, not the information.
-   ------------------------------------------------------------------ */
 
-.skills-grid img {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+/* --- Chapter heading block ----------------------------------------
+   Serif title with an italic serif lead underneath. This pairing is
+   the spine of the whole page, so it lives in one place.
+   ------------------------------------------------------------------- */
+
+.chapter-title {
+  margin-block: 0 var(--wp--preset--spacing--10);
 }
 
-.skills-grid img:hover {
-  transform: translateY(-8px) scale(1.1);
-}
-
-
-/* --- Project card --------------------------------------------------- */
-
-.project-card {
-  border-top: 1px solid var(--wp--preset--color--rule);
-  padding-top: var(--wp--preset--spacing--40);
-  transition: border-color 0.3s ease;
-}
-
-.project-card:hover {
-  border-color: var(--wp--preset--color--signal);
+.chapter-lead {
+  font-family: var(--wp--preset--font-family--lead);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.4;
+  color: var(--wp--preset--color--muted);
+  max-width: 46ch;
+  margin-block: 0 var(--wp--preset--spacing--40);
 }
 
 
-/* --- Accessibility floor -------------------------------------------
-   Non-negotiable. Anyone who has set "reduce motion" at the OS level
-   has usually done so for a reason.
-   ------------------------------------------------------------------ */
+/* ===================================================================
+   04  SITE RAIL
+   ===================================================================
 
+   A fixed hairline down the left edge with a dot that tracks scroll
+   position, plus two place labels. Pure chrome — it carries no
+   information that is not already in the page.
+
+   It only appears at 1360px and up. Below that the viewport cannot fit
+   an 88px rail beside a 1180px content column without overlapping it,
+   and an overlapping decoration is worse than no decoration. The media
+   query is the single source of truth; site.js has no matching
+   breakpoint to drift out of sync with.
+   ------------------------------------------------------------------- */
+
+.site-rail {
+  display: none;
+}
+
+@media (min-width: 1360px) {
+  .site-rail {
+    display: block;
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    width: var(--wp--custom--rail--width);
+    z-index: 5;
+    /* Decoration must never intercept a click meant for the page. */
+    pointer-events: none;
+  }
+
+  /* The track. */
+  .site-rail::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 18vh;
+    bottom: 18vh;
+    width: 1px;
+    background: var(--wp--preset--color--rule);
+  }
+
+  /* The travelling dot. --scroll-progress is set on :root by site.js
+     as a unitless 0–1. Nothing else reads it, so if the script never
+     runs the dot parks at the top and the rail still looks correct. */
+  .site-rail::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(18vh + (64vh * var(--scroll-progress, 0)));
+    width: 7px;
+    height: 7px;
+    margin-left: -3px;
+    border-radius: 50%;
+    background: var(--wp--preset--color--signal);
+    box-shadow: 0 0 0 4px var(--wp--preset--color--paper);
+  }
+
+  .site-rail__label {
+    position: absolute;
+    left: 1.25rem;
+    margin: 0;
+    font-family: var(--wp--preset--font-family--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--muted);
+    line-height: 1.5;
+    opacity: 0.75;
+  }
+
+  .site-rail__label--start { top: calc(18vh - 2.75rem); }
+  .site-rail__label--end   { bottom: calc(18vh - 2.75rem); }
+}
+
+
+/* ===================================================================
+   99  MOTION AND ACCESSIBILITY FLOOR
+   ===================================================================
+
+   Scroll reveal. Add "reveal" or "reveal-stagger" to any block via
+   Advanced > Additional CSS class(es). site.js adds "is-visible" when
+   the element scrolls into view.
+
+   Every hiding rule is nested under .js-reveal-ready, a class site.js
+   puts on <html> only once it is running. If the script fails to load,
+   is blocked, or throws, none of these rules ever match and the content
+   is simply visible. Content first, motion second.
+   ------------------------------------------------------------------- */
+
+.js-reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--wp--custom--duration--slow) var(--wp--custom--ease--out),
+              transform var(--wp--custom--duration--slow) var(--wp--custom--ease--out);
+}
+
+.js-reveal-ready .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Children arrive in sequence rather than all at once. */
+.js-reveal-ready .reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms var(--wp--custom--ease--out),
+              transform 600ms var(--wp--custom--ease--out);
+}
+
+/* Settled position, written through a variable rather than as
+   `transform: none`.
+
+   This rule is (0,3,0). A component that owns its own transform — the
+   project cards lift on hover at (0,2,0) — would lose the property
+   outright and the lift would silently do nothing. Composing through
+   --reveal-settled-y means the child sets the variable instead of
+   fighting for `transform`, and both effects survive. */
+.js-reveal-ready .reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: translateY(var(--reveal-settled-y, 0px));
+}
+
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 70ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 140ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 210ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 280ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 350ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 420ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 490ms; }
+
+
+/* Keyboard users have to be able to see where they are. */
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Skip link — visually hidden until it receives focus. */
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -120%);
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--wp--preset--color--ink);
+  color: var(--wp--preset--color--paper);
+  border-radius: 0 0 var(--wp--custom--radius--sm) var(--wp--custom--radius--sm);
+  font-size: var(--wp--preset--font-size--small);
+  transition: transform var(--wp--custom--duration--fast) ease;
+}
+
+.skip-link:focus {
+  transform: translate(-50%, 0);
+}
+
+
+/* Non-negotiable. Anyone who set "reduce motion" at the OS level has
+   usually done so for a reason — vestibular disorders, migraine, motion
+   sickness. Everything above degrades to an instant state change. */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 
   .js-reveal-ready .reveal,
@@ -140,8 +502,1551 @@ Tags: portfolio, full-site-editing, block-theme, one-column
   }
 }
 
-/* Keyboard users must be able to see where they are. */
-:where(a, button, input, textarea, summary):focus-visible {
+
+/* ===================================================================
+   05  SITE HEADER
+   ===================================================================
+
+   A floating pill that stays out of the way. Over the hero it is
+   invisible — just the title and the links sitting on the page. Once
+   the page scrolls it materialises: translucent fill, hairline border,
+   soft shadow. site.js toggles `is-scrolled` past 24px.
+
+   The outer bar is pointer-events: none so the empty space beside the
+   pill never swallows a click meant for the page underneath. The pill
+   itself opts back in.
+   ------------------------------------------------------------------- */
+
+.site-header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  padding: 0.75rem var(--wp--preset--spacing--30);
+  pointer-events: none;
+}
+
+/* The pill floats 12px below the top of the viewport, and content used to
+   stay visible in that gap on its way out — the top serifs of the hero
+   name would slide across the very top of the screen. This fills the gap
+   with the page colour. It is paper on paper, so it is invisible; it just
+   gives scrolling content somewhere to disappear before it reaches the
+   edge. Only while scrolled, so it never covers anything at rest. */
+.site-header.is-scrolled::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 0.75rem;
+  background: var(--wp--preset--color--paper);
+}
+
+/* The pill is exactly as wide as the content column beneath it.
+
+   At 1150px it was 15px narrower than the 1180px content on each side,
+   so the first and last glyphs of anything full-width — the C of the
+   hero name, the edge of a work card — slid out past the pill and stayed
+   sharp while everything between was blurred behind the glass. Reading
+   the wide-size token rather than hard-coding 1180px keeps the two in
+   step if the layout width in theme.json ever changes. */
+.site-header__pill {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--30);
+  max-width: var(--wp--style--global--wide-size);
+  margin-inline: auto;
+  padding: 0.5rem 0.6rem 0.5rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: var(--wp--custom--radius--pill);
+  transition: background-color var(--wp--custom--duration--base) ease,
+              border-color var(--wp--custom--duration--base) ease,
+              box-shadow var(--wp--custom--duration--base) ease;
+}
+
+.site-header.is-scrolled .site-header__pill {
+  background: var(--c-glass);
+  border-color: var(--wp--preset--color--rule);
+  box-shadow: var(--wp--preset--shadow--lift);
+  /* Progressive: browsers without backdrop-filter get the flat translucent
+     fill above, which is still legible. */
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+}
+
+.site-header .wp-block-site-title a {
+  text-decoration: none;
+}
+
+.site-header__end {
+  display: flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--20);
+}
+
+
+/* --- Navigation ----------------------------------------------------
+   Mono, tracked, uppercase. The hover underline grows from the left
+   rather than fading, which reads as a deliberate mark being drawn.
+   ------------------------------------------------------------------- */
+
+.site-header .wp-block-navigation {
+  --navigation-layout-gap: 0.35rem;
+}
+
+.site-header .wp-block-navigation-item__content {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--wp--preset--color--muted);
+  transition: color var(--wp--custom--duration--fast) ease;
+}
+
+.site-header .wp-block-navigation-item__content::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.25rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.site-header .wp-block-navigation-item__content:hover {
+  color: var(--wp--preset--color--ink);
+}
+
+.site-header .wp-block-navigation-item__content:hover::after {
+  transform: scaleX(1);
+}
+
+/* WordPress marks the link for the page you are on. Keep it marked. */
+.site-header .wp-block-navigation-item.current-menu-item .wp-block-navigation-item__content {
+  color: var(--wp--preset--color--ink);
+}
+
+.site-header .wp-block-navigation-item.current-menu-item .wp-block-navigation-item__content::after {
+  transform: scaleX(1);
+  background: var(--wp--preset--color--signal);
+}
+
+/* The mobile overlay inherits the page background rather than the
+   navigation block's default white. */
+.site-header .wp-block-navigation__responsive-container.is-menu-open {
+  background: var(--wp--preset--color--paper);
+  color: var(--wp--preset--color--ink);
+  padding-top: var(--wp--preset--spacing--50);
+}
+
+.site-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+  font-size: var(--wp--preset--font-size--large);
+  color: var(--wp--preset--color--ink);
+}
+
+
+/* --- Colour scheme toggle ------------------------------------------
+   One button, two icons stacked in the same grid cell. The one that
+   applies rotates in while the other rotates out. Showing the moon in
+   light mode is deliberate: the icon is the destination, not the
+   current state, which is how every OS-level toggle behaves.
+   ------------------------------------------------------------------- */
+
+.scheme-toggle {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--wp--preset--color--ink);
+  cursor: pointer;
+  transition: background-color var(--wp--custom--duration--fast) ease,
+              border-color var(--wp--custom--duration--fast) ease;
+}
+
+.scheme-toggle:hover {
+  background: var(--c-tint);
+  border-color: var(--wp--preset--color--signal);
+}
+
+.scheme-toggle svg {
+  grid-area: 1 / 1;
+  width: 17px;
+  height: 17px;
+  transition: transform 450ms var(--wp--custom--ease--out),
+              opacity var(--wp--custom--duration--base) ease;
+}
+
+.scheme-toggle .icon-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+.scheme-toggle .icon-moon {
+  opacity: 1;
+  transform: none;
+}
+
+html[data-theme="dark"] .scheme-toggle .icon-sun {
+  opacity: 1;
+  transform: none;
+}
+
+html[data-theme="dark"] .scheme-toggle .icon-moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+
+/* ===================================================================
+   06  SITE FOOTER
+   =================================================================== */
+
+.site-footer {
+  border-top: 1px solid var(--wp--preset--color--rule);
+  padding-block: var(--wp--preset--spacing--40);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--30);
+}
+
+.site-footer .wp-block-social-links {
+  gap: 0.35rem;
+}
+
+.site-footer .wp-block-social-link {
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.site-footer .wp-block-social-link:hover {
+  transform: translateY(-3px);
+}
+
+
+/* ===================================================================
+   07  HERO
+   ===================================================================
+
+   The opening screen. Full viewport, content optically centred.
+
+   The background is deliberately flat — one paper colour, edge to edge,
+   the whole way down the page. An earlier version had radial washes
+   behind this section; at these low opacities they did not read as
+   atmosphere, they read as a rectangle of slightly wrong colour with a
+   visible seam where the hero ended. On a page this quiet, an
+   almost-invisible gradient is worse than none.
+
+   100svh rather than 100vh: on mobile, vh is measured against the
+   viewport with the browser chrome retracted, so a 100vh hero is always
+   taller than the screen actually is and the scroll cue sits below the
+   fold. svh is the small viewport height, which is what you can
+   actually see.
+
+   The pattern sets this group to flow layout, not constrained, and that
+   is load-bearing. WordPress's constrained layout puts
+   `margin-inline: auto !important` on every direct child. Inside a flex
+   column an auto cross-axis margin cancels `align-self: stretch`, so
+   each child shrink-wraps to its own text and then centres itself, and
+   the hero ends up with every line floating at a different left edge.
+   Flow layout emits no auto margins, so the max-widths below are the
+   only thing setting measure and everything stays flush left.
+   ------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--wp--preset--spacing--60) var(--wp--preset--spacing--50);
+}
+
+.hero__name {
+  margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+/* Same Cardo italic as every other lead on the page, one size up. The
+   hero tagline is the loudest instance of that voice, not a different
+   voice. */
+.hero__tagline {
+  font-family: var(--wp--preset--font-family--lead);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--x-large);
+  line-height: 1.35;
+  color: var(--wp--preset--color--muted);
+  max-width: 34ch;
+  margin-block: 0;
+}
+
+/* Short rule between the tagline and the body copy. Reads as a breath.
+   core/separator ships with margin-inline: auto, which would centre a
+   3rem rule in a 1180px column and leave it stranded mid-air. */
+.hero__divider {
+  width: 3rem;
+  height: 1px;
+  border: 0;
+  margin-block: var(--wp--preset--spacing--30);
+  margin-inline: 0;
+  background: var(--wp--preset--color--rule);
+}
+
+.hero__body {
+  max-width: 52ch;
+  margin-block: 0 var(--wp--preset--spacing--40);
+  color: var(--wp--preset--color--ink);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp--preset--spacing--30);
+}
+
+/* --- Scroll cue ----------------------------------------------------
+   A hairline that drains downward on a loop. Deliberately quiet: it is
+   a hint, not an instruction. Hidden once the page has scrolled at all,
+   because by then it has done its job.
+   ------------------------------------------------------------------- */
+
+.hero__cue {
+  position: absolute;
+  left: 50%;
+  bottom: var(--wp--preset--spacing--30);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  transition: opacity var(--wp--custom--duration--base) ease;
+}
+
+.hero__cue::after {
+  content: "";
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(
+    to bottom,
+    var(--wp--preset--color--rule) 0%,
+    var(--wp--preset--color--signal) 50%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: hero-cue 2.4s var(--wp--custom--ease--inout) infinite;
+}
+
+@keyframes hero-cue {
+  from { background-position: 0 -100%; }
+  to   { background-position: 0 100%; }
+}
+
+.site-header.is-scrolled ~ * .hero__cue,
+body:has(.site-header.is-scrolled) .hero__cue {
+  opacity: 0;
+}
+
+@media (max-height: 700px) {
+  .hero__cue {
+    display: none;
+  }
+}
+
+
+/* ===================================================================
+   08  ABOUT
+   ===================================================================
+
+   Long-form prose set in the display serif rather than the body sans.
+   This is the one section on the page that is purely reading, so it
+   gets the face that is most comfortable to read at length and a
+   measure short enough to keep the eye from getting lost on return.
+   ------------------------------------------------------------------- */
+
+/* Extra air between the italic lead and the prose, so the two read as
+   separate movements rather than one run-on block.
+
+   Padding, not margin. WordPress's flow layout emits
+
+       .wp-block-group.is-layout-flow > * { margin-block-start: <blockGap> }
+
+   at specificity (0,2,0), which beats a plain `.about__prose` rule at
+   (0,1,0) — a margin-top here is simply discarded. Padding is not part
+   of that fight, so it lands without an !important or a specificity
+   arms race. This is the same WordPress layout CSS behind the flex-row
+   and hero-alignment fixes; see section 02. */
+.about__prose {
+  padding-top: var(--wp--preset--spacing--60);
+}
+
+/* Set in the display serif, one step lighter than the heading and one
+   step darker than the italic lead — `ink-soft` exists for exactly this
+   middle position in the text hierarchy.
+
+   The measure is in rem, not ch, on purpose. `ch` is the width of a
+   zero, so it silently rescales whenever the family changes; this
+   paragraph has already been resized twice by that. A rem value means
+   the width is what it says it is.
+
+   64rem is a long line — roughly 100 characters — which is past the
+   usual comfort range. The 1.7 leading is what makes it work: the wider
+   the column, the more vertical separation the eye needs to find the
+   start of the next line. Do not reduce one without the other.
+
+   The block is centred while the text stays flush left. Centred ragged
+   text over four lines is measurably harder to read. */
+.about__prose > p {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.7;
+  color: var(--wp--preset--color--ink-soft);
+  max-width: 64rem;
+  margin-block: 0 var(--wp--preset--spacing--30);
+  margin-inline: auto;
+}
+
+.about__prose > p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ===================================================================
+   09  SELECTED WORK
+   ===================================================================
+
+   A six-column grid. Cards claim different spans so the section reads
+   as a considered arrangement rather than a list of identical boxes,
+   which is what a portfolio grid usually degrades into.
+
+   Six columns divides cleanly by 2, 3, and 6, so the modifiers below
+   can express thirds and halves without fractional tracks.
+   ------------------------------------------------------------------- */
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  /* Lets a short card backfill the gap a two-row card leaves beside it,
+     instead of the board showing a hole. */
+  grid-auto-flow: dense;
+  gap: var(--wp--preset--spacing--30);
+  /* core/post-template renders a <ul>. */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* The grid children are the <li> wrappers post-template emits, not the
+   cards. The card has to stretch to fill its cell, or a short card in a
+   two-row track floats at the top of a tall empty box. */
+.work-grid > * {
+  display: flex;
+  grid-column: span 3;
+}
+
+.work-grid > * > .work-card {
+  flex: 1 1 auto;
+}
+
+.work-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: var(--wp--preset--spacing--30);
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--lg);
+  background: var(--wp--preset--color--surface);
+  /* A resting shadow the hover state has somewhere to grow from. Going
+     from `none` to a deep shadow pops rather than blooms. */
+  box-shadow: 0 1px 2px rgb(30 25 20 / 0.05);
+  transition: transform 0.34s cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 0.34s ease,
+              border-color 0.34s ease;
+}
+
+
+/* --- Card as a single hit target ------------------------------------
+   The link lives on the title, so the accessibility tree gets exactly
+   one link per card, named by the project. Its ::after is then stretched
+   over the whole card, which makes every pixel clickable without adding
+   a second focusable element or nesting interactive content.
+
+   The tag pills stay plain paragraphs — they sit under the overlay and
+   are not interactive, which is intended.
+   ------------------------------------------------------------------- */
+
+.work-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-card__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* The ring belongs on the card, not on the inline link, so suppress the
+   global focus outline here and re-add it at card level below. */
+.work-card__title a:focus-visible {
+  outline: none;
+}
+
+
+/* --- Arrow affordance ------------------------------------------------
+   Sits opposite the eyebrow label. Decorative: the card already
+   announces itself through the title link, so this is aria-hidden in
+   the markup and carries no meaning of its own.
+   ------------------------------------------------------------------- */
+
+.work-card__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* U+2197 defaults to emoji presentation on macOS and iOS, which renders
+   it as a blue tile that ignores `color` entirely. The markup appends
+   U+FE0E to request the text form; this is the CSS half of the same
+   request, for browsers that support it. Both are needed — the property
+   is recent, the variation selector is universal. */
+.work-card__arrow {
+  --arrow-travel: 5px;
+
+  flex: none;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  line-height: 1;
+  font-variant-emoji: text;
+  color: color-mix(in srgb, var(--wp--preset--color--ink) 50%, transparent);
+  /* Inset by exactly the distance it travels, so the hovered position
+     lands on the card's padding edge instead of crowding the border.
+     At rest it sits a little further in, which also reads better — a
+     diagonal glyph needs slightly more optical margin than a flat one. */
+  margin-right: var(--arrow-travel);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+              color 0.3s ease;
+}
+
+
+/* --- Lift and shadow bloom -------------------------------------------
+   Hover and keyboard focus get the identical treatment. Only transform,
+   box-shadow, and colour animate — nothing here changes size, padding,
+   or position in flow, so neighbouring cards never shift.
+   ------------------------------------------------------------------- */
+
+.work-card:hover,
+.work-card:has(.work-card__title a:focus-visible) {
+  /* Both forms are needed. The grid is a .reveal-stagger, so once the
+     cards have animated in, the settled-position rule owns `transform`
+     and only the variable gets through. If JavaScript never runs, that
+     rule never matches and the plain transform is what applies. */
+  --reveal-settled-y: -8px;
+  transform: translateY(-8px);
+  box-shadow: 0 20px 36px -16px rgb(30 25 20 / 0.28);
+  border-color: color-mix(in srgb, var(--wp--preset--color--rule) 92%, var(--wp--preset--color--ink));
+}
+
+.work-card:hover .work-card__arrow,
+.work-card:has(.work-card__title a:focus-visible) .work-card__arrow {
+  transform: translate(var(--arrow-travel), -5px);
+  color: var(--wp--preset--color--ink);
+}
+
+.work-card:has(.work-card__title a:focus-visible) {
   outline: 2px solid var(--wp--preset--color--signal);
   outline-offset: 3px;
+}
+
+/* Keep the bloom, drop the travel. The depth change still signals that
+   the card is live; the 8px jump is the part that causes trouble. */
+@media (prefers-reduced-motion: reduce) {
+  .work-card:hover,
+  .work-card:has(.work-card__title a:focus-visible) {
+    --reveal-settled-y: 0px;
+    transform: none;
+  }
+
+  .work-card:hover .work-card__arrow,
+  .work-card:has(.work-card__title a:focus-visible) .work-card__arrow {
+    transform: none;
+  }
+}
+
+/* Homepage bento. Four projects, four footprints. A query loop emits
+   identical markup for every post, so the arrangement has to be
+   positional rather than a modifier class per card. */
+.work-grid--home > *:nth-child(1) { grid-column: span 4; grid-row: span 2; }
+.work-grid--home > *:nth-child(2) { grid-column: span 2; grid-row: span 2; }
+.work-grid--home > *:nth-child(3) { grid-column: span 2; }
+.work-grid--home > *:nth-child(4) { grid-column: span 4; }
+
+.work-grid--home > *:nth-child(1) .work-card__title {
+  font-size: var(--wp--preset--font-size--xx-large);
+}
+
+.work-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.work-card__title {
+  margin: 0;
+}
+
+.work-card__tagline {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--lead);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.35;
+  color: var(--wp--preset--color--signal);
+}
+
+.work-card__body {
+  margin: 0;
+  color: var(--wp--preset--color--muted);
+}
+
+/* Pushes the tag row to the bottom edge however tall the card ends up,
+   so tags line up across cards in the same row. */
+.work-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: auto 0 0;
+  padding-top: var(--wp--preset--spacing--20);
+}
+
+
+/* core/post-terms renders every term as a link, pointing at a taxonomy
+   archive this theme has no template for. On a card they would also be a
+   competing hit target inside a surface that is already one link.
+
+   Everywhere they appear they are demoted to static text; site.js takes
+   them out of the tab order too, so they are display-only in every sense.
+   They stay in the accessibility tree, because the project type and the
+   stack are content worth announcing. */
+.work-card .wp-block-post-terms a,
+.project .wp-block-post-terms a {
+  pointer-events: none;
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-card__tags a {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--sm);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--wp--preset--color--muted);
+}
+
+/* post-terms puts a space between terms; the flex gap already spaces
+   them, so the separator would add a stray gap at each wrap point. */
+.work-card__tags .wp-block-post-terms__separator {
+  display: none;
+}
+
+/* Below the grid: one quiet link out to everything else. */
+.work-more {
+  margin-top: var(--wp--preset--spacing--40);
+}
+
+/* Two columns at tablet, one on phones. Keeping the feature card double
+   height on a single-column layout just makes it a tall empty box. */
+@media (max-width: 900px) {
+  .work-grid > *,
+  .work-grid--home > *:nth-child(n) {
+    grid-column: span 3;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .work-grid > *,
+  .work-grid--home > *:nth-child(n) {
+    grid-column: span 6;
+  }
+
+  .work-grid--home > *:nth-child(1) .work-card__title {
+    font-size: var(--wp--preset--font-size--x-large);
+  }
+}
+
+
+/* ===================================================================
+   10  NOTES AND WRITING
+   ===================================================================
+
+   A query loop over posts. Date on the left in mono, title and excerpt
+   on the right, hairline between entries. The two-column track keeps
+   every title starting at the same x regardless of date length.
+   ------------------------------------------------------------------- */
+
+.notes-list .wp-block-post {
+  position: relative;
+  display: grid;
+  /* Year · content · arrow. The third track is `auto`, so it takes only
+     what the glyph needs and the content column keeps the rest. */
+  grid-template-columns: 9rem 1fr auto;
+  align-items: start;
+  gap: var(--wp--preset--spacing--30);
+  padding-block: var(--wp--preset--spacing--30);
+  border-bottom: 1px solid var(--wp--preset--color--rule);
+  /* Crops the stretched link overlay to exactly this row. Nothing else
+     in a row is meant to escape it. An element's own outline is not
+     affected, so the focus ring still shows outside the padding box. */
+  overflow: hidden;
+  transition: border-color 0.34s ease, opacity 0.28s ease;
+}
+
+/* An opening rule above the first row, so the list is closed at both
+   ends. Every other hairline is the row above's border-bottom. */
+.notes-list .wp-block-post:first-child {
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.notes-list .wp-block-post-date {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+  padding-top: 0.35rem;
+  opacity: 0.42;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.notes-row__body {
+  transition: transform 0.36s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.notes-list .wp-block-post-title {
+  margin: 0 0 0.4rem;
+  font-size: var(--wp--preset--font-size--x-large);
+}
+
+.notes-list .wp-block-post-excerpt {
+  margin: 0;
+  color: var(--wp--preset--color--muted);
+}
+
+.notes-list .wp-block-post-excerpt__more-text {
+  display: none;
+}
+
+
+/* --- Row as a single hit target --------------------------------------
+   Same approach as the project cards: the link is the post title, and
+   its ::after is stretched over the row. One link per row in the
+   accessibility tree, named by the post, and no nested interactive
+   content.
+   ------------------------------------------------------------------- */
+
+.notes-list .wp-block-post-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The overlay is oversized and then clipped by the row, rather than
+   `inset: 0`.
+
+   `.notes-row__body` translates on hover, and a transformed element
+   becomes the containing block for its absolutely-positioned
+   descendants. So `inset: 0` here resolves against the body group, not
+   the row — the year column stayed unclickable and the overlay slid
+   10px with the rest of the content. Sizing it past every edge and
+   letting the row's `overflow: hidden` do the cropping gives exact row
+   coverage in both states with no arithmetic against the grid tracks. */
+.notes-list .wp-block-post-title a::after {
+  content: "";
+  position: absolute;
+  inset: -100vh -100vw;
+  z-index: 1;
+}
+
+/* The ring goes on the row, not on the inline link. */
+.notes-list .wp-block-post-title a:focus-visible {
+  outline: none;
+}
+
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+
+/* --- Arrow affordance ------------------------------------------------ */
+
+.notes-row__arrow {
+  align-self: center;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--medium);
+  line-height: 1;
+  color: var(--wp--preset--color--signal);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+
+/* --- Hover and focus -------------------------------------------------
+   Sibling dimming: hovering anywhere in the list fades every row, then
+   the hovered one comes back. The two rules are ordered so the second
+   wins on the row under the cursor — the effect is attention moving to
+   one entry, not the list lighting up.
+   ------------------------------------------------------------------- */
+
+.notes-list:hover .wp-block-post {
+  opacity: 0.45;
+}
+
+.notes-list .wp-block-post:hover,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) {
+  opacity: 1;
+  border-bottom-color: rgb(34 32 28 / 0.42);
+}
+
+/* The literal above is tuned for the cream page. On the dark scheme it
+   is all but invisible against a near-black background, so the same idea
+   is expressed from the other direction. */
+html[data-theme="dark"] .notes-list .wp-block-post:hover,
+html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) {
+  border-bottom-color: rgb(242 235 224 / 0.42);
+}
+
+.notes-list .wp-block-post:hover .notes-row__body,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .notes-row__body {
+  transform: translateX(10px);
+}
+
+.notes-list .wp-block-post:hover .wp-block-post-date,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .wp-block-post-date {
+  opacity: 1;
+  color: var(--wp--preset--color--signal);
+}
+
+.notes-list .wp-block-post:hover .notes-row__arrow,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .notes-row__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Keep the colour and the arrow, drop the travel and the dimming. The
+   slide is decoration; fading the rest of the list is a hard thing to
+   track if motion is a problem. */
+@media (prefers-reduced-motion: reduce) {
+  .notes-list:hover .wp-block-post {
+    opacity: 1;
+  }
+
+  .notes-list .wp-block-post:hover .notes-row__body,
+  .notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .notes-row__body {
+    transform: none;
+  }
+
+  .notes-row__arrow {
+    transform: none;
+  }
+}
+
+.notes-more {
+  margin-top: var(--wp--preset--spacing--40);
+}
+
+@media (max-width: 700px) {
+  .notes-list .wp-block-post {
+    /* Year and content stack; the arrow keeps its own column beside
+       them rather than becoming a third row on its own line. */
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem var(--wp--preset--spacing--30);
+  }
+
+  .notes-list .wp-block-post-date {
+    padding-top: 0;
+  }
+
+  .notes-row__arrow {
+    grid-column: 2;
+    grid-row: 1 / -1;
+  }
+}
+
+
+/* ===================================================================
+   11  MEMORIES
+   ===================================================================
+
+   A masonry board of photos and short notes. CSS columns rather than
+   grid: the tiles have no meaningful order, and columns will flow items
+   of any height without leaving gaps or needing a row-span calculation
+   per tile.
+   ------------------------------------------------------------------- */
+
+.memory-board {
+  columns: 3;
+  column-gap: var(--wp--preset--spacing--30);
+}
+
+.memory-board > * {
+  /* Without this a tile can be split across a column boundary. */
+  break-inside: avoid;
+  margin: 0 0 var(--wp--preset--spacing--30);
+}
+
+/* --- Zoom on hover ---------------------------------------------------
+   The frame is clipped and the picture inside it grows. Scaling the tile
+   itself would push it into the column gap and nudge its neighbours;
+   scaling the contents inside a fixed frame keeps every edge still and
+   reads as looking closer rather than as the card growing.
+
+   Both tile kinds are listed together so a plate swapped for a real
+   Image block behaves identically. `.memory-plate::before` is the
+   stand-in for the picture that is not there yet.
+   ------------------------------------------------------------------- */
+
+.memory-board .wp-block-image,
+.memory-plate {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--wp--custom--radius--md);
+}
+
+.memory-board .wp-block-image img,
+.memory-plate::before {
+  transition: transform 0.7s var(--wp--custom--ease--out);
+}
+
+.memory-board .wp-block-image:hover img,
+.memory-plate:hover::before {
+  transform: scale(1.06);
+}
+
+.memory-board .wp-block-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+
+/* --- Plate ---------------------------------------------------------
+   A photo that does not exist yet.
+
+   An empty core/image block renders to nothing on the front end — it
+   has no markup to save until an image is attached — so a board built
+   from empty ones silently collapses. A plate is a real group that holds
+   its space and reads as deliberate.
+
+   To use a real photo: select the plate in the editor and replace it
+   with an Image block. The aspect ratio comes from the modifier class,
+   so the board keeps its rhythm either way.
+   ------------------------------------------------------------------- */
+
+.memory-plate {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 5;
+  border: 1px dashed var(--wp--preset--color--rule);
+  background: transparent;
+  transition: border-color var(--wp--custom--duration--base) ease;
+}
+
+/* The surface is a pseudo-element rather than a background on the plate
+   itself, so it has something to scale that is not the border. */
+.memory-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--wp--preset--color--surface);
+}
+
+.memory-plate > * {
+  position: relative;
+  z-index: 1;
+}
+
+.memory-plate:hover {
+  border-color: var(--wp--preset--color--signal);
+}
+
+/* Five heights at a fixed column width, tallest first. Each modifier is
+   used by more than one tile, so retuning one moves every tile carrying
+   it — to change a single tile, move it to a different modifier or add
+   one. The pixel values are what these ratios produce in a 385px column
+   at 1440px, recorded so the ladder can be reasoned about without
+   measuring again. */
+.memory-plate--square   { aspect-ratio: 1 / 1; }    /* 385 -> 385 */
+.memory-plate--short    { aspect-ratio: 5 / 4; }    /* 385 -> 308 */
+.memory-plate--wide     { aspect-ratio: 4 / 3; }    /* 385 -> 289 */
+.memory-plate--panorama { aspect-ratio: 16 / 9; }   /* 385 -> 217 */
+
+/* Starts a tile lower than the tiles beside it, and carries everything
+   below it in the same column down with it. Purely for rhythm — a board
+   where every column starts on the same line reads as a table.
+
+   This is a translate plus a matching bottom margin, not a top margin.
+   Multicol truncates margins that land on a column boundary, and a tile
+   that begins a column is exactly that case — `margin-top` computes
+   correctly and then does nothing at all. The transform does the visual
+   move; the extra bottom margin makes the flow account for it, so the
+   next tile in the column comes down too and the gap below stays right.
+   ------------------------------------------------------------------- */
+
+.memory-board > .memory-plate--offset,
+.memory-board > .memory-plate--offset-sm {
+  transform: translateY(var(--plate-offset));
+  margin-bottom: calc(var(--wp--preset--spacing--30) + var(--plate-offset));
+}
+
+/* Two depths, one source value, so the columns step down evenly:
+   0 · 28 · 56. Deriving the half from the full means they cannot drift
+   apart when either is retuned. */
+.memory-board > .memory-plate--offset    { --plate-offset: var(--wp--preset--spacing--70); }
+.memory-board > .memory-plate--offset-sm { --plate-offset: calc(var(--wp--preset--spacing--70) / 2); }
+
+.memory-plate p {
+  margin: 0;
+  font-size: 0.6875rem;
+}
+
+/* A zoom is motion for its own sake — the tile carries the same
+   information either way, so it goes entirely under reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .memory-board .wp-block-image:hover img,
+  .memory-plate:hover::before {
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .memory-board { columns: 2; }
+
+  /* The offsets exist to break up three columns that would otherwise
+     start on the same line. Below three they have nothing to break up —
+     in a single stack they are just tiles sitting in holes. */
+  .memory-board > .memory-plate--offset,
+  .memory-board > .memory-plate--offset-sm {
+    transform: none;
+    margin-bottom: var(--wp--preset--spacing--30);
+  }
+}
+
+@media (max-width: 600px) {
+  .memory-board { columns: 1; }
+}
+
+
+/* ===================================================================
+   12  CONTACT
+   ===================================================================
+
+   The last page. Centred, unlike every section above it — after a page
+   of flush-left chapters, centring is what signals the end.
+
+   This one uses constrained layout in the pattern rather than flow.
+   The auto margins that broke the hero are exactly what is wanted here.
+   ------------------------------------------------------------------- */
+
+.contact {
+  text-align: center;
+  padding-bottom: var(--wp--preset--spacing--70);
+}
+
+.contact .chapter-rule {
+  text-align: left;
+}
+
+.contact__eyebrow {
+  font-family: var(--wp--preset--font-family--lead);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  color: var(--wp--preset--color--muted);
+  margin-block: 0 var(--wp--preset--spacing--20);
+}
+
+.contact__title {
+  max-width: 18ch;
+  margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+.contact__body {
+  max-width: 48ch;
+  margin-block: 0 var(--wp--preset--spacing--40);
+  color: var(--wp--preset--color--muted);
+}
+
+.contact__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wp--preset--spacing--30);
+}
+
+/* The address is the point of the section, so it is set at heading
+   scale in the display face rather than buried in a button. */
+.contact__address {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--x-large);
+  line-height: 1.2;
+  margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+
+/* ===================================================================
+   13  PROJECTS ARCHIVE AND SINGLE
+   ===================================================================
+
+   /projects/ reuses the homepage's six-column bento. The difference is
+   that the homepage hand-picks four sizes while the archive has to cope
+   with any number of projects, so the sizes come from nth-child on an
+   eight-step cycle rather than from a modifier class per card.
+
+   grid-auto-flow: dense lets a later short card backfill a gap a taller
+   one left behind. Without it a 2-row card leaves a hole beside it and
+   the board reads as broken rather than arranged.
+   ------------------------------------------------------------------- */
+
+.work-grid--archive {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-flow: dense;
+  gap: var(--wp--preset--spacing--30);
+}
+
+/* Every card in the cycle claims a different footprint. Eight steps so a
+   full page of eight never repeats a size in the same position. */
+.work-grid--archive > *:nth-child(8n + 1) { grid-column: span 4; grid-row: span 2; }
+.work-grid--archive > *:nth-child(8n + 2) { grid-column: span 2; grid-row: span 2; }
+.work-grid--archive > *:nth-child(8n + 3) { grid-column: span 2; }
+.work-grid--archive > *:nth-child(8n + 4) { grid-column: span 4; }
+.work-grid--archive > *:nth-child(8n + 5) { grid-column: span 3; }
+.work-grid--archive > *:nth-child(8n + 6) { grid-column: span 3; }
+.work-grid--archive > *:nth-child(8n + 7) { grid-column: span 2; }
+.work-grid--archive > *:nth-child(8n + 8) { grid-column: span 4; }
+
+/* The first card in the cycle gets the extra room, so it gets the
+   bigger title — the same rule the homepage feature card follows. */
+.work-grid--archive > *:nth-child(8n + 1) .work-card__title {
+  font-size: var(--wp--preset--font-size--xx-large);
+}
+
+@media (max-width: 900px) {
+  .work-grid--archive > * { grid-column: span 3 !important; grid-row: auto !important; }
+}
+
+@media (max-width: 600px) {
+  .work-grid--archive > * { grid-column: span 6 !important; }
+
+  .work-grid--archive > *:nth-child(8n + 1) .work-card__title {
+    font-size: var(--wp--preset--font-size--x-large);
+  }
+}
+
+/* A chapter that opens a page has nothing above it to push it clear of
+   the fixed header, unlike the homepage where a 100svh hero does that
+   job. It has to reserve the header's own height plus a chapter's worth
+   of air, or the rule and the heading render underneath the pill. */
+.chapter--first {
+  padding-top: calc(var(--wp--custom--header--height) + var(--wp--preset--spacing--60));
+}
+
+/* These pages lead with an h1, which theme.json sizes at 7rem for the
+   homepage hero. At the top of an archive that reads as a different
+   site; it should match the section headings it sits above. */
+.chapter--first .chapter-title,
+.chapter--first .project__title {
+  font-size: var(--wp--preset--font-size--xx-large);
+}
+
+.work-pagination {
+  margin-top: var(--wp--preset--spacing--50);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* --- Single project ------------------------------------------------- */
+
+.project__back {
+  margin-block: 0 var(--wp--preset--spacing--40);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project__back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--wp--preset--color--muted);
+  transition: color var(--wp--custom--duration--fast) ease;
+}
+
+.project__back a::before {
+  content: "\2190";
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.project__back a:hover {
+  color: var(--wp--preset--color--ink);
+}
+
+.project__back a:hover::before {
+  transform: translateX(-0.35rem);
+}
+
+/* Title block left, visit link right. Centred against the whole title
+   block rather than sitting on the tagline's baseline, which lands it on
+   the seam between the two lines — it reads as belonging to the heading
+   as a whole instead of hanging off the bottom of it. */
+.project__intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--40);
+  margin-bottom: var(--wp--preset--spacing--70);
+}
+
+.project__intro > * {
+  margin-block: 0;
+}
+
+.project__intro-text {
+  flex: 1 1 24rem;
+}
+
+.project__title {
+  margin-block: 0 var(--wp--preset--spacing--20);
+  font-size: var(--wp--preset--font-size--display);
+}
+
+.project__tagline {
+  margin-block: 0;
+  font-family: var(--wp--preset--font-family--lead);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--x-large);
+  line-height: 1.35;
+  color: var(--wp--preset--color--muted);
+  max-width: 34ch;
+}
+
+
+/* --- Visit link ------------------------------------------------------
+   A core/button, because that is the only block whose href can be bound
+   to a field. The button chrome is stripped back to a text link with an
+   arrow, matching every other outbound link on the site.
+
+   The binding returns null rather than an empty string when no URL is
+   set, so the anchor renders with no href and the rule below removes the
+   whole thing. Without that, a project with no link shows a live-looking
+   "Visit X" that goes to the current page.
+   ------------------------------------------------------------------- */
+
+.project__visit {
+  flex: 0 0 auto;
+  margin-block: 0;
+}
+
+.project__visit .wp-block-button__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--wp--preset--color--signal);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--medium);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.project__visit .wp-block-button__link::after {
+  content: "\2192";
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.project__visit .wp-block-button__link:hover {
+  background: none;
+  color: var(--wp--preset--color--signal);
+}
+
+.project__visit .wp-block-button__link:hover::after {
+  transform: translateX(0.35rem);
+}
+
+.project__visit:has(a:not([href])),
+.project__visit:has(a[href=""]) {
+  display: none;
+}
+
+
+/* --- Built with ----------------------------------------------------
+   The 03 rule lives in the template rather than the post body, because
+   the chips it introduces come from the taxonomy rather than from
+   anything anyone typed. 01 and 02 are authored per project; 03 is
+   always here and always the stack.
+   ------------------------------------------------------------------- */
+
+.project__built {
+  margin-top: var(--wp--preset--spacing--60);
+}
+
+.project__built .chapter-rule {
+  margin-bottom: var(--wp--preset--spacing--40);
+}
+
+.project__tech {
+  margin-block: 0;
+  padding-top: 0;
+}
+
+/* The body is authored in the editor, so it has to look right without
+   anyone applying classes: prose measure, the ink-soft text colour the
+   About section uses, and headings that read as the numbered chapter
+   rules used everywhere else. */
+.project__body > p,
+.project__body > ul,
+.project__body > ol {
+  max-width: 60ch;
+  color: var(--wp--preset--color--ink-soft);
+  line-height: 1.7;
+}
+
+.project__body > ul,
+.project__body > ol {
+  padding-left: 1.1rem;
+}
+
+.project__body > ul li,
+.project__body > ol li {
+  margin-bottom: 0.75rem;
+}
+
+.project__body > ul li::marker {
+  color: var(--wp--preset--color--signal);
+}
+
+.project__rule {
+  margin-block: var(--wp--preset--spacing--70) var(--wp--preset--spacing--40);
+  border: 0;
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.project__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--30);
+}
+
+.project__footer > * {
+  margin-block: 0;
+}
+
+.project__next {
+  margin: 0;
+}
+
+
+/* ===================================================================
+   14  WRITING ARCHIVE
+   ===================================================================
+
+   The posts page. A thumbnail on the left, title, excerpt, and date on
+   the right. Wider and more generous than the homepage notes list,
+   which is a teaser rather than a place to browse.
+   ------------------------------------------------------------------- */
+
+.writing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.writing-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 15rem 1fr;
+  align-items: start;
+  gap: var(--wp--preset--spacing--40);
+  padding-block: var(--wp--preset--spacing--50);
+  border-bottom: 1px solid var(--wp--preset--color--rule);
+  /* Crops the stretched link overlay to this row. See the notes list for
+     why the overlay is oversized rather than inset: 0. */
+  overflow: hidden;
+  transition: border-color 0.34s ease;
+}
+
+.writing-list > *:first-child .writing-row {
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.writing-row > * {
+  margin-block: 0;
+}
+
+
+/* --- Thumbnail -------------------------------------------------------
+   The wrapper always exists; core/post-featured-image renders nothing at
+   all when a post has no image. Styling the wrapper rather than the
+   figure means a post without a thumbnail still holds its column instead
+   of collapsing the grid to one track for that row alone.
+   ------------------------------------------------------------------- */
+
+.writing-row__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px dashed var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--md);
+  background: var(--wp--preset--color--surface);
+}
+
+.writing-row__media .wp-block-post-featured-image {
+  margin: 0;
+  height: 100%;
+}
+
+.writing-row__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--wp--custom--ease--out);
+}
+
+/* A real photo fills the plate, so the dashed placeholder border would
+   read as a stray outline around it. */
+.writing-row__media:has(img) {
+  border-style: solid;
+  border-color: transparent;
+}
+
+
+/* --- Body ------------------------------------------------------------ */
+
+.writing-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.writing-row__title {
+  margin: 0;
+  font-size: var(--wp--preset--font-size--x-large);
+  transition: color var(--wp--custom--duration--base) ease;
+}
+
+.writing-row__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.writing-row__title a::after {
+  content: "";
+  position: absolute;
+  inset: -100vh -100vw;
+  z-index: 1;
+}
+
+.writing-row__title a:focus-visible {
+  outline: none;
+}
+
+.writing-row__excerpt {
+  margin: 0;
+  color: var(--wp--preset--color--ink-soft);
+  max-width: 62ch;
+}
+
+.writing-row__excerpt .wp-block-post-excerpt__more-text {
+  display: none;
+}
+
+.writing-row__date {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.08em;
+  color: var(--wp--preset--color--muted);
+}
+
+
+/* --- Hover and focus ------------------------------------------------- */
+
+.writing-row:hover,
+.writing-row:has(.writing-row__title a:focus-visible) {
+  border-bottom-color: rgb(34 32 28 / 0.42);
+}
+
+html[data-theme="dark"] .writing-row:hover,
+html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
+  border-bottom-color: rgb(242 235 224 / 0.42);
+}
+
+.writing-row:hover .writing-row__title,
+.writing-row:has(.writing-row__title a:focus-visible) .writing-row__title {
+  color: var(--wp--preset--color--signal);
+}
+
+.writing-row:hover .writing-row__media img,
+.writing-row:has(.writing-row__title a:focus-visible) .writing-row__media img {
+  transform: scale(1.05);
+}
+
+.writing-row:has(.writing-row__title a:focus-visible) {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .writing-row:hover .writing-row__media img,
+  .writing-row:has(.writing-row__title a:focus-visible) .writing-row__media img {
+    transform: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .writing-row {
+    grid-template-columns: 1fr;
+    gap: var(--wp--preset--spacing--30);
+  }
+
+  .writing-row__media {
+    aspect-ratio: 16 / 9;
+  }
 }
