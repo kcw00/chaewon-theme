@@ -1452,127 +1452,68 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   margin: 0 0 var(--wp--preset--spacing--30);
 }
 
-/* --- Zoom on hover ---------------------------------------------------
-   The frame is clipped and the picture inside it grows. Scaling the tile
-   itself would push it into the column gap and nudge its neighbours;
-   scaling the contents inside a fixed frame keeps every edge still and
-   reads as looking closer rather than as the card growing.
+/* --- Photos ----------------------------------------------------------
+   Each tile is cropped to a ratio rather than shown at its natural
+   aspect. The source photos are nearly all 3:4, so without this the
+   board would be six near-identical portraits in three columns; the
+   ratios are what create the variety and object-fit does the cropping.
 
-   Both tile kinds are listed together so a plate swapped for a real
-   Image block behaves identically. `.memory-plate::before` is the
-   stand-in for the picture that is not there yet.
+   The frame is clipped and the picture inside it grows on hover.
+   Scaling the tile itself would push it into the column gap and nudge
+   its neighbours; scaling the contents inside a fixed frame keeps every
+   edge still and reads as looking closer.
    ------------------------------------------------------------------- */
 
-.memory-board .wp-block-image,
-.memory-plate {
+.memory-photo {
   position: relative;
   overflow: hidden;
   border-radius: var(--wp--custom--radius--md);
-}
-
-.memory-board .wp-block-image img,
-.memory-plate::before {
-  transition: transform 0.7s var(--wp--custom--ease--out);
-}
-
-.memory-board .wp-block-image:hover img,
-.memory-plate:hover::before {
-  transform: scale(1.06);
-}
-
-.memory-board .wp-block-image img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-
-/* --- Plate ---------------------------------------------------------
-   A photo that does not exist yet.
-
-   An empty core/image block renders to nothing on the front end — it
-   has no markup to save until an image is attached — so a board built
-   from empty ones silently collapses. A plate is a real group that holds
-   its space and reads as deliberate.
-
-   To use a real photo: select the plate in the editor and replace it
-   with an Image block. The aspect ratio comes from the modifier class,
-   so the board keeps its rhythm either way.
-   ------------------------------------------------------------------- */
-
-.memory-plate {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 5;
-  border: 1px dashed var(--wp--preset--color--rule);
-  background: transparent;
-  transition: border-color var(--wp--custom--duration--base) ease;
-}
-
-/* The surface is a pseudo-element rather than a background on the plate
-   itself, so it has something to scale that is not the border. */
-.memory-plate::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   background: var(--wp--preset--color--surface);
 }
 
-.memory-plate > * {
-  position: relative;
-  z-index: 1;
+.memory-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--wp--custom--ease--out);
 }
 
-.memory-plate:hover {
-  border-color: var(--wp--preset--color--signal);
+.memory-photo:hover img {
+  transform: scale(1.06);
 }
 
-/* Five heights at a fixed column width, tallest first. Each modifier is
-   used by more than one tile, so retuning one moves every tile carrying
-   it — to change a single tile, move it to a different modifier or add
-   one. The pixel values are what these ratios produce in a 385px column
-   at 1440px, recorded so the ladder can be reasoned about without
-   measuring again. */
-.memory-plate--square   { aspect-ratio: 1 / 1; }    /* 385 -> 385 */
-.memory-plate--short    { aspect-ratio: 5 / 4; }    /* 385 -> 308 */
-.memory-plate--wide     { aspect-ratio: 4 / 3; }    /* 385 -> 289 */
-.memory-plate--panorama { aspect-ratio: 16 / 9; }   /* 385 -> 217 */
+/* Four heights at a fixed column width, tallest first. */
+.memory-photo--tall   { aspect-ratio: 4 / 5; }   /* 385 -> 481 */
+.memory-photo--square { aspect-ratio: 1 / 1; }   /* 385 -> 385 */
+.memory-photo--short  { aspect-ratio: 5 / 4; }   /* 385 -> 308 */
+.memory-photo--wide   { aspect-ratio: 4 / 3; }   /* 385 -> 289 */
 
-/* Starts a tile lower than the tiles beside it, and carries everything
-   below it in the same column down with it. Purely for rhythm — a board
-   where every column starts on the same line reads as a table.
+
+/* --- Column cascade --------------------------------------------------
+   Starts a tile lower than the tiles beside it, and carries everything
+   below it in the same column down with it, so the three columns step
+   down 0 / 28 / 56 instead of all starting on the same line.
 
    This is a translate plus a matching bottom margin, not a top margin.
-   Multicol truncates margins that land on a column boundary, and a tile
-   that begins a column is exactly that case — `margin-top` computes
-   correctly and then does nothing at all. The transform does the visual
-   move; the extra bottom margin makes the flow account for it, so the
-   next tile in the column comes down too and the gap below stays right.
+   Multicol truncates a margin that lands on a column boundary, and a
+   tile that begins a column is exactly that case — `margin-top`
+   computes correctly and then does nothing at all.
    ------------------------------------------------------------------- */
 
-.memory-board > .memory-plate--offset,
-.memory-board > .memory-plate--offset-sm {
+.memory-board > .memory-photo--offset,
+.memory-board > .memory-photo--offset-sm {
   transform: translateY(var(--plate-offset));
   margin-bottom: calc(var(--wp--preset--spacing--30) + var(--plate-offset));
 }
 
-/* Two depths, one source value, so the columns step down evenly:
-   0 · 28 · 56. Deriving the half from the full means they cannot drift
-   apart when either is retuned. */
-.memory-board > .memory-plate--offset    { --plate-offset: var(--wp--preset--spacing--70); }
-.memory-board > .memory-plate--offset-sm { --plate-offset: calc(var(--wp--preset--spacing--70) / 2); }
-
-.memory-plate p {
-  margin: 0;
-  font-size: 0.6875rem;
-}
+.memory-board > .memory-photo--offset    { --plate-offset: var(--wp--preset--spacing--70); }
+.memory-board > .memory-photo--offset-sm { --plate-offset: calc(var(--wp--preset--spacing--70) / 2); }
 
 /* A zoom is motion for its own sake — the tile carries the same
    information either way, so it goes entirely under reduced motion. */
 @media (prefers-reduced-motion: reduce) {
-  .memory-board .wp-block-image:hover img,
-  .memory-plate:hover::before {
+  .memory-photo:hover img {
     transform: none;
   }
 }
@@ -1583,8 +1524,8 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   /* The offsets exist to break up three columns that would otherwise
      start on the same line. Below three they have nothing to break up —
      in a single stack they are just tiles sitting in holes. */
-  .memory-board > .memory-plate--offset,
-  .memory-board > .memory-plate--offset-sm {
+  .memory-board > .memory-photo--offset,
+  .memory-board > .memory-photo--offset-sm {
     transform: none;
     margin-bottom: var(--wp--preset--spacing--30);
   }

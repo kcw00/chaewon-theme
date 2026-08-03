@@ -5,15 +5,19 @@
  * Categories: chaewon
  * Description: Masonry board of photographs.
  *
- * The photo slots are plates, not empty Image blocks. An Image block
- * with nothing attached renders to nothing on the front end, so a board
- * built from empty ones silently collapses. Select a plate in the editor
- * and replace it with an Image block when there is a photo for it — the
- * hover zoom is defined for both, so the board behaves the same either
- * way.
+ * The photos are theme assets rather than media-library attachments, so
+ * they travel with the repository and a fresh install is not an empty
+ * board. That is the trade: they are swapped by replacing a file in
+ * assets/img/memories/ rather than through the media picker.
+ *
+ * Each tile carries a ratio modifier. The photos are mostly 3:4, so the
+ * ratios are what create variety across the board; object-fit: cover
+ * does the cropping.
  *
  * @package Chaewon
  */
+
+$chaewon_memories = get_template_directory_uri() . '/assets/img/memories/';
 
 ?>
 
@@ -43,53 +47,29 @@
 	<!-- wp:group {"className":"memory-board reveal","layout":{"type":"default"}} -->
 	<div class="wp-block-group memory-board reveal">
 
-		<!-- wp:group {"className":"memory-plate","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate">
-			<!-- wp:paragraph {"className":"label"} -->
-			<p class="label">Seoul</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
+		<!-- wp:image {"className":"memory-photo memory-photo--tall"} -->
+		<figure class="wp-block-image memory-photo memory-photo--tall"><img src="<?php echo esc_url( $chaewon_memories . 'rockies.jpg' ); ?>" alt="Looking out over a still pond towards a mountain face, framed by pines." decoding="async" /></figure>
+		<!-- /wp:image -->
 
-		<!-- wp:group {"className":"memory-plate memory-plate--short","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate memory-plate--short">
-			<!-- wp:paragraph {"className":"label"} -->
-			<p class="label">Morning</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
+		<!-- wp:image {"className":"memory-photo memory-photo--short"} -->
+		<figure class="wp-block-image memory-photo memory-photo--short"><img src="<?php echo esc_url( $chaewon_memories . 'seoul.jpg' ); ?>" alt="A red arch bridge across a wide river at dusk." loading="lazy" decoding="async" /></figure>
+		<!-- /wp:image -->
 
-		<!-- wp:group {"className":"memory-plate memory-plate--square memory-plate--offset-sm","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate memory-plate--square memory-plate--offset-sm">
-			<!-- wp:paragraph {"className":"label"} -->
-			<p class="label">Vancouver</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
+		<!-- wp:image {"className":"memory-photo memory-photo--square memory-photo--offset-sm"} -->
+		<figure class="wp-block-image memory-photo memory-photo--square memory-photo--offset-sm"><img src="<?php echo esc_url( $chaewon_memories . 'balcony.jpg' ); ?>" alt="A shiba inu sitting on a balcony, watching the city in the rain." loading="lazy" decoding="async" /></figure>
+		<!-- /wp:image -->
 
-		<!-- wp:group {"className":"memory-plate memory-plate--wide","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate memory-plate--wide">
-			<!-- wp:paragraph {"className":"label"} -->
-			<p class="label">Desk</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
+		<!-- wp:image {"className":"memory-photo memory-photo--wide"} -->
+		<figure class="wp-block-image memory-photo memory-photo--wide"><img src="<?php echo esc_url( $chaewon_memories . 'shiba.jpg' ); ?>" alt="A shiba inu grinning on a grassy lookout above the water." loading="lazy" decoding="async" /></figure>
+		<!-- /wp:image -->
 
-		<!-- wp:group {"className":"memory-plate memory-plate--panorama memory-plate--offset","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate memory-plate--panorama memory-plate--offset">
-			<!-- wp:paragraph {"className":"label"} -->
-			<p class="label">The long way home</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
+		<!-- wp:image {"className":"memory-photo memory-photo--short memory-photo--offset"} -->
+		<figure class="wp-block-image memory-photo memory-photo--short memory-photo--offset"><img src="<?php echo esc_url( $chaewon_memories . 'japan.jpg' ); ?>" alt="A quiet street corner with a vending machine against a tiled apartment block." loading="lazy" decoding="async" /></figure>
+		<!-- /wp:image -->
 
-		<!-- wp:group {"className":"memory-plate","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate">
-			<!-- wp:paragraph {"className":"label"} -->
-			<p class="label">Somewhere between</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
+		<!-- wp:image {"className":"memory-photo memory-photo--tall"} -->
+		<figure class="wp-block-image memory-photo memory-photo--tall"><img src="<?php echo esc_url( $chaewon_memories . 'lake.jpg' ); ?>" alt="Crouching by a windy lake shore with a dog, hills across the water." loading="lazy" decoding="async" /></figure>
+		<!-- /wp:image -->
 
 	</div>
 	<!-- /wp:group -->
