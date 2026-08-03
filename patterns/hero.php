@@ -3,7 +3,7 @@
  * Title: Hero
  * Slug: chaewon/hero
  * Categories: chaewon, featured
- * Description: Full-viewport opening screen — coordinates, name, tagline, and two calls to action.
+ * Description: Full-viewport opening screen — name, tagline, and two calls to action.
  *
  * Patterns are reusable chunks of block markup. WordPress parses the
  * header comment above the same way it parses style.css; Title and Slug
@@ -22,10 +22,6 @@
 
 <!-- wp:group {"tagName":"section","align":"wide","className":"hero","layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignwide hero">
-
-	<!-- wp:paragraph {"className":"hero__meta label label--dot"} -->
-	<p class="hero__meta label label--dot">37.5&deg;N 127.0&deg;E &rsaquo; 49.1&deg;N 122.8&deg;W</p>
-	<!-- /wp:paragraph -->
 
 	<!-- wp:heading {"level":1,"className":"hero__name"} -->
 	<h1 class="wp-block-heading hero__name">Chaewon<br><mark style="background-color:rgba(0, 0, 0, 0)" class="has-inline-color has-signal-color">Kim</mark></h1>

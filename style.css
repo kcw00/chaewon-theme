@@ -72,13 +72,11 @@ html[data-theme="dark"] {
    preset variables directly, so a rule reads as "translucent page
    background" instead of "paper at 72 percent". */
 :root {
-  --c-veil:  rgb(253 246 237 / 0.72);
   --c-glass: rgb(253 246 237 / 0.86);
   --c-tint:  rgb(47 111 94 / 0.06);
 }
 
 html[data-theme="dark"] {
-  --c-veil:  rgb(20 18 15 / 0.72);
   --c-glass: rgb(20 18 15 / 0.86);
   --c-tint:  rgb(127 183 158 / 0.07);
 }
@@ -691,8 +689,14 @@ html[data-theme="dark"] .scheme-toggle .icon-moon {
    07  HERO
    ===================================================================
 
-   The opening screen. Full viewport, content optically centred, with a
-   soft atmospheric wash behind it.
+   The opening screen. Full viewport, content optically centred.
+
+   The background is deliberately flat — one paper colour, edge to edge,
+   the whole way down the page. An earlier version had radial washes
+   behind this section; at these low opacities they did not read as
+   atmosphere, they read as a rectangle of slightly wrong colour with a
+   visible seam where the hero ended. On a page this quiet, an
+   almost-invisible gradient is worse than none.
 
    100svh rather than 100vh: on mobile, vh is measured against the
    viewport with the browser chrome retracted, so a 100vh hero is always
@@ -707,49 +711,7 @@ html[data-theme="dark"] .scheme-toggle .icon-moon {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
   padding-block: var(--wp--preset--spacing--60) var(--wp--preset--spacing--50);
-}
-
-/* Two overlapping radial washes: cool signal from the upper right, warm
-   from the upper left. Cheap, resolution-independent, and it moves with
-   the palette instead of being baked into an image. */
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: -25% -15% auto -15%;
-  height: 105%;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(58% 52% at 78% 14%, rgb(47 111 94 / 0.13), transparent 68%),
-    radial-gradient(52% 46% at 10% 4%, rgb(198 152 84 / 0.16), transparent 70%);
-}
-
-html[data-theme="dark"] .hero::before {
-  background:
-    radial-gradient(58% 52% at 78% 14%, rgb(127 183 158 / 0.11), transparent 68%),
-    radial-gradient(52% 46% at 10% 4%, rgb(198 152 84 / 0.09), transparent 70%);
-}
-
-/* The wash sits at z-index 0, so every real child has to sit above it. */
-.hero > * {
-  position: relative;
-  z-index: 1;
-}
-
-.hero__meta {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  margin-block: 0 var(--wp--preset--spacing--30);
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--wp--preset--color--rule);
-  border-radius: var(--wp--custom--radius--pill);
-  background: var(--c-veil);
-  letter-spacing: 0.06em;
-  text-transform: none;
-  white-space: nowrap;
 }
 
 .hero__name {
