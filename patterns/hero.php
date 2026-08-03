@@ -51,7 +51,7 @@
 		<!-- /wp:buttons -->
 
 		<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"0","bottom":"0"}}}} -->
-		<p style="margin-top:0;margin-bottom:0"><a class="link-arrow" href="#field-notes">How I got here</a></p>
+		<p style="margin-top:0;margin-bottom:0"><a class="link-arrow" href="#about">About me</a></p>
 		<!-- /wp:paragraph -->
 
 	</div>

@@ -31,6 +31,12 @@ Tags: portfolio, full-site-editing, block-theme, one-column, dark-mode-support
      04  Site rail
      05  Site header
      06  Site footer
+     07  Hero
+     08  About
+     09  Selected work
+     10  Notes and writing
+     11  Memories
+     12  Contact
      99  Motion and accessibility floor
    =================================================================== */
 
@@ -812,4 +818,477 @@ body:has(.site-header.is-scrolled) .hero__cue {
   .hero__cue {
     display: none;
   }
+}
+
+
+/* ===================================================================
+   08  ABOUT
+   ===================================================================
+
+   Long-form prose set in the display serif rather than the body sans.
+   This is the one section on the page that is purely reading, so it
+   gets the face that is most comfortable to read at length and a
+   measure short enough to keep the eye from getting lost on return.
+   ------------------------------------------------------------------- */
+
+.about__prose > p {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.55;
+  max-width: 40ch;
+  margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+.about__prose > p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* --- Journey line --------------------------------------------------
+   Two endpoints and the distance between them. A diagram, not prose,
+   so it is written as flat HTML in the pattern rather than assembled
+   from nested group blocks.
+
+   The distance label sits on top of the connecting hairline with the
+   page background behind it, which is what makes the line appear to
+   break around the text. It relies on the page being one flat colour —
+   the moment a section gets its own background tint, this label shows
+   a rectangle of the wrong colour.
+   ------------------------------------------------------------------- */
+
+.journey {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--wp--preset--spacing--20);
+  margin-top: var(--wp--preset--spacing--50);
+  padding-top: var(--wp--preset--spacing--40);
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.journey__stop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.journey__stop--end {
+  text-align: right;
+}
+
+.journey__place {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--ink);
+}
+
+.journey__coord {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--wp--preset--color--muted);
+}
+
+.journey__span {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.5rem;
+}
+
+/* The connecting line, with a dot pinned to each end. */
+.journey__span::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--wp--preset--color--rule);
+}
+
+.journey__distance {
+  position: relative;
+  margin: 0;
+  padding-inline: 0.85rem;
+  background: var(--wp--preset--color--paper);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+  white-space: nowrap;
+}
+
+.journey__dot {
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--wp--preset--color--signal);
+}
+
+.journey__dot--start { left: 0; }
+.journey__dot--end   { right: 0; }
+
+/* Stacked on narrow screens: a horizontal line between two stops needs
+   room the phone does not have, so the whole diagram rotates. */
+@media (max-width: 700px) {
+  .journey {
+    grid-template-columns: 1fr;
+    gap: var(--wp--preset--spacing--30);
+  }
+
+  .journey__stop--end {
+    text-align: left;
+  }
+
+  .journey__span {
+    justify-content: flex-start;
+    min-height: auto;
+  }
+
+  .journey__span::before,
+  .journey__dot {
+    display: none;
+  }
+
+  .journey__distance {
+    padding-inline: 0;
+  }
+}
+
+
+/* ===================================================================
+   09  SELECTED WORK
+   ===================================================================
+
+   A six-column grid. Cards claim different spans so the section reads
+   as a considered arrangement rather than a list of identical boxes,
+   which is what a portfolio grid usually degrades into.
+
+   Six columns divides cleanly by 2, 3, and 6, so the modifiers below
+   can express thirds and halves without fractional tracks.
+   ------------------------------------------------------------------- */
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--wp--preset--spacing--30);
+}
+
+.work-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  grid-column: span 3;
+  padding: var(--wp--preset--spacing--30);
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--lg);
+  background: var(--wp--preset--color--surface);
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out),
+              border-color var(--wp--custom--duration--base) ease,
+              box-shadow var(--wp--custom--duration--base) ease;
+}
+
+.work-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--wp--preset--color--signal);
+  box-shadow: var(--wp--preset--shadow--lift);
+}
+
+.work-card--feature { grid-column: span 4; grid-row: span 2; }
+.work-card--tall    { grid-column: span 2; grid-row: span 2; }
+.work-card--narrow  { grid-column: span 2; }
+.work-card--wide    { grid-column: span 4; }
+
+/* The feature card gets the extra room, so it gets the bigger title. */
+.work-card--feature .work-card__title {
+  font-size: var(--wp--preset--font-size--xx-large);
+}
+
+.work-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.work-card__title {
+  margin: 0;
+}
+
+.work-card__tagline {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--display);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.35;
+  color: var(--wp--preset--color--signal);
+}
+
+.work-card__body {
+  margin: 0;
+  color: var(--wp--preset--color--muted);
+}
+
+/* Pushes the tag row to the bottom edge however tall the card ends up,
+   so tags line up across cards in the same row. */
+.work-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: auto 0 0;
+  padding-top: var(--wp--preset--spacing--20);
+}
+
+.work-card__tags .label--chip {
+  font-size: 0.6875rem;
+  padding: 0.25rem 0.6rem;
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+/* Below the grid: one quiet link out to everything else. */
+.work-more {
+  margin-top: var(--wp--preset--spacing--40);
+}
+
+/* Two columns at tablet, one on phones. Keeping the feature card double
+   height on a single-column layout just makes it a tall empty box. */
+@media (max-width: 900px) {
+  .work-card--feature,
+  .work-card--tall {
+    grid-row: auto;
+  }
+
+  .work-card,
+  .work-card--feature,
+  .work-card--tall,
+  .work-card--narrow,
+  .work-card--wide {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 600px) {
+  .work-card,
+  .work-card--feature,
+  .work-card--tall,
+  .work-card--narrow,
+  .work-card--wide {
+    grid-column: span 6;
+  }
+
+  .work-card--feature .work-card__title {
+    font-size: var(--wp--preset--font-size--x-large);
+  }
+}
+
+
+/* ===================================================================
+   10  NOTES AND WRITING
+   ===================================================================
+
+   A query loop over posts. Date on the left in mono, title and excerpt
+   on the right, hairline between entries. The two-column track keeps
+   every title starting at the same x regardless of date length.
+   ------------------------------------------------------------------- */
+
+.notes-list .wp-block-post {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: var(--wp--preset--spacing--30);
+  padding-block: var(--wp--preset--spacing--30);
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+/* The last entry gets a closing rule so the list reads as finished
+   rather than cut off. */
+.notes-list .wp-block-post:last-child {
+  border-bottom: 1px solid var(--wp--preset--color--rule);
+}
+
+.notes-list .wp-block-post-date {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+  padding-top: 0.35rem;
+}
+
+.notes-list .wp-block-post-title {
+  margin: 0 0 0.4rem;
+  font-size: var(--wp--preset--font-size--x-large);
+}
+
+.notes-list .wp-block-post-title a {
+  transition: color var(--wp--custom--duration--fast) ease;
+}
+
+.notes-list .wp-block-post-excerpt {
+  margin: 0;
+  color: var(--wp--preset--color--muted);
+}
+
+.notes-list .wp-block-post-excerpt__more-text {
+  display: none;
+}
+
+.notes-more {
+  margin-top: var(--wp--preset--spacing--40);
+}
+
+@media (max-width: 700px) {
+  .notes-list .wp-block-post {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .notes-list .wp-block-post-date {
+    padding-top: 0;
+  }
+}
+
+
+/* ===================================================================
+   11  MEMORIES
+   ===================================================================
+
+   A masonry board of photos and short notes. CSS columns rather than
+   grid: the tiles have no meaningful order, and columns will flow items
+   of any height without leaving gaps or needing a row-span calculation
+   per tile.
+   ------------------------------------------------------------------- */
+
+.memory-board {
+  columns: 3;
+  column-gap: var(--wp--preset--spacing--30);
+}
+
+.memory-board > * {
+  /* Without this a tile can be split across a column boundary. */
+  break-inside: avoid;
+  margin: 0 0 var(--wp--preset--spacing--30);
+}
+
+.memory-board .wp-block-image {
+  overflow: hidden;
+  border-radius: var(--wp--custom--radius--md);
+}
+
+.memory-board .wp-block-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform var(--wp--custom--duration--slow) var(--wp--custom--ease--out);
+}
+
+.memory-board .wp-block-image:hover img {
+  transform: scale(1.04);
+}
+
+/* An image block with nothing in it yet. Rather than collapsing to
+   nothing on the front end, it holds its place as a labelled plate, so
+   the board looks deliberate before any photos are uploaded. */
+.memory-board .wp-block-image:not(:has(img)) {
+  aspect-ratio: 4 / 5;
+  border: 1px dashed var(--wp--preset--color--rule);
+  background: var(--wp--preset--color--surface);
+}
+
+/* A written tile. Same visual weight as a photo, different content. */
+.memory-note {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: var(--wp--preset--spacing--30);
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--md);
+  background: var(--wp--preset--color--surface);
+}
+
+.memory-note__text {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--display);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.4;
+}
+
+.memory-note__source {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .memory-board { columns: 2; }
+}
+
+@media (max-width: 600px) {
+  .memory-board { columns: 1; }
+}
+
+
+/* ===================================================================
+   12  CONTACT
+   ===================================================================
+
+   The last page. Centred, unlike every section above it — after a page
+   of flush-left chapters, centring is what signals the end.
+
+   This one uses constrained layout in the pattern rather than flow.
+   The auto margins that broke the hero are exactly what is wanted here.
+   ------------------------------------------------------------------- */
+
+.contact {
+  text-align: center;
+  padding-bottom: var(--wp--preset--spacing--70);
+}
+
+.contact .chapter-rule {
+  text-align: left;
+}
+
+.contact__eyebrow {
+  font-family: var(--wp--preset--font-family--display);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  color: var(--wp--preset--color--muted);
+  margin-block: 0 var(--wp--preset--spacing--20);
+}
+
+.contact__title {
+  max-width: 18ch;
+  margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+.contact__body {
+  max-width: 48ch;
+  margin-block: 0 var(--wp--preset--spacing--40);
+  color: var(--wp--preset--color--muted);
+}
+
+.contact__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wp--preset--spacing--30);
+}
+
+/* The address is the point of the section, so it is set at heading
+   scale in the display face rather than buried in a button. */
+.contact__address {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--x-large);
+  line-height: 1.2;
+  margin-block: 0 var(--wp--preset--spacing--30);
 }
