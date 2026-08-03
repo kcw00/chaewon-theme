@@ -1,44 +1,400 @@
 /*
 Theme Name: Chaewon
-Theme URI: https://chaewon.ca
+Theme URI: https://github.com/kcw00/chaewon-theme
 Author: Chaewon Kim
-Author URI: https://chaewon.ca
-Description: A custom block theme for an engineering portfolio. Built from scratch, no page builder.
+Author URI: https://github.com/kcw00
+Description: A custom block theme for an engineering portfolio. Built from scratch — no parent theme, no page builder, no build step.
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 0.1.0
+Version: 0.2.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: chaewon
-Tags: portfolio, full-site-editing, block-theme, one-column
+Text Domain: chaewon-theme
+Tags: portfolio, full-site-editing, block-theme, one-column, dark-mode-support
 */
 
-/* ---------------------------------------------------------------
+/* ===================================================================
    The comment block above is not decoration. WordPress parses it to
    populate Appearance > Themes. Remove "Theme Name" and the theme
    disappears from the admin entirely.
 
-   Everything below is normal CSS. Most of your colors, fonts, and
-   spacing should live in theme.json instead, which generates CSS
-   custom properties automatically. Use this file for the things
-   theme.json cannot express: pseudo-elements, transitions,
-   keyframes, and media queries.
-   --------------------------------------------------------------- */
+   Everything below is normal CSS. Colors, type, and spacing live in
+   theme.json, which generates CSS custom properties automatically.
+   This file is for what theme.json cannot express: the dark scheme,
+   layout, pseudo-elements, transitions, and media queries.
+
+   Contents
+     01  Dark scheme
+     02  Base
+     03  Chapter system
+     04  Site rail
+     99  Motion and accessibility floor
+   =================================================================== */
 
 
-/* --- Scroll reveal ------------------------------------------------
-   Add the class "reveal" to any block via Advanced > Additional CSS
-   class(es). assets/js/reveal.js adds "is-visible" when it scrolls
-   into view. Elements start hidden ONLY when JS is present, so the
-   content stays readable if the script fails.
-   ------------------------------------------------------------------ */
+/* ===================================================================
+   01  DARK SCHEME
+   ===================================================================
+
+   theme.json emits the palette as --wp--preset--color--* on :root.
+   Rather than write a dark rule for every component, we redefine those
+   same properties inside a dark scope. Every block that references a
+   palette slug — including core blocks we never touch — flips for free.
+
+   The selector is html[data-theme="dark"] and not [data-theme="dark"]
+   on purpose. Specificity (0,1,1) beats :root's (0,1,0), so this wins
+   regardless of whether our stylesheet loads before or after the inline
+   global styles WordPress prints in <head>. Weaken it to a bare
+   attribute selector and dark mode becomes a load-order coin flip.
+   ------------------------------------------------------------------- */
+
+html[data-theme="dark"] {
+  --wp--preset--color--paper:   #14120F;
+  --wp--preset--color--ink:     #F2EBE0;
+  --wp--preset--color--muted:   #9A9187;
+  --wp--preset--color--rule:    #2C2721;
+  --wp--preset--color--signal:  #7FB79E;
+  --wp--preset--color--surface: #1D1A16;
+
+  /* Shadows tuned for light backgrounds read as grey smudges on dark.
+     Deepen them and let the surface tint carry the elevation instead. */
+  --wp--preset--shadow--lift:  0 1px 2px rgb(0 0 0 / 0.30), 0 8px 24px -12px rgb(0 0 0 / 0.55);
+  --wp--preset--shadow--raise: 0 2px 4px rgb(0 0 0 / 0.35), 0 20px 48px -20px rgb(0 0 0 / 0.70);
+
+  /* Tells the browser to render form controls and scrollbars dark too. */
+  color-scheme: dark;
+}
+
+/* Semantic aliases. Component rules reference these rather than the
+   preset variables directly, so a rule reads as "translucent page
+   background" instead of "paper at 72 percent". */
+:root {
+  --c-veil:  rgb(253 246 237 / 0.72);
+  --c-glass: rgb(253 246 237 / 0.86);
+  --c-tint:  rgb(47 111 94 / 0.06);
+}
+
+html[data-theme="dark"] {
+  --c-veil:  rgb(20 18 15 / 0.72);
+  --c-glass: rgb(20 18 15 / 0.86);
+  --c-tint:  rgb(127 183 158 / 0.07);
+}
+
+
+/* ===================================================================
+   02  BASE
+   =================================================================== */
+
+html {
+  scroll-behavior: smooth;
+  /* Anchor targets otherwise land underneath the fixed header. */
+  scroll-padding-top: calc(var(--wp--custom--header--height) + 2rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* The scheme swap is a deliberate, user-triggered change. Easing it
+     stops the whole page from snapping. */
+  transition: background-color var(--wp--custom--duration--base) ease,
+              color var(--wp--custom--duration--base) ease;
+}
+
+::selection {
+  background: var(--wp--preset--color--signal);
+  color: var(--wp--preset--color--paper);
+}
+
+/* Optical sizing is what makes Instrument Serif look drawn rather than
+   scaled at display sizes. */
+h1, h2, h3 {
+  text-wrap: balance;
+  font-optical-sizing: auto;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+
+/* --- Link underline ------------------------------------------------
+   theme.json turns off text-decoration so we can animate a real line.
+   A background-image underline can be positioned and eased; the native
+   one cannot. Scoped to prose so it never touches nav or buttons.
+   ------------------------------------------------------------------- */
+
+.entry-content a:where(:not(.wp-element-button)),
+.prose a:where(:not(.wp-element-button)) {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  padding-bottom: 0.12em;
+  transition: background-size var(--wp--custom--duration--base) var(--wp--custom--ease--out),
+              color var(--wp--custom--duration--fast) ease;
+}
+
+.entry-content a:where(:not(.wp-element-button)):hover,
+.prose a:where(:not(.wp-element-button)):hover {
+  background-size: 0% 1px;
+}
+
+
+/* --- Arrow link ----------------------------------------------------
+   "Field notes →". The arrow slides on hover. The glyph is generated
+   content, so assistive tech skips it and the link text stays clean.
+   ------------------------------------------------------------------- */
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--wp--preset--font-size--medium);
+}
+
+.link-arrow::after {
+  content: "→";
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.link-arrow:hover::after {
+  transform: translateX(0.35rem);
+}
+
+
+/* --- Mono label ----------------------------------------------------
+   Small tracked uppercase type. Used for anything that is data rather
+   than prose: coordinates, years, section names, tags. Mono is the
+   signal that says "this is metadata," so it is worth being strict
+   about where it appears.
+   ------------------------------------------------------------------- */
+
+.label {
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: var(--wp--custom--tracking--label);
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+  line-height: 1.4;
+}
+
+/* A label with a small dot in front, for status-like metadata. */
+.label--dot::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 0.6rem;
+  border-radius: 50%;
+  background: var(--wp--preset--color--signal);
+  vertical-align: middle;
+}
+
+/* Boxed variant — reads as a chip or a stamp. */
+.label--chip {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--sm);
+  letter-spacing: 0.08em;
+}
+
+
+/* ===================================================================
+   03  CHAPTER SYSTEM
+   ===================================================================
+
+   Every section opens with a numbered rule:
+
+     01 ─────────────────────────────  FIELD NOTES   [49.1°N]
+
+   The number sits left, a hairline stretches across, the label sits
+   right, and an optional chip trails it. The line is a pseudo-element
+   on the label, so it always fills exactly the space between the two,
+   at any viewport, with no JavaScript.
+   ------------------------------------------------------------------- */
+
+.chapter {
+  padding-block: var(--wp--preset--spacing--60);
+  position: relative;
+}
+
+.chapter-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: var(--wp--preset--spacing--50);
+}
+
+.chapter-rule > * {
+  margin: 0;
+}
+
+.chapter-rule__num {
+  flex: none;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chapter-rule__label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: var(--wp--custom--tracking--label);
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+}
+
+.chapter-rule__label::before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--wp--preset--color--rule);
+}
+
+.chapter-rule__meta {
+  flex: none;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.08em;
+  color: var(--wp--preset--color--muted);
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--sm);
+  white-space: nowrap;
+}
+
+/* The chip is the first thing to go when there is no room for it. */
+@media (max-width: 700px) {
+  .chapter-rule__meta {
+    display: none;
+  }
+}
+
+
+/* --- Chapter heading block ----------------------------------------
+   Serif title with an italic serif lead underneath. This pairing is
+   the spine of the whole page, so it lives in one place.
+   ------------------------------------------------------------------- */
+
+.chapter-title {
+  margin-block: 0 var(--wp--preset--spacing--10);
+}
+
+.chapter-lead {
+  font-family: var(--wp--preset--font-family--display);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.4;
+  color: var(--wp--preset--color--muted);
+  max-width: 46ch;
+  margin-block: 0 var(--wp--preset--spacing--40);
+}
+
+
+/* ===================================================================
+   04  SITE RAIL
+   ===================================================================
+
+   A fixed hairline down the left edge with a dot that tracks scroll
+   position, plus two place labels. Pure chrome — it carries no
+   information that is not already in the page.
+
+   It only appears at 1360px and up. Below that the viewport cannot fit
+   an 88px rail beside a 1180px content column without overlapping it,
+   and an overlapping decoration is worse than no decoration. The media
+   query is the single source of truth; site.js has no matching
+   breakpoint to drift out of sync with.
+   ------------------------------------------------------------------- */
+
+.site-rail {
+  display: none;
+}
+
+@media (min-width: 1360px) {
+  .site-rail {
+    display: block;
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    width: var(--wp--custom--rail--width);
+    z-index: 5;
+    /* Decoration must never intercept a click meant for the page. */
+    pointer-events: none;
+  }
+
+  /* The track. */
+  .site-rail::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 18vh;
+    bottom: 18vh;
+    width: 1px;
+    background: var(--wp--preset--color--rule);
+  }
+
+  /* The travelling dot. --scroll-progress is set on :root by site.js
+     as a unitless 0–1. Nothing else reads it, so if the script never
+     runs the dot parks at the top and the rail still looks correct. */
+  .site-rail::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(18vh + (64vh * var(--scroll-progress, 0)));
+    width: 7px;
+    height: 7px;
+    margin-left: -3px;
+    border-radius: 50%;
+    background: var(--wp--preset--color--signal);
+    box-shadow: 0 0 0 4px var(--wp--preset--color--paper);
+  }
+
+  .site-rail__label {
+    position: absolute;
+    left: 1.25rem;
+    margin: 0;
+    font-family: var(--wp--preset--font-family--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--muted);
+    line-height: 1.5;
+    opacity: 0.75;
+  }
+
+  .site-rail__label--start { top: calc(18vh - 2.75rem); }
+  .site-rail__label--end   { bottom: calc(18vh - 2.75rem); }
+}
+
+
+/* ===================================================================
+   99  MOTION AND ACCESSIBILITY FLOOR
+   ===================================================================
+
+   Scroll reveal. Add "reveal" or "reveal-stagger" to any block via
+   Advanced > Additional CSS class(es). site.js adds "is-visible" when
+   the element scrolls into view.
+
+   Every hiding rule is nested under .js-reveal-ready, a class site.js
+   puts on <html> only once it is running. If the script fails to load,
+   is blocked, or throws, none of these rules ever match and the content
+   is simply visible. Content first, motion second.
+   ------------------------------------------------------------------- */
 
 .js-reveal-ready .reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--wp--custom--duration--slow) var(--wp--custom--ease--out),
+              transform var(--wp--custom--duration--slow) var(--wp--custom--ease--out);
 }
 
 .js-reveal-ready .reveal.is-visible {
@@ -46,11 +402,12 @@ Tags: portfolio, full-site-editing, block-theme, one-column
   transform: none;
 }
 
-/* Children stagger in sequence rather than all at once. */
+/* Children arrive in sequence rather than all at once. */
 .js-reveal-ready .reveal-stagger > * {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 600ms var(--wp--custom--ease--out),
+              transform 600ms var(--wp--custom--ease--out);
 }
 
 .js-reveal-ready .reveal-stagger.is-visible > * {
@@ -59,78 +416,56 @@ Tags: portfolio, full-site-editing, block-theme, one-column
 }
 
 .js-reveal-ready .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 60ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 120ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 180ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 240ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 300ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 360ms; }
-.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 420ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 70ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 140ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 210ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 280ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 350ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 420ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 490ms; }
 
 
-/* --- Section eyebrow ----------------------------------------------
-   The small "01 / SELECTED WORK" label. Uses the mono font so it
-   reads as metadata rather than prose.
-   ------------------------------------------------------------------ */
+/* Keyboard users have to be able to see where they are. */
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
 
-.section-eyebrow {
-  font-family: var(--wp--preset--font-family--mono);
+/* Skip link — visually hidden until it receives focus. */
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -120%);
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--wp--preset--color--ink);
+  color: var(--wp--preset--color--paper);
+  border-radius: 0 0 var(--wp--custom--radius--sm) var(--wp--custom--radius--sm);
   font-size: var(--wp--preset--font-size--small);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--wp--preset--color--muted);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  transition: transform var(--wp--custom--duration--fast) ease;
 }
 
-.section-eyebrow::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--wp--preset--color--rule);
+.skip-link:focus {
+  transform: translate(-50%, 0);
 }
 
 
-/* --- Skill icons ---------------------------------------------------
-   Full colour at rest. Motion is the reward, not the information.
-   ------------------------------------------------------------------ */
-
-.skills-grid img {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.skills-grid img:hover {
-  transform: translateY(-8px) scale(1.1);
-}
-
-
-/* --- Project card --------------------------------------------------- */
-
-.project-card {
-  border-top: 1px solid var(--wp--preset--color--rule);
-  padding-top: var(--wp--preset--spacing--40);
-  transition: border-color 0.3s ease;
-}
-
-.project-card:hover {
-  border-color: var(--wp--preset--color--signal);
-}
-
-
-/* --- Accessibility floor -------------------------------------------
-   Non-negotiable. Anyone who has set "reduce motion" at the OS level
-   has usually done so for a reason.
-   ------------------------------------------------------------------ */
-
+/* Non-negotiable. Anyone who set "reduce motion" at the OS level has
+   usually done so for a reason — vestibular disorders, migraine, motion
+   sickness. Everything above degrades to an instant state change. */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 
   .js-reveal-ready .reveal,
@@ -138,10 +473,4 @@ Tags: portfolio, full-site-editing, block-theme, one-column
     opacity: 1;
     transform: none;
   }
-}
-
-/* Keyboard users must be able to see where they are. */
-:where(a, button, input, textarea, summary):focus-visible {
-  outline: 2px solid var(--wp--preset--color--signal);
-  outline-offset: 3px;
 }
