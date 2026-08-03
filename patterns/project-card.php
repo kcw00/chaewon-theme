@@ -45,5 +45,13 @@
 
 	<!-- wp:post-terms {"term":"project_tech","className":"work-card__tags","separator":""} /-->
 
+	<!-- wp:buttons {"className":"work-card__visit","layout":{"type":"flex"}} -->
+	<div class="wp-block-buttons work-card__visit">
+		<!-- wp:button {"metadata":{"bindings":{"url":{"source":"chaewon/project","args":{"key":"url"}},"text":{"source":"chaewon/project","args":{"key":"visit_label"}}}}} -->
+		<div class="wp-block-button"><a class="wp-block-button__link wp-element-button"></a></div>
+		<!-- /wp:button -->
+	</div>
+	<!-- /wp:buttons -->
+
 </div>
 <!-- /wp:group -->

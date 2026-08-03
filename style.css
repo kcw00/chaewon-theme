@@ -1127,6 +1127,59 @@ body:has(.site-header.is-scrolled) .hero__cue {
   color: var(--wp--preset--color--muted);
 }
 
+/* --- Visit link on a card -------------------------------------------
+   A second, deliberate destination inside a card that is otherwise one
+   hit target. The card's stretched overlay sits at z-index 1, so this
+   has to sit above it to be clickable at all — and it stays focusable,
+   because unlike the taxonomy links it is a real action the card is
+   offering rather than an accident of how post-terms renders.
+
+   Two tab stops per card is the correct outcome here: the card itself
+   (to the project page) and the visit link (to the project).
+   ------------------------------------------------------------------- */
+
+.work-card__visit {
+  position: relative;
+  z-index: 2;
+  margin-block: var(--wp--preset--spacing--20) 0;
+}
+
+.work-card__visit .wp-block-button__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border-radius: 2px;
+  background: none;
+  color: var(--wp--preset--color--signal);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--small);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.work-card__visit .wp-block-button__link::after {
+  content: "\2192";
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.work-card__visit .wp-block-button__link:hover {
+  background: none;
+  color: var(--wp--preset--color--signal);
+}
+
+.work-card__visit .wp-block-button__link:hover::after {
+  transform: translateX(0.3rem);
+}
+
+/* No URL set means the binding returns null and the anchor renders with
+   no href. Removing the wrapper is what stops a card advertising a link
+   that would only reload the page. */
+.work-card__visit:has(a:not([href])),
+.work-card__visit:has(a[href=""]) {
+  display: none;
+}
+
 /* Pushes the tag row to the bottom edge however tall the card ends up,
    so tags line up across cards in the same row. */
 .work-card__tags {
