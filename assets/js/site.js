@@ -218,12 +218,12 @@
 	}
 
 	/* ---------------------------------------------------------------
-	 * 5. Taxonomy links inside cards
+	 * 5. Taxonomy links
 	 *
-	 * core/post-terms always renders terms as links. A project card is
-	 * already a single hit target — its title link is stretched across
-	 * the whole surface — so those term links are competing tab stops
-	 * that lead somewhere the card does not advertise.
+	 * core/post-terms always renders terms as links, pointing at a
+	 * taxonomy archive this theme has no template for. On a card they
+	 * are also a competing tab stop inside a surface that is already a
+	 * single hit target.
 	 *
 	 * CSS handles the pointer; this handles the keyboard. tabindex only,
 	 * not aria-hidden: the project type and the stack are content worth
@@ -231,7 +231,9 @@
 	 * --------------------------------------------------------------- */
 
 	function initCardTerms() {
-		var links = document.querySelectorAll( '.work-card .wp-block-post-terms a' );
+		var links = document.querySelectorAll(
+			'.work-card .wp-block-post-terms a, .project .wp-block-post-terms a'
+		);
 
 		Array.prototype.forEach.call( links, function ( link ) {
 			link.setAttribute( 'tabindex', '-1' );
