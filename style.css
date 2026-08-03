@@ -427,9 +427,17 @@ p {
               transform 600ms var(--wp--custom--ease--out);
 }
 
+/* Settled position, written through a variable rather than as
+   `transform: none`.
+
+   This rule is (0,3,0). A component that owns its own transform — the
+   project cards lift on hover at (0,2,0) — would lose the property
+   outright and the lift would silently do nothing. Composing through
+   --reveal-settled-y means the child sets the variable instead of
+   fighting for `transform`, and both effects survive. */
 .js-reveal-ready .reveal-stagger.is-visible > * {
   opacity: 1;
-  transform: none;
+  transform: translateY(var(--reveal-settled-y, 0px));
 }
 
 .js-reveal-ready .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
@@ -1013,6 +1021,11 @@ body:has(.site-header.is-scrolled) .hero__cue {
 
 .work-card:hover,
 .work-card:has(.work-card__link:focus-visible) {
+  /* Both forms are needed. The grid is a .reveal-stagger, so once the
+     cards have animated in, the settled-position rule owns `transform`
+     and only the variable gets through. If JavaScript never runs, that
+     rule never matches and the plain transform is what applies. */
+  --reveal-settled-y: -8px;
   transform: translateY(-8px);
   box-shadow: 0 20px 36px -16px rgb(30 25 20 / 0.28);
   border-color: color-mix(in srgb, var(--wp--preset--color--rule) 92%, var(--wp--preset--color--ink));
@@ -1033,7 +1046,11 @@ body:has(.site-header.is-scrolled) .hero__cue {
    the card is live; the 8px jump is the part that causes trouble. */
 @media (prefers-reduced-motion: reduce) {
   .work-card:hover,
-  .work-card:has(.work-card__link:focus-visible),
+  .work-card:has(.work-card__link:focus-visible) {
+    --reveal-settled-y: 0px;
+    transform: none;
+  }
+
   .work-card:hover .work-card__arrow,
   .work-card:has(.work-card__link:focus-visible) .work-card__arrow {
     transform: none;
