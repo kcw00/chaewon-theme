@@ -685,3 +685,157 @@ html[data-theme="dark"] .scheme-toggle .icon-moon {
 .site-footer .wp-block-social-link:hover {
   transform: translateY(-3px);
 }
+
+
+/* ===================================================================
+   07  HERO
+   ===================================================================
+
+   The opening screen. Full viewport, content optically centred, with a
+   soft atmospheric wash behind it.
+
+   100svh rather than 100vh: on mobile, vh is measured against the
+   viewport with the browser chrome retracted, so a 100vh hero is always
+   taller than the screen actually is and the scroll cue sits below the
+   fold. svh is the small viewport height, which is what you can
+   actually see.
+   ------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding-block: var(--wp--preset--spacing--60) var(--wp--preset--spacing--50);
+}
+
+/* Two overlapping radial washes: cool signal from the upper right, warm
+   from the upper left. Cheap, resolution-independent, and it moves with
+   the palette instead of being baked into an image. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -25% -15% auto -15%;
+  height: 105%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 52% at 78% 14%, rgb(47 111 94 / 0.13), transparent 68%),
+    radial-gradient(52% 46% at 10% 4%, rgb(198 152 84 / 0.16), transparent 70%);
+}
+
+html[data-theme="dark"] .hero::before {
+  background:
+    radial-gradient(58% 52% at 78% 14%, rgb(127 183 158 / 0.11), transparent 68%),
+    radial-gradient(52% 46% at 10% 4%, rgb(198 152 84 / 0.09), transparent 70%);
+}
+
+/* The wash sits at z-index 0, so every real child has to sit above it. */
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__meta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-block: 0 var(--wp--preset--spacing--30);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--pill);
+  background: var(--c-veil);
+  letter-spacing: 0.06em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.hero__name {
+  margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+.hero__tagline {
+  font-family: var(--wp--preset--font-family--display);
+  font-style: italic;
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.35;
+  color: var(--wp--preset--color--muted);
+  max-width: 34ch;
+  margin-block: 0;
+}
+
+/* Short rule between the tagline and the body copy. Reads as a breath. */
+.hero__divider {
+  width: 3rem;
+  height: 1px;
+  border: 0;
+  margin-block: var(--wp--preset--spacing--30);
+  background: var(--wp--preset--color--rule);
+}
+
+.hero__body {
+  max-width: 52ch;
+  margin-block: 0 var(--wp--preset--spacing--40);
+  color: var(--wp--preset--color--ink);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp--preset--spacing--30);
+}
+
+/* --- Scroll cue ----------------------------------------------------
+   A hairline that drains downward on a loop. Deliberately quiet: it is
+   a hint, not an instruction. Hidden once the page has scrolled at all,
+   because by then it has done its job.
+   ------------------------------------------------------------------- */
+
+.hero__cue {
+  position: absolute;
+  left: 50%;
+  bottom: var(--wp--preset--spacing--30);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  transition: opacity var(--wp--custom--duration--base) ease;
+}
+
+.hero__cue::after {
+  content: "";
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(
+    to bottom,
+    var(--wp--preset--color--rule) 0%,
+    var(--wp--preset--color--signal) 50%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: hero-cue 2.4s var(--wp--custom--ease--inout) infinite;
+}
+
+@keyframes hero-cue {
+  from { background-position: 0 -100%; }
+  to   { background-position: 0 100%; }
+}
+
+.site-header.is-scrolled ~ * .hero__cue,
+body:has(.site-header.is-scrolled) .hero__cue {
+  opacity: 0;
+}
+
+@media (max-height: 700px) {
+  .hero__cue {
+    display: none;
+  }
+}
