@@ -148,7 +148,7 @@
         "snug":  "-0.03em"
       },
       "rail":   { "width": "5.5rem" },
-      "header": { "height": "4.5rem" }
+      "header": { "height": "5rem" }
     },
 
     "useRootPaddingAwareAlignments": true
