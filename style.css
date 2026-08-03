@@ -1371,6 +1371,14 @@ body:has(.site-header.is-scrolled) .hero__cue {
 
 @media (max-width: 900px) {
   .memory-board { columns: 2; }
+
+  /* The offset exists to break up three columns that would otherwise
+     start on the same line. Below three it has nothing to break up — in
+     a single stack it is just one tile sitting in a hole. */
+  .memory-board > .memory-plate--offset {
+    transform: none;
+    margin-bottom: var(--wp--preset--spacing--30);
+  }
 }
 
 @media (max-width: 600px) {
