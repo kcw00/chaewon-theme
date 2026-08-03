@@ -835,7 +835,9 @@ body:has(.site-header.is-scrolled) .hero__cue {
   font-family: var(--wp--preset--font-family--display);
   font-size: var(--wp--preset--font-size--large);
   line-height: 1.55;
-  max-width: 40ch;
+  /* 40ch was leaving two thirds of a 1180px column empty and pushing the
+     paragraphs into a narrow strip. 58ch reads as a column by choice. */
+  max-width: 58ch;
   margin-block: 0 var(--wp--preset--spacing--30);
 }
 
@@ -1046,6 +1048,14 @@ body:has(.site-header.is-scrolled) .hero__cue {
   gap: 0.4rem;
   margin: auto 0 0;
   padding-top: var(--wp--preset--spacing--20);
+}
+
+/* WordPress's flow layout adds margin-block-start to every sibling after
+   the first. Inside a flex row that lands each chip a little lower than
+   the one before it, so the row visibly staircases. Zero it and let the
+   flex gap do the spacing. */
+.work-card__tags > * {
+  margin: 0;
 }
 
 .work-card__tags .label--chip {
