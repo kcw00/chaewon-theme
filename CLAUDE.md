@@ -64,9 +64,14 @@ Six palette slugs, defined once in `theme.json`:
 All pairs clear WCAG AA against their background. Re-check with the script in
 `changelog.d/` before changing a value.
 
-Three families: `display` (Instrument Serif) for headings, `body` (Inter) for
-prose, `mono` (JetBrains Mono) for metadata and labels. Mono is doing real work
-here — it is the visual signal for "this is data, not prose."
+Four families: `display` (Instrument Serif) for headings, `body` (Inter) for
+prose, `mono` (JetBrains Mono) for metadata and labels, `tech` (Share Tech) for
+the hero tagline. Mono is doing real work here — it is the visual signal for
+"this is data, not prose."
+
+`tech` is used in exactly one place on purpose. It ships one weight and no
+italic, so nothing that uses it may ask for bold or italic; the browser
+synthesises them and the glyphs skew.
 
 ## Dark mode
 

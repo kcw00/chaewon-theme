@@ -77,6 +77,20 @@
               "src": [ "file:./assets/fonts/JetBrainsMono-Variable.woff2" ]
             }
           ]
+        },
+        {
+          "slug": "tech",
+          "name": "Tech",
+          "fontFamily": "\"Share Tech\", ui-monospace, SFMono-Regular, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Share Tech",
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": [ "file:./assets/fonts/ShareTech-Regular.woff2" ]
+            }
+          ]
         }
       ],
       "fontSizes": [
