@@ -44,12 +44,16 @@
 		<!-- wp:post-template -->
 			<!-- wp:post-date {"format":"Y","isLink":false} /-->
 
-			<!-- wp:group {"layout":{"type":"default"}} -->
-			<div class="wp-block-group">
+			<!-- wp:group {"className":"notes-row__body","layout":{"type":"default"}} -->
+			<div class="wp-block-group notes-row__body">
 				<!-- wp:post-title {"level":3,"isLink":true} /-->
 				<!-- wp:post-excerpt {"excerptLength":26} /-->
 			</div>
 			<!-- /wp:group -->
+
+			<!-- wp:html -->
+			<span class="notes-row__arrow" aria-hidden="true">&rarr;</span>
+			<!-- /wp:html -->
 		<!-- /wp:post-template -->
 
 		<!-- wp:query-no-results -->

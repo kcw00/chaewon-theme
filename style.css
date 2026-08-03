@@ -1171,17 +1171,22 @@ body:has(.site-header.is-scrolled) .hero__cue {
    ------------------------------------------------------------------- */
 
 .notes-list .wp-block-post {
+  position: relative;
   display: grid;
-  grid-template-columns: 9rem 1fr;
+  /* Year · content · arrow. The third track is `auto`, so it takes only
+     what the glyph needs and the content column keeps the rest. */
+  grid-template-columns: 9rem 1fr auto;
+  align-items: start;
   gap: var(--wp--preset--spacing--30);
   padding-block: var(--wp--preset--spacing--30);
-  border-top: 1px solid var(--wp--preset--color--rule);
+  border-bottom: 1px solid var(--wp--preset--color--rule);
+  transition: border-color 0.34s ease, opacity 0.28s ease;
 }
 
-/* The last entry gets a closing rule so the list reads as finished
-   rather than cut off. */
-.notes-list .wp-block-post:last-child {
-  border-bottom: 1px solid var(--wp--preset--color--rule);
+/* An opening rule above the first row, so the list is closed at both
+   ends. Every other hairline is the row above's border-bottom. */
+.notes-list .wp-block-post:first-child {
+  border-top: 1px solid var(--wp--preset--color--rule);
 }
 
 .notes-list .wp-block-post-date {
@@ -1192,15 +1197,17 @@ body:has(.site-header.is-scrolled) .hero__cue {
   text-transform: uppercase;
   color: var(--wp--preset--color--muted);
   padding-top: 0.35rem;
+  opacity: 0.42;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.notes-row__body {
+  transition: transform 0.36s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
 .notes-list .wp-block-post-title {
   margin: 0 0 0.4rem;
   font-size: var(--wp--preset--font-size--x-large);
-}
-
-.notes-list .wp-block-post-title a {
-  transition: color var(--wp--custom--duration--fast) ease;
 }
 
 .notes-list .wp-block-post-excerpt {
@@ -1212,18 +1219,131 @@ body:has(.site-header.is-scrolled) .hero__cue {
   display: none;
 }
 
+
+/* --- Row as a single hit target --------------------------------------
+   Same approach as the project cards: the link is the post title, and
+   its ::after is stretched over the row. One link per row in the
+   accessibility tree, named by the post, and no nested interactive
+   content.
+   ------------------------------------------------------------------- */
+
+.notes-list .wp-block-post-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.notes-list .wp-block-post-title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* The ring goes on the row, not on the inline link. */
+.notes-list .wp-block-post-title a:focus-visible {
+  outline: none;
+}
+
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+
+/* --- Arrow affordance ------------------------------------------------ */
+
+.notes-row__arrow {
+  align-self: center;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--medium);
+  line-height: 1;
+  color: var(--wp--preset--color--signal);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+
+/* --- Hover and focus -------------------------------------------------
+   Sibling dimming: hovering anywhere in the list fades every row, then
+   the hovered one comes back. The two rules are ordered so the second
+   wins on the row under the cursor — the effect is attention moving to
+   one entry, not the list lighting up.
+   ------------------------------------------------------------------- */
+
+.notes-list:hover .wp-block-post {
+  opacity: 0.45;
+}
+
+.notes-list .wp-block-post:hover,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) {
+  opacity: 1;
+  border-bottom-color: rgb(34 32 28 / 0.42);
+}
+
+/* The literal above is tuned for the cream page. On the dark scheme it
+   is all but invisible against a near-black background, so the same idea
+   is expressed from the other direction. */
+html[data-theme="dark"] .notes-list .wp-block-post:hover,
+html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) {
+  border-bottom-color: rgb(242 235 224 / 0.42);
+}
+
+.notes-list .wp-block-post:hover .notes-row__body,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .notes-row__body {
+  transform: translateX(10px);
+}
+
+.notes-list .wp-block-post:hover .wp-block-post-date,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .wp-block-post-date {
+  opacity: 1;
+  color: var(--wp--preset--color--signal);
+}
+
+.notes-list .wp-block-post:hover .notes-row__arrow,
+.notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .notes-row__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Keep the colour and the arrow, drop the travel and the dimming. The
+   slide is decoration; fading the rest of the list is a hard thing to
+   track if motion is a problem. */
+@media (prefers-reduced-motion: reduce) {
+  .notes-list:hover .wp-block-post {
+    opacity: 1;
+  }
+
+  .notes-list .wp-block-post:hover .notes-row__body,
+  .notes-list .wp-block-post:has(.wp-block-post-title a:focus-visible) .notes-row__body {
+    transform: none;
+  }
+
+  .notes-row__arrow {
+    transform: none;
+  }
+}
+
 .notes-more {
   margin-top: var(--wp--preset--spacing--40);
 }
 
 @media (max-width: 700px) {
   .notes-list .wp-block-post {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
+    /* Year and content stack; the arrow keeps its own column beside
+       them rather than becoming a third row on its own line. */
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem var(--wp--preset--spacing--30);
   }
 
   .notes-list .wp-block-post-date {
     padding-top: 0;
+  }
+
+  .notes-row__arrow {
+    grid-column: 2;
+    grid-row: 1 / -1;
   }
 }
 
