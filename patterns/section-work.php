@@ -42,12 +42,20 @@
 
 		<!-- wp:group {"className":"work-card work-card--feature","layout":{"type":"default"}} -->
 		<div class="wp-block-group work-card work-card--feature">
-			<!-- wp:paragraph {"className":"work-card__meta label label--dot"} -->
-			<p class="work-card__meta label label--dot">Booking platform &middot; 2024&ndash;</p>
-			<!-- /wp:paragraph -->
+			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
+			<div class="wp-block-group work-card__meta-row">
+				<!-- wp:paragraph {"className":"work-card__meta label label--dot"} -->
+				<p class="work-card__meta label label--dot">Booking platform &middot; 2024&ndash;</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:html -->
+				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<!-- /wp:html -->
+			</div>
+			<!-- /wp:group -->
 
 			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title">Booking Platform</h3>
+			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">Booking Platform</a></h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"className":"work-card__tagline"} -->
@@ -76,12 +84,20 @@
 
 		<!-- wp:group {"className":"work-card work-card--tall","layout":{"type":"default"}} -->
 		<div class="wp-block-group work-card work-card--tall">
-			<!-- wp:paragraph {"className":"work-card__meta label"} -->
-			<p class="work-card__meta label">Full stack &middot; 2023&ndash;</p>
-			<!-- /wp:paragraph -->
+			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
+			<div class="wp-block-group work-card__meta-row">
+				<!-- wp:paragraph {"className":"work-card__meta label"} -->
+				<p class="work-card__meta label">Full stack &middot; 2023&ndash;</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:html -->
+				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<!-- /wp:html -->
+			</div>
+			<!-- /wp:group -->
 
 			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title">NoteApp</h3>
+			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">NoteApp</a></h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"className":"work-card__tagline"} -->
@@ -107,12 +123,20 @@
 
 		<!-- wp:group {"className":"work-card work-card--narrow","layout":{"type":"default"}} -->
 		<div class="wp-block-group work-card work-card--narrow">
-			<!-- wp:paragraph {"className":"work-card__meta label"} -->
-			<p class="work-card__meta label">Orchestration &middot; 2025</p>
-			<!-- /wp:paragraph -->
+			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
+			<div class="wp-block-group work-card__meta-row">
+				<!-- wp:paragraph {"className":"work-card__meta label"} -->
+				<p class="work-card__meta label">Orchestration &middot; 2025</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:html -->
+				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<!-- /wp:html -->
+			</div>
+			<!-- /wp:group -->
 
 			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title">NoteApp Minion</h3>
+			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">NoteApp Minion</a></h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"className":"work-card__body"} -->
@@ -131,12 +155,20 @@
 
 		<!-- wp:group {"className":"work-card work-card--wide","layout":{"type":"default"}} -->
 		<div class="wp-block-group work-card work-card--wide">
-			<!-- wp:paragraph {"className":"work-card__meta label"} -->
-			<p class="work-card__meta label">Infrastructure &middot; ongoing</p>
-			<!-- /wp:paragraph -->
+			<!-- wp:group {"className":"work-card__meta-row","layout":{"type":"default"}} -->
+			<div class="wp-block-group work-card__meta-row">
+				<!-- wp:paragraph {"className":"work-card__meta label"} -->
+				<p class="work-card__meta label">Infrastructure &middot; ongoing</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:html -->
+				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<!-- /wp:html -->
+			</div>
+			<!-- /wp:group -->
 
 			<!-- wp:heading {"level":3,"className":"work-card__title"} -->
-			<h3 class="wp-block-heading work-card__title">Home Cluster</h3>
+			<h3 class="wp-block-heading work-card__title"><a class="work-card__link" href="https://github.com/kcw00">Home Cluster</a></h3>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"className":"work-card__body"} -->

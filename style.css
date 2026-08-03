@@ -196,6 +196,7 @@ p {
 .site-header__pill > *,
 .site-header__end > *,
 .hero__actions > *,
+.work-card__meta-row > *,
 .work-card__tags > *,
 .contact__actions > * {
   margin-block: 0;
@@ -879,7 +880,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
    arms race. This is the same WordPress layout CSS behind the flex-row
    and hero-alignment fixes; see section 02. */
 .about__prose {
-  padding-top: var(--wp--preset--spacing--80);
+  padding-top: var(--wp--preset--spacing--60);
 }
 
 /* Set in the display serif, one step lighter than the heading and one
@@ -932,6 +933,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
 }
 
 .work-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -940,15 +942,102 @@ body:has(.site-header.is-scrolled) .hero__cue {
   border: 1px solid var(--wp--preset--color--rule);
   border-radius: var(--wp--custom--radius--lg);
   background: var(--wp--preset--color--surface);
-  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out),
-              border-color var(--wp--custom--duration--base) ease,
-              box-shadow var(--wp--custom--duration--base) ease;
+  /* A resting shadow the hover state has somewhere to grow from. Going
+     from `none` to a deep shadow pops rather than blooms. */
+  box-shadow: 0 1px 2px rgb(30 25 20 / 0.05);
+  transition: transform 0.34s cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 0.34s ease,
+              border-color 0.34s ease;
 }
 
-.work-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--wp--preset--color--signal);
-  box-shadow: var(--wp--preset--shadow--lift);
+
+/* --- Card as a single hit target ------------------------------------
+   The link lives on the title, so the accessibility tree gets exactly
+   one link per card, named by the project. Its ::after is then stretched
+   over the whole card, which makes every pixel clickable without adding
+   a second focusable element or nesting interactive content.
+
+   The tag pills stay plain paragraphs — they sit under the overlay and
+   are not interactive, which is intended.
+   ------------------------------------------------------------------- */
+
+.work-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* The ring belongs on the card, not on the inline link, so suppress the
+   global focus outline here and re-add it at card level below. */
+.work-card__link:focus-visible {
+  outline: none;
+}
+
+
+/* --- Arrow affordance ------------------------------------------------
+   Sits opposite the eyebrow label. Decorative: the card already
+   announces itself through the title link, so this is aria-hidden in
+   the markup and carries no meaning of its own.
+   ------------------------------------------------------------------- */
+
+.work-card__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.work-card__arrow {
+  flex: none;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  line-height: 1;
+  color: color-mix(in srgb, var(--wp--preset--color--ink) 50%, transparent);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
+              color 0.3s ease;
+}
+
+
+/* --- Lift and shadow bloom -------------------------------------------
+   Hover and keyboard focus get the identical treatment. Only transform,
+   box-shadow, and colour animate — nothing here changes size, padding,
+   or position in flow, so neighbouring cards never shift.
+   ------------------------------------------------------------------- */
+
+.work-card:hover,
+.work-card:has(.work-card__link:focus-visible) {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 36px -16px rgb(30 25 20 / 0.28);
+  border-color: color-mix(in srgb, var(--wp--preset--color--rule) 92%, var(--wp--preset--color--ink));
+}
+
+.work-card:hover .work-card__arrow,
+.work-card:has(.work-card__link:focus-visible) .work-card__arrow {
+  transform: translate(5px, -5px);
+  color: var(--wp--preset--color--ink);
+}
+
+.work-card:has(.work-card__link:focus-visible) {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 3px;
+}
+
+/* Keep the bloom, drop the travel. The depth change still signals that
+   the card is live; the 8px jump is the part that causes trouble. */
+@media (prefers-reduced-motion: reduce) {
+  .work-card:hover,
+  .work-card:has(.work-card__link:focus-visible),
+  .work-card:hover .work-card__arrow,
+  .work-card:has(.work-card__link:focus-visible) .work-card__arrow {
+    transform: none;
+  }
 }
 
 .work-card--feature { grid-column: span 4; grid-row: span 2; }

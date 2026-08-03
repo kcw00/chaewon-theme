@@ -114,8 +114,7 @@
         { "slug": "40", "name": "4 — Loose",   "size": "1rem" },
         { "slug": "50", "name": "5 — Section", "size": "1.5rem" },
         { "slug": "60", "name": "6 — Chapter", "size": "2.25rem" },
-        { "slug": "70", "name": "7 — Rest",    "size": "3.5rem" },
-        { "slug": "80", "name": "8 — Breath",  "size": "5rem" }
+        { "slug": "70", "name": "7 — Rest",    "size": "3.5rem" }
       ]
     },
 
