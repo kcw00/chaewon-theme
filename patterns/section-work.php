@@ -49,7 +49,7 @@
 				<!-- /wp:paragraph -->
 
 				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
 				<!-- /wp:html -->
 			</div>
 			<!-- /wp:group -->
@@ -91,7 +91,7 @@
 				<!-- /wp:paragraph -->
 
 				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
 				<!-- /wp:html -->
 			</div>
 			<!-- /wp:group -->
@@ -130,7 +130,7 @@
 				<!-- /wp:paragraph -->
 
 				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
 				<!-- /wp:html -->
 			</div>
 			<!-- /wp:group -->
@@ -162,7 +162,7 @@
 				<!-- /wp:paragraph -->
 
 				<!-- wp:html -->
-				<span class="work-card__arrow" aria-hidden="true">&#8599;</span>
+				<span class="work-card__arrow" aria-hidden="true">&#8599;&#65038;</span>
 				<!-- /wp:html -->
 			</div>
 			<!-- /wp:group -->

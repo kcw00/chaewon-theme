@@ -1002,11 +1002,17 @@ body:has(.site-header.is-scrolled) .hero__cue {
   gap: 1rem;
 }
 
+/* U+2197 defaults to emoji presentation on macOS and iOS, which renders
+   it as a blue tile that ignores `color` entirely. The markup appends
+   U+FE0E to request the text form; this is the CSS half of the same
+   request, for browsers that support it. Both are needed — the property
+   is recent, the variation selector is universal. */
 .work-card__arrow {
   flex: none;
   font-family: var(--wp--preset--font-family--mono);
   font-size: var(--wp--preset--font-size--small);
   line-height: 1;
+  font-variant-emoji: text;
   color: color-mix(in srgb, var(--wp--preset--color--ink) 50%, transparent);
   transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
               color 0.3s ease;
