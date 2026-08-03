@@ -3,11 +3,12 @@
  * Title: Chapter 04 — Memories
  * Slug: chaewon/section-memories
  * Categories: chaewon
- * Description: Masonry board mixing photographs with short written notes.
+ * Description: Masonry board mixing photo placeholders with short written notes.
  *
- * The image blocks ship empty on purpose. Click one in the editor and
- * upload; until then style.css holds each one open as a dashed plate so
- * the board reads as unfinished rather than broken.
+ * The photo slots are plates, not empty Image blocks. An Image block
+ * with nothing attached renders to nothing on the front end, so a board
+ * built from empty ones silently collapses. Select a plate in the editor
+ * and replace it with an Image block when there is a photo for it.
  *
  * @package Chaewon
  */
@@ -44,9 +45,13 @@
 	<!-- wp:group {"className":"memory-board reveal","layout":{"type":"default"}} -->
 	<div class="wp-block-group memory-board reveal">
 
-		<!-- wp:image {"sizeSlug":"large"} -->
-		<figure class="wp-block-image size-large"></figure>
-		<!-- /wp:image -->
+		<!-- wp:group {"className":"memory-plate","layout":{"type":"default"}} -->
+		<div class="wp-block-group memory-plate">
+			<!-- wp:paragraph {"className":"label"} -->
+			<p class="label">Seoul</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
 
 		<!-- wp:group {"className":"memory-note","layout":{"type":"default"}} -->
 		<div class="wp-block-group memory-note">
@@ -60,13 +65,21 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:image {"sizeSlug":"large"} -->
-		<figure class="wp-block-image size-large"></figure>
-		<!-- /wp:image -->
+		<!-- wp:group {"className":"memory-plate memory-plate--square","layout":{"type":"default"}} -->
+		<div class="wp-block-group memory-plate memory-plate--square">
+			<!-- wp:paragraph {"className":"label"} -->
+			<p class="label">Vancouver</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
 
-		<!-- wp:image {"sizeSlug":"large"} -->
-		<figure class="wp-block-image size-large"></figure>
-		<!-- /wp:image -->
+		<!-- wp:group {"className":"memory-plate memory-plate--wide","layout":{"type":"default"}} -->
+		<div class="wp-block-group memory-plate memory-plate--wide">
+			<!-- wp:paragraph {"className":"label"} -->
+			<p class="label">Desk</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
 
 		<!-- wp:group {"className":"memory-note","layout":{"type":"default"}} -->
 		<div class="wp-block-group memory-note">
@@ -80,9 +93,13 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:image {"sizeSlug":"large"} -->
-		<figure class="wp-block-image size-large"></figure>
-		<!-- /wp:image -->
+		<!-- wp:group {"className":"memory-plate","layout":{"type":"default"}} -->
+		<div class="wp-block-group memory-plate">
+			<!-- wp:paragraph {"className":"label"} -->
+			<p class="label">Somewhere between</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
 
 	</div>
 	<!-- /wp:group -->

@@ -1196,13 +1196,39 @@ body:has(.site-header.is-scrolled) .hero__cue {
   transform: scale(1.04);
 }
 
-/* An image block with nothing in it yet. Rather than collapsing to
-   nothing on the front end, it holds its place as a labelled plate, so
-   the board looks deliberate before any photos are uploaded. */
-.memory-board .wp-block-image:not(:has(img)) {
+/* --- Plate ---------------------------------------------------------
+   A photo that does not exist yet.
+
+   An empty core/image block renders to nothing on the front end — it
+   has no markup to save until an image is attached — so the board would
+   silently collapse from six tiles to two. A plate is a real group that
+   holds its space and reads as deliberate.
+
+   To use a real photo: select the plate in the editor and replace it
+   with an Image block. The aspect ratio comes from the modifier class,
+   so the board keeps its rhythm either way.
+   ------------------------------------------------------------------- */
+
+.memory-plate {
+  display: grid;
+  place-items: center;
   aspect-ratio: 4 / 5;
   border: 1px dashed var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--md);
   background: var(--wp--preset--color--surface);
+  transition: border-color var(--wp--custom--duration--base) ease;
+}
+
+.memory-plate:hover {
+  border-color: var(--wp--preset--color--signal);
+}
+
+.memory-plate--square { aspect-ratio: 1 / 1; }
+.memory-plate--wide   { aspect-ratio: 4 / 3; }
+
+.memory-plate p {
+  margin: 0;
+  font-size: 0.6875rem;
 }
 
 /* A written tile. Same visual weight as a photo, different content. */
