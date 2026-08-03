@@ -259,16 +259,6 @@ p {
   position: relative;
 }
 
-/* 9rem of air above and below reads as generous on a 1440px screen and
-   as dead space on a phone, where it costs most of a viewport per
-   section. The proportion that feels right is relative to the width, not
-   fixed. */
-@media (max-width: 700px) {
-  .chapter {
-    padding-block: var(--wp--preset--spacing--50);
-  }
-}
-
 .chapter-rule {
   display: flex;
   align-items: center;
@@ -889,7 +879,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
    arms race. This is the same WordPress layout CSS behind the flex-row
    and hero-alignment fixes; see section 02. */
 .about__prose {
-  padding-top: var(--wp--preset--spacing--40);
+  padding-top: var(--wp--preset--spacing--80);
 }
 
 /* Set in the display serif, one step lighter than the heading and one

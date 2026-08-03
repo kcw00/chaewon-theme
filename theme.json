@@ -108,13 +108,14 @@
       "units": [ "px", "rem", "em", "vh", "vw", "%" ],
       "defaultSpacingSizes": false,
       "spacingSizes": [
-        { "slug": "10", "name": "1 — Hair",    "size": "0.5rem" },
-        { "slug": "20", "name": "2 — Tight",   "size": "0.75rem" },
-        { "slug": "30", "name": "3 — Base",    "size": "1.5rem" },
-        { "slug": "40", "name": "4 — Loose",   "size": "3rem" },
-        { "slug": "50", "name": "5 — Section", "size": "6rem" },
-        { "slug": "60", "name": "6 — Chapter", "size": "9rem" },
-        { "slug": "70", "name": "7 — Rest",    "size": "12rem" }
+        { "slug": "10", "name": "1 — Hair",    "size": "0.375rem" },
+        { "slug": "20", "name": "2 — Tight",   "size": "0.5rem" },
+        { "slug": "30", "name": "3 — Base",    "size": "0.75rem" },
+        { "slug": "40", "name": "4 — Loose",   "size": "1rem" },
+        { "slug": "50", "name": "5 — Section", "size": "1.5rem" },
+        { "slug": "60", "name": "6 — Chapter", "size": "2.25rem" },
+        { "slug": "70", "name": "7 — Rest",    "size": "3.5rem" },
+        { "slug": "80", "name": "8 — Breath",  "size": "5rem" }
       ]
     },
 
