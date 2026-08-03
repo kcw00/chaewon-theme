@@ -1008,12 +1008,19 @@ body:has(.site-header.is-scrolled) .hero__cue {
    request, for browsers that support it. Both are needed — the property
    is recent, the variation selector is universal. */
 .work-card__arrow {
+  --arrow-travel: 5px;
+
   flex: none;
   font-family: var(--wp--preset--font-family--mono);
   font-size: var(--wp--preset--font-size--small);
   line-height: 1;
   font-variant-emoji: text;
   color: color-mix(in srgb, var(--wp--preset--color--ink) 50%, transparent);
+  /* Inset by exactly the distance it travels, so the hovered position
+     lands on the card's padding edge instead of crowding the border.
+     At rest it sits a little further in, which also reads better — a
+     diagonal glyph needs slightly more optical margin than a flat one. */
+  margin-right: var(--arrow-travel);
   transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1),
               color 0.3s ease;
 }
@@ -1039,7 +1046,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
 
 .work-card:hover .work-card__arrow,
 .work-card:has(.work-card__link:focus-visible) .work-card__arrow {
-  transform: translate(5px, -5px);
+  transform: translate(var(--arrow-travel), -5px);
   color: var(--wp--preset--color--ink);
 }
 
