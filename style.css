@@ -1340,11 +1340,19 @@ body:has(.site-header.is-scrolled) .hero__cue {
    below it in the same column down with it. Purely for rhythm — a board
    where every column starts on the same line reads as a table.
 
-   Needs to out-specify `.memory-board > *`, which zeroes the top margin
-   on every tile, so it is written as a child selector rather than a bare
-   class. */
+   This is a translate plus a matching bottom margin, not a top margin.
+   Multicol truncates margins that land on a column boundary, and a tile
+   that begins a column is exactly that case — `margin-top` computes
+   correctly and then does nothing at all. The transform does the visual
+   move; the extra bottom margin makes the flow account for it, so the
+   next tile in the column comes down too and the gap below stays right.
+   ------------------------------------------------------------------- */
+
 .memory-board > .memory-plate--offset {
-  margin-top: var(--wp--preset--spacing--70);
+  --plate-offset: var(--wp--preset--spacing--70);
+
+  transform: translateY(var(--plate-offset));
+  margin-bottom: calc(var(--wp--preset--spacing--30) + var(--plate-offset));
 }
 
 .memory-plate p {
