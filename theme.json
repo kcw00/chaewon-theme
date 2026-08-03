@@ -106,6 +106,7 @@
 
     "spacing": {
       "units": [ "px", "rem", "em", "vh", "vw", "%" ],
+      "defaultSpacingSizes": false,
       "spacingSizes": [
         { "slug": "10", "name": "1 — Hair",    "size": "0.5rem" },
         { "slug": "20", "name": "2 — Tight",   "size": "0.75rem" },
