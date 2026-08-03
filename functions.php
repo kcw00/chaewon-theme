@@ -262,6 +262,20 @@ function chaewon_register_project_type(): void {
 
 	register_post_meta(
 		'project',
+		'project_url',
+		array(
+			'type'          => 'string',
+			'single'        => true,
+			'default'       => '',
+			'show_in_rest'  => true,
+			'auth_callback' => static function () {
+				return current_user_can( 'edit_posts' );
+			},
+		)
+	);
+
+	register_post_meta(
+		'project',
 		'tagline',
 		array(
 			'type'          => 'string',
@@ -301,3 +315,49 @@ add_action( 'init', 'chaewon_maybe_flush_rewrites', 20 );
  * the rules can be stale.
  */
 add_action( 'after_switch_theme', 'flush_rewrite_rules' );
+
+/**
+ * A binding source for values that have to be computed per project.
+ *
+ * core/post-meta can only hand a block a stored field verbatim. The visit
+ * link needs two things that are not stored: a label that includes the
+ * project's own title ("Visit Home Cluster"), and a URL that has to come
+ * back as null rather than an empty string when the field is blank, so
+ * the markup can be hidden instead of rendering a link to nowhere.
+ *
+ * Registered on init because the block bindings registry is not available
+ * before it.
+ */
+function chaewon_register_block_bindings(): void {
+	if ( ! function_exists( 'register_block_bindings_source' ) ) {
+		return; // WordPress < 6.5.
+	}
+
+	register_block_bindings_source(
+		'chaewon/project',
+		array(
+			'label'              => __( 'Project', 'chaewon-theme' ),
+			'uses_context'       => array( 'postId' ),
+			'get_value_callback' => static function ( array $source_args, $block_instance ) {
+				$post_id = $block_instance->context['postId'] ?? get_the_ID();
+
+				if ( ! $post_id ) {
+					return null;
+				}
+
+				switch ( $source_args['key'] ?? '' ) {
+					case 'url':
+						$url = (string) get_post_meta( $post_id, 'project_url', true );
+						return '' === $url ? null : $url;
+
+					case 'visit_label':
+						/* translators: %s: project title. */
+						return sprintf( __( 'Visit %s', 'chaewon-theme' ), get_the_title( $post_id ) );
+				}
+
+				return null;
+			},
+		)
+	);
+}
+add_action( 'init', 'chaewon_register_block_bindings' );

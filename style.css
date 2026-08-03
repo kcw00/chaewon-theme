@@ -1721,19 +1721,110 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   transform: translateX(-0.35rem);
 }
 
+/* Title block left, visit link right, both sitting on the tagline's
+   baseline so the link reads as part of the heading rather than as a
+   floating button. */
+.project__intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--40);
+  margin-bottom: var(--wp--preset--spacing--70);
+}
+
+.project__intro > * {
+  margin-block: 0;
+}
+
+.project__intro-text {
+  flex: 1 1 24rem;
+}
+
 .project__title {
   margin-block: 0 var(--wp--preset--spacing--20);
   font-size: var(--wp--preset--font-size--display);
 }
 
 .project__tagline {
-  margin-block: 0 var(--wp--preset--spacing--70);
+  margin-block: 0;
   font-family: var(--wp--preset--font-family--lead);
   font-style: italic;
   font-size: var(--wp--preset--font-size--x-large);
   line-height: 1.35;
   color: var(--wp--preset--color--muted);
   max-width: 34ch;
+}
+
+
+/* --- Visit link ------------------------------------------------------
+   A core/button, because that is the only block whose href can be bound
+   to a field. The button chrome is stripped back to a text link with an
+   arrow, matching every other outbound link on the site.
+
+   The binding returns null rather than an empty string when no URL is
+   set, so the anchor renders with no href and the rule below removes the
+   whole thing. Without that, a project with no link shows a live-looking
+   "Visit X" that goes to the current page.
+   ------------------------------------------------------------------- */
+
+.project__visit {
+  flex: 0 0 auto;
+  margin-block: 0;
+}
+
+.project__visit .wp-block-button__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--wp--preset--color--signal);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--medium);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.project__visit .wp-block-button__link::after {
+  content: "\2192";
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.project__visit .wp-block-button__link:hover {
+  background: none;
+  color: var(--wp--preset--color--signal);
+}
+
+.project__visit .wp-block-button__link:hover::after {
+  transform: translateX(0.35rem);
+}
+
+.project__visit:has(a:not([href])),
+.project__visit:has(a[href=""]) {
+  display: none;
+}
+
+
+/* --- Built with ----------------------------------------------------
+   The 03 rule lives in the template rather than the post body, because
+   the chips it introduces come from the taxonomy rather than from
+   anything anyone typed. 01 and 02 are authored per project; 03 is
+   always here and always the stack.
+   ------------------------------------------------------------------- */
+
+.project__built {
+  margin-top: var(--wp--preset--spacing--60);
+}
+
+.project__built .chapter-rule {
+  margin-bottom: var(--wp--preset--spacing--40);
+}
+
+.project__tech {
+  margin-block: 0;
+  padding-top: 0;
 }
 
 /* The body is authored in the editor, so it has to look right without
