@@ -59,8 +59,8 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:group {"className":"memory-plate memory-plate--square","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate memory-plate--square">
+		<!-- wp:group {"className":"memory-plate memory-plate--square memory-plate--offset-sm","layout":{"type":"default"}} -->
+		<div class="wp-block-group memory-plate memory-plate--square memory-plate--offset-sm">
 			<!-- wp:paragraph {"className":"label"} -->
 			<p class="label">Vancouver</p>
 			<!-- /wp:paragraph -->

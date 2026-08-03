@@ -1348,12 +1348,17 @@ body:has(.site-header.is-scrolled) .hero__cue {
    next tile in the column comes down too and the gap below stays right.
    ------------------------------------------------------------------- */
 
-.memory-board > .memory-plate--offset {
-  --plate-offset: var(--wp--preset--spacing--70);
-
+.memory-board > .memory-plate--offset,
+.memory-board > .memory-plate--offset-sm {
   transform: translateY(var(--plate-offset));
   margin-bottom: calc(var(--wp--preset--spacing--30) + var(--plate-offset));
 }
+
+/* Two depths, one source value, so the columns step down evenly:
+   0 · 28 · 56. Deriving the half from the full means they cannot drift
+   apart when either is retuned. */
+.memory-board > .memory-plate--offset    { --plate-offset: var(--wp--preset--spacing--70); }
+.memory-board > .memory-plate--offset-sm { --plate-offset: calc(var(--wp--preset--spacing--70) / 2); }
 
 .memory-plate p {
   margin: 0;
@@ -1372,10 +1377,11 @@ body:has(.site-header.is-scrolled) .hero__cue {
 @media (max-width: 900px) {
   .memory-board { columns: 2; }
 
-  /* The offset exists to break up three columns that would otherwise
-     start on the same line. Below three it has nothing to break up — in
-     a single stack it is just one tile sitting in a hole. */
-  .memory-board > .memory-plate--offset {
+  /* The offsets exist to break up three columns that would otherwise
+     start on the same line. Below three they have nothing to break up —
+     in a single stack they are just tiles sitting in holes. */
+  .memory-board > .memory-plate--offset,
+  .memory-board > .memory-plate--offset-sm {
     transform: none;
     margin-bottom: var(--wp--preset--spacing--30);
   }
