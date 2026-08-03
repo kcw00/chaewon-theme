@@ -1249,29 +1249,48 @@ body:has(.site-header.is-scrolled) .hero__cue {
   margin: 0 0 var(--wp--preset--spacing--30);
 }
 
-.memory-board .wp-block-image {
+/* --- Zoom on hover ---------------------------------------------------
+   The frame is clipped and the picture inside it grows. Scaling the tile
+   itself would push it into the column gap and nudge its neighbours;
+   scaling the contents inside a fixed frame keeps every edge still and
+   reads as looking closer rather than as the card growing.
+
+   Both tile kinds are listed together so a plate swapped for a real
+   Image block behaves identically. `.memory-plate::before` is the
+   stand-in for the picture that is not there yet.
+   ------------------------------------------------------------------- */
+
+.memory-board .wp-block-image,
+.memory-plate {
+  position: relative;
   overflow: hidden;
   border-radius: var(--wp--custom--radius--md);
+}
+
+.memory-board .wp-block-image img,
+.memory-plate::before {
+  transition: transform 0.7s var(--wp--custom--ease--out);
+}
+
+.memory-board .wp-block-image:hover img,
+.memory-plate:hover::before {
+  transform: scale(1.06);
 }
 
 .memory-board .wp-block-image img {
   display: block;
   width: 100%;
   height: auto;
-  transition: transform var(--wp--custom--duration--slow) var(--wp--custom--ease--out);
 }
 
-.memory-board .wp-block-image:hover img {
-  transform: scale(1.04);
-}
 
 /* --- Plate ---------------------------------------------------------
    A photo that does not exist yet.
 
    An empty core/image block renders to nothing on the front end — it
-   has no markup to save until an image is attached — so the board would
-   silently collapse from six tiles to two. A plate is a real group that
-   holds its space and reads as deliberate.
+   has no markup to save until an image is attached — so a board built
+   from empty ones silently collapses. A plate is a real group that holds
+   its space and reads as deliberate.
 
    To use a real photo: select the plate in the editor and replace it
    with an Image block. The aspect ratio comes from the modifier class,
@@ -1283,9 +1302,23 @@ body:has(.site-header.is-scrolled) .hero__cue {
   place-items: center;
   aspect-ratio: 4 / 5;
   border: 1px dashed var(--wp--preset--color--rule);
-  border-radius: var(--wp--custom--radius--md);
-  background: var(--wp--preset--color--surface);
+  background: transparent;
   transition: border-color var(--wp--custom--duration--base) ease;
+}
+
+/* The surface is a pseudo-element rather than a background on the plate
+   itself, so it has something to scale that is not the border. */
+.memory-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--wp--preset--color--surface);
+}
+
+.memory-plate > * {
+  position: relative;
+  z-index: 1;
 }
 
 .memory-plate:hover {
@@ -1300,27 +1333,13 @@ body:has(.site-header.is-scrolled) .hero__cue {
   font-size: 0.6875rem;
 }
 
-/* A written tile. Same visual weight as a photo, different content. */
-.memory-note {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: var(--wp--preset--spacing--30);
-  border: 1px solid var(--wp--preset--color--rule);
-  border-radius: var(--wp--custom--radius--md);
-  background: var(--wp--preset--color--surface);
-}
-
-.memory-note__text {
-  margin: 0;
-  font-family: var(--wp--preset--font-family--lead);
-  font-style: italic;
-  font-size: var(--wp--preset--font-size--large);
-  line-height: 1.4;
-}
-
-.memory-note__source {
-  margin: 0;
+/* A zoom is motion for its own sake — the tile carries the same
+   information either way, so it goes entirely under reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .memory-board .wp-block-image:hover img,
+  .memory-plate:hover::before {
+    transform: none;
+  }
 }
 
 @media (max-width: 900px) {
