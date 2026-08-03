@@ -76,14 +76,20 @@ html[data-theme="dark"] {
 
 /* Semantic aliases. Component rules reference these rather than the
    preset variables directly, so a rule reads as "translucent page
-   background" instead of "paper at 72 percent". */
+   background" instead of "paper at 96 percent".
+
+   --c-glass is near-opaque on purpose. The header pill has to actually
+   hide what scrolls under it; at the 0.86 it started with, headline-sized
+   type stayed legible through the blur and read as a smudge rather than
+   as depth. The remaining 4% plus the backdrop blur is enough to keep it
+   feeling like a floating pane instead of a solid bar. */
 :root {
-  --c-glass: rgb(253 246 237 / 0.86);
+  --c-glass: rgb(253 246 237 / 0.96);
   --c-tint:  rgb(47 111 94 / 0.06);
 }
 
 html[data-theme="dark"] {
-  --c-glass: rgb(20 18 15 / 0.86);
+  --c-glass: rgb(20 18 15 / 0.96);
   --c-tint:  rgb(127 183 158 / 0.07);
 }
 
