@@ -867,9 +867,19 @@ body:has(.site-header.is-scrolled) .hero__cue {
    ------------------------------------------------------------------- */
 
 /* Extra air between the italic lead and the prose, so the two read as
-   separate movements rather than one run-on block. */
+   separate movements rather than one run-on block.
+
+   Padding, not margin. WordPress's flow layout emits
+
+       .wp-block-group.is-layout-flow > * { margin-block-start: <blockGap> }
+
+   at specificity (0,2,0), which beats a plain `.about__prose` rule at
+   (0,1,0) — a margin-top here is simply discarded. Padding is not part
+   of that fight, so it lands without an !important or a specificity
+   arms race. This is the same WordPress layout CSS behind the flex-row
+   and hero-alignment fixes; see section 02. */
 .about__prose {
-  margin-top: var(--wp--preset--spacing--50);
+  padding-top: var(--wp--preset--spacing--40);
 }
 
 /* Set in the display serif, one step lighter than the heading and one
