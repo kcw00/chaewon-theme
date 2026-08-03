@@ -703,6 +703,15 @@ html[data-theme="dark"] .scheme-toggle .icon-moon {
    taller than the screen actually is and the scroll cue sits below the
    fold. svh is the small viewport height, which is what you can
    actually see.
+
+   The pattern sets this group to flow layout, not constrained, and that
+   is load-bearing. WordPress's constrained layout puts
+   `margin-inline: auto !important` on every direct child. Inside a flex
+   column an auto cross-axis margin cancels `align-self: stretch`, so
+   each child shrink-wraps to its own text and then centres itself, and
+   the hero ends up with every line floating at a different left edge.
+   Flow layout emits no auto margins, so the max-widths below are the
+   only thing setting measure and everything stays flush left.
    ------------------------------------------------------------------- */
 
 .hero {

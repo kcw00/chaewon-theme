@@ -20,7 +20,7 @@
 
 ?>
 
-<!-- wp:group {"tagName":"section","align":"wide","className":"hero","layout":{"type":"constrained"}} -->
+<!-- wp:group {"tagName":"section","align":"wide","className":"hero","layout":{"type":"default"}} -->
 <section class="wp-block-group alignwide hero">
 
 	<!-- wp:heading {"level":1,"className":"hero__name"} -->
