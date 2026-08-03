@@ -1,19 +1,23 @@
 # Fonts
 
-Self-hosted, latin subset, `woff2`. 117 KB total.
+Self-hosted, latin subset, `woff2`. 132 KB total.
 
-| File | Family | Axes | Used for |
+| File | Family | Slug | Used for |
 |---|---|---|---|
-| `InstrumentSerif-Regular.woff2` | Instrument Serif | 400 | Headings |
-| `InstrumentSerif-Italic.woff2` | Instrument Serif | 400 italic | Section leads, card taglines |
-| `Inter-Variable.woff2` | Inter | wght 400–600 | Body copy |
-| `JetBrainsMono-Variable.woff2` | JetBrains Mono | wght 400–500 | Labels, metadata |
-| `ShareTech-Regular.woff2` | Share Tech | 400 | Hero tagline only |
+| `InstrumentSerif-Regular.woff2` | Instrument Serif 400 | `display` | Headings, About prose, contact address |
+| `Inter-Variable.woff2` | Inter wght 400–600 | `body` | Body copy |
+| `JetBrainsMono-Variable.woff2` | JetBrains Mono wght 400–500 | `mono` | Labels, metadata |
+| `Cardo-Regular.woff2` | Cardo 400 | `lead` | — |
+| `Cardo-Italic.woff2` | Cardo 400 italic | `lead` | Hero tagline, section leads, card taglines, memory notes, contact eyebrow, quotes |
 
-Share Tech has **one weight and no italic**. Asking for bold or italic
-anywhere it is used makes the browser synthesise them, which skews the
-glyphs and looks like a rendering bug. If a second weight is ever needed
-there, the font has to change.
+`lead` is the italic voice of the whole site. In practice only the italic
+face is used; the roman is bundled so the family is complete and the
+browser never has to synthesise an upright from the italic.
+
+**Instrument Serif is bundled roman only.** Nothing on the page italicises
+it any more — that job moved to Cardo. If a heading is ever set to italic
+in the editor, the browser will synthesise a slant, which looks wrong. Add
+the italic face back if that becomes a real need.
 
 Self-hosted rather than linked from a CDN for three reasons: no third-party
 request on every page load, no layout shift while a remote stylesheet resolves,
@@ -41,4 +45,4 @@ permits bundling and redistribution. See `OFL.txt`.
 - Instrument Serif — Rodrigo Fuenzalida, Jordan Egstad
 - Inter — Rasmus Andersson
 - JetBrains Mono — JetBrains s.r.o.
-- Share Tech — Ralph Levien / Font Squirrel
+- Cardo — David J. Perry

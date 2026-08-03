@@ -278,7 +278,7 @@ p {
 }
 
 .chapter-lead {
-  font-family: var(--wp--preset--font-family--display);
+  font-family: var(--wp--preset--font-family--lead);
   font-style: italic;
   font-size: var(--wp--preset--font-size--large);
   line-height: 1.4;
@@ -487,13 +487,21 @@ p {
   pointer-events: none;
 }
 
+/* The pill is exactly as wide as the content column beneath it.
+
+   At 1150px it was 15px narrower than the 1180px content on each side,
+   so the first and last glyphs of anything full-width — the C of the
+   hero name, the edge of a work card — slid out past the pill and stayed
+   sharp while everything between was blurred behind the glass. Reading
+   the wide-size token rather than hard-coding 1180px keeps the two in
+   step if the layout width in theme.json ever changes. */
 .site-header__pill {
   pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--wp--preset--spacing--30);
-  max-width: 1150px;
+  max-width: var(--wp--style--global--wide-size);
   margin-inline: auto;
   padding: 0.5rem 0.6rem 0.5rem 1.4rem;
   border: 1px solid transparent;
@@ -715,20 +723,16 @@ html[data-theme="dark"] .scheme-toggle .icon-moon {
   margin-block: 0 var(--wp--preset--spacing--30);
 }
 
-/* Share Tech, not the display italic used by every other tagline on the
-   page. It ships one weight and no italic, so nothing here may ask for
-   either — the browser would synthesise them and the result skews.
-
-   It sets small for its point size and runs tight, so the size steps up
-   one notch and the line-height opens to compensate. */
+/* Same Cardo italic as every other lead on the page, one size up. The
+   hero tagline is the loudest instance of that voice, not a different
+   voice. */
 .hero__tagline {
-  font-family: var(--wp--preset--font-family--tech);
+  font-family: var(--wp--preset--font-family--lead);
+  font-style: italic;
   font-size: var(--wp--preset--font-size--x-large);
-  font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: 0.005em;
+  line-height: 1.35;
   color: var(--wp--preset--color--muted);
-  max-width: 30ch;
+  max-width: 34ch;
   margin-block: 0;
 }
 
@@ -1003,7 +1007,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
 
 .work-card__tagline {
   margin: 0;
-  font-family: var(--wp--preset--font-family--display);
+  font-family: var(--wp--preset--font-family--lead);
   font-style: italic;
   font-size: var(--wp--preset--font-size--large);
   line-height: 1.35;
@@ -1229,7 +1233,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
 
 .memory-note__text {
   margin: 0;
-  font-family: var(--wp--preset--font-family--display);
+  font-family: var(--wp--preset--font-family--lead);
   font-style: italic;
   font-size: var(--wp--preset--font-size--large);
   line-height: 1.4;
@@ -1269,7 +1273,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
 }
 
 .contact__eyebrow {
-  font-family: var(--wp--preset--font-family--display);
+  font-family: var(--wp--preset--font-family--lead);
   font-style: italic;
   font-size: var(--wp--preset--font-size--large);
   color: var(--wp--preset--color--muted);

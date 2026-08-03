@@ -65,13 +65,13 @@ All pairs clear WCAG AA against their background. Re-check with the script in
 `changelog.d/` before changing a value.
 
 Four families: `display` (Instrument Serif) for headings, `body` (Inter) for
-prose, `mono` (JetBrains Mono) for metadata and labels, `tech` (Share Tech) for
-the hero tagline. Mono is doing real work here — it is the visual signal for
-"this is data, not prose."
+prose, `mono` (JetBrains Mono) for metadata and labels, `lead` (Cardo italic)
+for taglines, section leads, and quotes. Mono is doing real work here — it is
+the visual signal for "this is data, not prose."
 
-`tech` is used in exactly one place on purpose. It ships one weight and no
-italic, so nothing that uses it may ask for bold or italic; the browser
-synthesises them and the glyphs skew.
+`lead` is the site's italic voice. Every italic on the page is Cardo; every
+upright serif is Instrument Serif. Instrument Serif is bundled **roman only**,
+so italicising a heading makes the browser synthesise a slant.
 
 ## Dark mode
 
