@@ -988,12 +988,12 @@ body:has(.site-header.is-scrolled) .hero__cue {
    are not interactive, which is intended.
    ------------------------------------------------------------------- */
 
-.work-card__link {
+.work-card__title a {
   color: inherit;
   text-decoration: none;
 }
 
-.work-card__link::after {
+.work-card__title a::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1003,7 +1003,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
 
 /* The ring belongs on the card, not on the inline link, so suppress the
    global focus outline here and re-add it at card level below. */
-.work-card__link:focus-visible {
+.work-card__title a:focus-visible {
   outline: none;
 }
 
@@ -1052,7 +1052,7 @@ body:has(.site-header.is-scrolled) .hero__cue {
    ------------------------------------------------------------------- */
 
 .work-card:hover,
-.work-card:has(.work-card__link:focus-visible) {
+.work-card:has(.work-card__title a:focus-visible) {
   /* Both forms are needed. The grid is a .reveal-stagger, so once the
      cards have animated in, the settled-position rule owns `transform`
      and only the variable gets through. If JavaScript never runs, that
@@ -1064,12 +1064,12 @@ body:has(.site-header.is-scrolled) .hero__cue {
 }
 
 .work-card:hover .work-card__arrow,
-.work-card:has(.work-card__link:focus-visible) .work-card__arrow {
+.work-card:has(.work-card__title a:focus-visible) .work-card__arrow {
   transform: translate(var(--arrow-travel), -5px);
   color: var(--wp--preset--color--ink);
 }
 
-.work-card:has(.work-card__link:focus-visible) {
+.work-card:has(.work-card__title a:focus-visible) {
   outline: 2px solid var(--wp--preset--color--signal);
   outline-offset: 3px;
 }
@@ -1078,13 +1078,13 @@ body:has(.site-header.is-scrolled) .hero__cue {
    the card is live; the 8px jump is the part that causes trouble. */
 @media (prefers-reduced-motion: reduce) {
   .work-card:hover,
-  .work-card:has(.work-card__link:focus-visible) {
+  .work-card:has(.work-card__title a:focus-visible) {
     --reveal-settled-y: 0px;
     transform: none;
   }
 
   .work-card:hover .work-card__arrow,
-  .work-card:has(.work-card__link:focus-visible) .work-card__arrow {
+  .work-card:has(.work-card__title a:focus-visible) .work-card__arrow {
     transform: none;
   }
 }
@@ -1138,11 +1138,32 @@ body:has(.site-header.is-scrolled) .hero__cue {
 }
 
 
-.work-card__tags .label--chip {
-  font-size: 0.6875rem;
+/* core/post-terms renders every term as a link. Inside a card whose whole
+   surface is already one link they become competing hit targets. They are
+   demoted to static text here; site.js takes them out of the tab order so
+   the card is a single stop for keyboard users too. They stay in the
+   accessibility tree, because the type and the stack are content. */
+.work-card .wp-block-post-terms a {
+  pointer-events: none;
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-card__tags a {
+  display: inline-block;
   padding: 0.25rem 0.6rem;
-  text-transform: none;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--sm);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.6875rem;
   letter-spacing: 0.04em;
+  color: var(--wp--preset--color--muted);
+}
+
+/* post-terms puts a space between terms; the flex gap already spaces
+   them, so the separator would add a stray gap at each wrap point. */
+.work-card__tags .wp-block-post-terms__separator {
+  display: none;
 }
 
 /* Below the grid: one quiet link out to everything else. */
