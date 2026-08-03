@@ -75,8 +75,8 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:group {"className":"memory-plate memory-plate--wide","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate memory-plate--wide">
+		<!-- wp:group {"className":"memory-plate memory-plate--panorama","layout":{"type":"default"}} -->
+		<div class="wp-block-group memory-plate memory-plate--panorama">
 			<!-- wp:paragraph {"className":"label"} -->
 			<p class="label">The long way home</p>
 			<!-- /wp:paragraph -->

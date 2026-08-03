@@ -1325,12 +1325,16 @@ body:has(.site-header.is-scrolled) .hero__cue {
   border-color: var(--wp--preset--color--signal);
 }
 
-/* Four heights at a fixed column width, tallest first. `--short` sits
-   between square and wide so the board has a step there instead of
-   jumping straight from a square to the widest tile. */
-.memory-plate--square { aspect-ratio: 1 / 1; }   /* 385 -> 385 */
-.memory-plate--short  { aspect-ratio: 5 / 4; }   /* 385 -> 308 */
-.memory-plate--wide   { aspect-ratio: 4 / 3; }   /* 385 -> 289 */
+/* Five heights at a fixed column width, tallest first. Each modifier is
+   used by more than one tile, so retuning one moves every tile carrying
+   it — to change a single tile, move it to a different modifier or add
+   one. The pixel values are what these ratios produce in a 385px column
+   at 1440px, recorded so the ladder can be reasoned about without
+   measuring again. */
+.memory-plate--square   { aspect-ratio: 1 / 1; }    /* 385 -> 385 */
+.memory-plate--short    { aspect-ratio: 5 / 4; }    /* 385 -> 308 */
+.memory-plate--wide     { aspect-ratio: 4 / 3; }    /* 385 -> 289 */
+.memory-plate--panorama { aspect-ratio: 16 / 9; }   /* 385 -> 217 */
 
 .memory-plate p {
   margin: 0;
