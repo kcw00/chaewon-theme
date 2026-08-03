@@ -176,6 +176,31 @@ p {
 }
 
 
+/* --- Flex rows built from group blocks -----------------------------
+   WordPress's flow layout emits
+
+       .wp-block-group > * + * { margin-block-start: <blockGap> }
+
+   on every group block. Inside a flex or grid container that margin is
+   not collapsed or ignored — it offsets the item. A row of tag chips
+   staircases; a vertically centred button sits low, because in flexbox
+   a block margin shifts the item even under align-items: center.
+
+   Every custom flex or grid row assembled from a group block belongs in
+   this list. Three separate visual bugs have come from forgetting it,
+   so it lives in one place rather than being rediscovered per component.
+   ------------------------------------------------------------------- */
+
+.chapter-rule > *,
+.site-header__pill > *,
+.site-header__end > *,
+.hero__actions > *,
+.work-card__tags > *,
+.contact__actions > * {
+  margin-block: 0;
+}
+
+
 /* --- Mono label ----------------------------------------------------
    Small tracked uppercase type. Used for anything that is data rather
    than prose: coordinates, years, section names, tags. Mono is the
@@ -238,10 +263,6 @@ p {
   align-items: center;
   gap: 1rem;
   margin-bottom: var(--wp--preset--spacing--50);
-}
-
-.chapter-rule > * {
-  margin: 0;
 }
 
 .chapter-rule__num {
@@ -844,13 +865,16 @@ body:has(.site-header.is-scrolled) .hero__cue {
    measure short enough to keep the eye from getting lost on return.
    ------------------------------------------------------------------- */
 
+/* `ch` is the width of a zero, and Instrument Serif's zero is narrow, so
+   these numbers run well ahead of the actual character count: 82ch lands
+   at roughly 100 characters a line. That is past the usual comfort range,
+   which is why the leading opens to 1.65 — the longer the line, the more
+   help the eye needs finding the start of the next one. */
 .about__prose > p {
   font-family: var(--wp--preset--font-family--display);
   font-size: var(--wp--preset--font-size--large);
-  line-height: 1.55;
-  /* 40ch was leaving two thirds of a 1180px column empty and pushing the
-     paragraphs into a narrow strip. 58ch reads as a column by choice. */
-  max-width: 58ch;
+  line-height: 1.65;
+  max-width: 82ch;
   margin-block: 0 var(--wp--preset--spacing--30);
 }
 
@@ -1049,13 +1073,6 @@ body:has(.site-header.is-scrolled) .hero__cue {
   padding-top: var(--wp--preset--spacing--20);
 }
 
-/* WordPress's flow layout adds margin-block-start to every sibling after
-   the first. Inside a flex row that lands each chip a little lower than
-   the one before it, so the row visibly staircases. Zero it and let the
-   flex gap do the spacing. */
-.work-card__tags > * {
-  margin: 0;
-}
 
 .work-card__tags .label--chip {
   font-size: 0.6875rem;
