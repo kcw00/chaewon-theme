@@ -2023,3 +2023,39 @@ html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
     aspect-ratio: 16 / 9;
   }
 }
+
+
+/* --- Stack groups ----------------------------------------------------
+   The "Built with" section on a project page. Authored in the post body
+   rather than generated from the taxonomy, because a real stack has
+   shape — backend, frontend, delivery — and a flat row of chips throws
+   that away. The taxonomy still drives the compact chips on cards,
+   which is the job it is actually good at.
+   ------------------------------------------------------------------- */
+
+.project__body .stack-group {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: var(--wp--preset--spacing--30);
+  align-items: baseline;
+  max-width: 60ch;
+  padding-block: var(--wp--preset--spacing--20);
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.project__body .stack-group > * {
+  margin-block: 0;
+  max-width: none;
+}
+
+.project__body .stack-group__items {
+  color: var(--wp--preset--color--ink-soft);
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .project__body .stack-group {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}
