@@ -574,6 +574,38 @@ p {
   backdrop-filter: blur(16px) saturate(1.6);
 }
 
+/* --- Avatar mark -----------------------------------------------------
+   One PNG, drawn in pure black on transparency, inverted for the dark
+   scheme. Two files would eventually disagree with each other; a filter
+   cannot.
+
+   The source art was normalised to #000 exactly for this reason —
+   invert(1) on a near-black stroke returns a dirty off-white rather than
+   the paper colour.
+   ------------------------------------------------------------------- */
+
+.site-avatar {
+  display: block;
+  flex: none;
+  line-height: 0;
+}
+
+.site-avatar img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  transition: filter var(--wp--custom--duration--base) ease,
+              opacity var(--wp--custom--duration--fast) ease;
+}
+
+html[data-theme="dark"] .site-avatar img {
+  filter: invert(1);
+}
+
+.site-avatar:hover img {
+  opacity: 0.7;
+}
+
 .site-header .wp-block-site-title a {
   text-decoration: none;
 }
