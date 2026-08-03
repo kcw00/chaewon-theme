@@ -259,6 +259,16 @@ p {
   position: relative;
 }
 
+/* 9rem of air above and below reads as generous on a 1440px screen and
+   as dead space on a phone, where it costs most of a viewport per
+   section. The proportion that feels right is relative to the width, not
+   fixed. */
+@media (max-width: 700px) {
+  .chapter {
+    padding-block: var(--wp--preset--spacing--50);
+  }
+}
+
 .chapter-rule {
   display: flex;
   align-items: center;
