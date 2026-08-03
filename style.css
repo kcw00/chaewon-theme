@@ -1180,6 +1180,10 @@ body:has(.site-header.is-scrolled) .hero__cue {
   gap: var(--wp--preset--spacing--30);
   padding-block: var(--wp--preset--spacing--30);
   border-bottom: 1px solid var(--wp--preset--color--rule);
+  /* Crops the stretched link overlay to exactly this row. Nothing else
+     in a row is meant to escape it. An element's own outline is not
+     affected, so the focus ring still shows outside the padding box. */
+  overflow: hidden;
   transition: border-color 0.34s ease, opacity 0.28s ease;
 }
 
@@ -1232,10 +1236,20 @@ body:has(.site-header.is-scrolled) .hero__cue {
   text-decoration: none;
 }
 
+/* The overlay is oversized and then clipped by the row, rather than
+   `inset: 0`.
+
+   `.notes-row__body` translates on hover, and a transformed element
+   becomes the containing block for its absolutely-positioned
+   descendants. So `inset: 0` here resolves against the body group, not
+   the row — the year column stayed unclickable and the overlay slid
+   10px with the rest of the content. Sizing it past every edge and
+   letting the row's `overflow: hidden` do the cropping gives exact row
+   coverage in both states with no arithmetic against the grid tracks. */
 .notes-list .wp-block-post-title a::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -100vh -100vw;
   z-index: 1;
 }
 
