@@ -16,7 +16,8 @@
       "custom": true,
       "customDuotone": false,
       "palette": [
-        { "slug": "ink",     "color": "#14161A", "name": "Ink" },
+        { "slug": "ink",      "color": "#14161A", "name": "Ink" },
+        { "slug": "ink-soft", "color": "#3A4049", "name": "Ink soft" },
         { "slug": "paper",   "color": "#FDF6ED", "name": "Paper" },
         { "slug": "muted",   "color": "#6B7280", "name": "Muted" },
         { "slug": "rule",    "color": "#E3E3DE", "name": "Rule" },

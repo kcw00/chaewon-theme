@@ -55,11 +55,16 @@ Six palette slugs, defined once in `theme.json`:
 | Slug | Light | Dark | Role |
 |---|---|---|---|
 | `paper` | `#FDF6ED` | `#14120F` | page background |
-| `ink` | `#14161A` | `#F2EBE0` | body text |
+| `ink` | `#14161A` | `#F2EBE0` | headings, strongest text |
+| `ink-soft` | `#3A4049` | `#C9BFB0` | long-form prose |
 | `muted` | `#6B7280` | `#9A9187` | metadata, secondary text |
 | `rule` | `#E3E3DE` | `#2C2721` | hairlines, borders |
 | `signal` | `#2F6F5E` | `#7FB79E` | accent, links, focus |
 | `surface` | `#F2F2EE` | `#1D1A16` | raised cards |
+
+The three text colours are a deliberate ladder: `ink` for headings,
+`ink-soft` for prose, `muted` for metadata. `ink-soft` sits at the L\*
+midpoint of the other two in both schemes.
 
 All pairs clear WCAG AA against their background. Re-check with the script in
 `changelog.d/` before changing a value.
