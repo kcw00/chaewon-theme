@@ -1,0 +1,76 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","metadata":{"name":"Content"},"layout":{"type":"constrained"}} -->
+<main id="content" class="wp-block-group">
+
+	<!-- wp:group {"tagName":"section","align":"wide","className":"chapter chapter--first","layout":{"type":"default"}} -->
+	<section class="wp-block-group alignwide chapter chapter--first">
+
+		<!-- wp:group {"className":"chapter-rule","layout":{"type":"default"}} -->
+		<div class="wp-block-group chapter-rule">
+			<!-- wp:paragraph {"className":"chapter-rule__num"} -->
+			<p class="chapter-rule__num">&mdash;</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:paragraph {"className":"chapter-rule__label"} -->
+			<p class="chapter-rule__label">Writing</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:heading {"className":"chapter-title"} -->
+		<h1 class="wp-block-heading chapter-title">Notes &amp; writing</h1>
+		<!-- /wp:heading -->
+
+		<!-- wp:paragraph {"className":"chapter-lead"} -->
+		<p class="chapter-lead">Things I wanted to write down before they drifted away.</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:query {"queryId":4,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"layout":{"type":"default"}} -->
+		<div class="wp-block-query">
+
+			<!-- wp:post-template {"className":"writing-list"} -->
+
+				<!-- wp:group {"className":"writing-row","layout":{"type":"default"}} -->
+				<div class="wp-block-group writing-row">
+
+					<!-- wp:group {"className":"writing-row__media","layout":{"type":"default"}} -->
+					<div class="wp-block-group writing-row__media">
+						<!-- wp:post-featured-image {"isLink":false} /-->
+					</div>
+					<!-- /wp:group -->
+
+					<!-- wp:group {"className":"writing-row__body","layout":{"type":"default"}} -->
+					<div class="wp-block-group writing-row__body">
+						<!-- wp:post-title {"level":2,"isLink":true,"className":"writing-row__title"} /-->
+						<!-- wp:post-excerpt {"excerptLength":34,"className":"writing-row__excerpt"} /-->
+						<!-- wp:post-date {"format":"F j, Y","isLink":false,"className":"writing-row__date"} /-->
+					</div>
+					<!-- /wp:group -->
+
+				</div>
+				<!-- /wp:group -->
+
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"textColor":"muted"} -->
+				<p class="has-muted-color has-text-color">Nothing written yet. Add a post under Posts &rarr; Add New and it will appear here.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+
+			<!-- wp:query-pagination {"className":"work-pagination","layout":{"type":"flex","justifyContent":"space-between"}} -->
+				<!-- wp:query-pagination-previous /-->
+				<!-- wp:query-pagination-next /-->
+			<!-- /wp:query-pagination -->
+
+		</div>
+		<!-- /wp:query -->
+
+	</section>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

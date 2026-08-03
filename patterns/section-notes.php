@@ -66,7 +66,7 @@
 	<!-- /wp:query -->
 
 	<!-- wp:paragraph {"className":"notes-more"} -->
-	<p class="notes-more"><a class="link-arrow" href="/blog">Browse all writing</a></p>
+	<p class="notes-more"><a class="link-arrow" href="/writing/">Browse all writing</a></p>
 	<!-- /wp:paragraph -->
 
 </section>

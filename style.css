@@ -38,6 +38,7 @@ Tags: portfolio, full-site-editing, block-theme, one-column, dark-mode-support
      11  Memories
      12  Contact
      13  Projects archive and single
+     14  Writing archive
      99  Motion and accessibility floor
    =================================================================== */
 
@@ -1926,4 +1927,174 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
 
 .project__next {
   margin: 0;
+}
+
+
+/* ===================================================================
+   14  WRITING ARCHIVE
+   ===================================================================
+
+   The posts page. A thumbnail on the left, title, excerpt, and date on
+   the right. Wider and more generous than the homepage notes list,
+   which is a teaser rather than a place to browse.
+   ------------------------------------------------------------------- */
+
+.writing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.writing-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 15rem 1fr;
+  align-items: start;
+  gap: var(--wp--preset--spacing--40);
+  padding-block: var(--wp--preset--spacing--50);
+  border-bottom: 1px solid var(--wp--preset--color--rule);
+  /* Crops the stretched link overlay to this row. See the notes list for
+     why the overlay is oversized rather than inset: 0. */
+  overflow: hidden;
+  transition: border-color 0.34s ease;
+}
+
+.writing-list > *:first-child .writing-row {
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.writing-row > * {
+  margin-block: 0;
+}
+
+
+/* --- Thumbnail -------------------------------------------------------
+   The wrapper always exists; core/post-featured-image renders nothing at
+   all when a post has no image. Styling the wrapper rather than the
+   figure means a post without a thumbnail still holds its column instead
+   of collapsing the grid to one track for that row alone.
+   ------------------------------------------------------------------- */
+
+.writing-row__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px dashed var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--md);
+  background: var(--wp--preset--color--surface);
+}
+
+.writing-row__media .wp-block-post-featured-image {
+  margin: 0;
+  height: 100%;
+}
+
+.writing-row__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--wp--custom--ease--out);
+}
+
+/* A real photo fills the plate, so the dashed placeholder border would
+   read as a stray outline around it. */
+.writing-row__media:has(img) {
+  border-style: solid;
+  border-color: transparent;
+}
+
+
+/* --- Body ------------------------------------------------------------ */
+
+.writing-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.writing-row__title {
+  margin: 0;
+  font-size: var(--wp--preset--font-size--x-large);
+  transition: color var(--wp--custom--duration--base) ease;
+}
+
+.writing-row__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.writing-row__title a::after {
+  content: "";
+  position: absolute;
+  inset: -100vh -100vw;
+  z-index: 1;
+}
+
+.writing-row__title a:focus-visible {
+  outline: none;
+}
+
+.writing-row__excerpt {
+  margin: 0;
+  color: var(--wp--preset--color--ink-soft);
+  max-width: 62ch;
+}
+
+.writing-row__excerpt .wp-block-post-excerpt__more-text {
+  display: none;
+}
+
+.writing-row__date {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.08em;
+  color: var(--wp--preset--color--muted);
+}
+
+
+/* --- Hover and focus ------------------------------------------------- */
+
+.writing-row:hover,
+.writing-row:has(.writing-row__title a:focus-visible) {
+  border-bottom-color: rgb(34 32 28 / 0.42);
+}
+
+html[data-theme="dark"] .writing-row:hover,
+html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
+  border-bottom-color: rgb(242 235 224 / 0.42);
+}
+
+.writing-row:hover .writing-row__title,
+.writing-row:has(.writing-row__title a:focus-visible) .writing-row__title {
+  color: var(--wp--preset--color--signal);
+}
+
+.writing-row:hover .writing-row__media img,
+.writing-row:has(.writing-row__title a:focus-visible) .writing-row__media img {
+  transform: scale(1.05);
+}
+
+.writing-row:has(.writing-row__title a:focus-visible) {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .writing-row:hover .writing-row__media img,
+  .writing-row:has(.writing-row__title a:focus-visible) .writing-row__media img {
+    transform: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .writing-row {
+    grid-template-columns: 1fr;
+    gap: var(--wp--preset--spacing--30);
+  }
+
+  .writing-row__media {
+    aspect-ratio: 16 / 9;
+  }
 }
