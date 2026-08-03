@@ -29,6 +29,8 @@ Tags: portfolio, full-site-editing, block-theme, one-column, dark-mode-support
      02  Base
      03  Chapter system
      04  Site rail
+     05  Site header
+     06  Site footer
      99  Motion and accessibility floor
    =================================================================== */
 
@@ -473,4 +475,213 @@ p {
     opacity: 1;
     transform: none;
   }
+}
+
+
+/* ===================================================================
+   05  SITE HEADER
+   ===================================================================
+
+   A floating pill that stays out of the way. Over the hero it is
+   invisible — just the title and the links sitting on the page. Once
+   the page scrolls it materialises: translucent fill, hairline border,
+   soft shadow. site.js toggles `is-scrolled` past 24px.
+
+   The outer bar is pointer-events: none so the empty space beside the
+   pill never swallows a click meant for the page underneath. The pill
+   itself opts back in.
+   ------------------------------------------------------------------- */
+
+.site-header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  padding: 0.75rem var(--wp--preset--spacing--30);
+  pointer-events: none;
+}
+
+.site-header__pill {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--30);
+  max-width: 1150px;
+  margin-inline: auto;
+  padding: 0.5rem 0.6rem 0.5rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: var(--wp--custom--radius--pill);
+  transition: background-color var(--wp--custom--duration--base) ease,
+              border-color var(--wp--custom--duration--base) ease,
+              box-shadow var(--wp--custom--duration--base) ease;
+}
+
+.site-header.is-scrolled .site-header__pill {
+  background: var(--c-glass);
+  border-color: var(--wp--preset--color--rule);
+  box-shadow: var(--wp--preset--shadow--lift);
+  /* Progressive: browsers without backdrop-filter get the flat translucent
+     fill above, which is still legible. */
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+}
+
+.site-header .wp-block-site-title a {
+  text-decoration: none;
+}
+
+.site-header__end {
+  display: flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--20);
+}
+
+
+/* --- Navigation ----------------------------------------------------
+   Mono, tracked, uppercase. The hover underline grows from the left
+   rather than fading, which reads as a deliberate mark being drawn.
+   ------------------------------------------------------------------- */
+
+.site-header .wp-block-navigation {
+  --navigation-layout-gap: 0.35rem;
+}
+
+.site-header .wp-block-navigation-item__content {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--wp--preset--color--muted);
+  transition: color var(--wp--custom--duration--fast) ease;
+}
+
+.site-header .wp-block-navigation-item__content::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.25rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.site-header .wp-block-navigation-item__content:hover {
+  color: var(--wp--preset--color--ink);
+}
+
+.site-header .wp-block-navigation-item__content:hover::after {
+  transform: scaleX(1);
+}
+
+/* WordPress marks the link for the page you are on. Keep it marked. */
+.site-header .wp-block-navigation-item.current-menu-item .wp-block-navigation-item__content {
+  color: var(--wp--preset--color--ink);
+}
+
+.site-header .wp-block-navigation-item.current-menu-item .wp-block-navigation-item__content::after {
+  transform: scaleX(1);
+  background: var(--wp--preset--color--signal);
+}
+
+/* The mobile overlay inherits the page background rather than the
+   navigation block's default white. */
+.site-header .wp-block-navigation__responsive-container.is-menu-open {
+  background: var(--wp--preset--color--paper);
+  color: var(--wp--preset--color--ink);
+  padding-top: var(--wp--preset--spacing--50);
+}
+
+.site-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+  font-size: var(--wp--preset--font-size--large);
+  color: var(--wp--preset--color--ink);
+}
+
+
+/* --- Colour scheme toggle ------------------------------------------
+   One button, two icons stacked in the same grid cell. The one that
+   applies rotates in while the other rotates out. Showing the moon in
+   light mode is deliberate: the icon is the destination, not the
+   current state, which is how every OS-level toggle behaves.
+   ------------------------------------------------------------------- */
+
+.scheme-toggle {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--wp--preset--color--ink);
+  cursor: pointer;
+  transition: background-color var(--wp--custom--duration--fast) ease,
+              border-color var(--wp--custom--duration--fast) ease;
+}
+
+.scheme-toggle:hover {
+  background: var(--c-tint);
+  border-color: var(--wp--preset--color--signal);
+}
+
+.scheme-toggle svg {
+  grid-area: 1 / 1;
+  width: 17px;
+  height: 17px;
+  transition: transform 450ms var(--wp--custom--ease--out),
+              opacity var(--wp--custom--duration--base) ease;
+}
+
+.scheme-toggle .icon-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+.scheme-toggle .icon-moon {
+  opacity: 1;
+  transform: none;
+}
+
+html[data-theme="dark"] .scheme-toggle .icon-sun {
+  opacity: 1;
+  transform: none;
+}
+
+html[data-theme="dark"] .scheme-toggle .icon-moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+
+/* ===================================================================
+   06  SITE FOOTER
+   =================================================================== */
+
+.site-footer {
+  border-top: 1px solid var(--wp--preset--color--rule);
+  padding-block: var(--wp--preset--spacing--40);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--30);
+}
+
+.site-footer .wp-block-social-links {
+  gap: 0.35rem;
+}
+
+.site-footer .wp-block-social-link {
+  transition: transform var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+.site-footer .wp-block-social-link:hover {
+  transform: translateY(-3px);
 }

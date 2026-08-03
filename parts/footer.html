@@ -1,7 +1,23 @@
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}},"border":{"top":{"color":"var:preset|color|rule","width":"1px"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group" style="border-top-color:var(--wp--preset--color--rule);border-top-width:1px;padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40)">
-	<!-- wp:paragraph {"fontSize":"small","textColor":"muted"} -->
-	<p class="has-muted-color has-text-color has-small-font-size">Chaewon Kim — built from scratch, no page builder.</p>
-	<!-- /wp:paragraph -->
+<!-- wp:group {"tagName":"div","className":"site-footer","layout":{"type":"constrained"}} -->
+<div class="wp-block-group site-footer">
+
+	<!-- wp:group {"className":"site-footer__inner","layout":{"type":"default"}} -->
+	<div class="wp-block-group site-footer__inner">
+
+		<!-- wp:paragraph {"className":"label","style":{"spacing":{"margin":{"top":"0","bottom":"0"}}}} -->
+		<p class="label" style="margin-top:0;margin-bottom:0">Chaewon Kim &copy; 2026</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:social-links {"iconColor":"muted","iconColorValue":"var(--wp--preset--color--muted)","size":"has-small-icon-size","className":"is-style-logos-only","layout":{"type":"flex","justifyContent":"right"}} -->
+		<ul class="wp-block-social-links has-small-icon-size has-icon-color is-style-logos-only">
+			<!-- wp:social-link {"url":"https://github.com/kcw00","service":"github"} /-->
+			<!-- wp:social-link {"url":"#","service":"linkedin"} /-->
+			<!-- wp:social-link {"url":"mailto:hello@example.com","service":"mail"} /-->
+		</ul>
+		<!-- /wp:social-links -->
+
+	</div>
+	<!-- /wp:group -->
+
 </div>
 <!-- /wp:group -->
