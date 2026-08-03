@@ -3,7 +3,7 @@
  * Title: Chapter 01 — About me
  * Slug: chaewon/section-about
  * Categories: chaewon
- * Description: Numbered chapter rule, long-form prose, and a Seoul to Vancouver journey line.
+ * Description: Numbered chapter rule with a heading, lead, and long-form prose.
  *
  * @package Chaewon
  */
@@ -48,24 +48,6 @@
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
-
-	<!-- wp:html -->
-	<div class="journey">
-		<div class="journey__stop">
-			<p class="journey__place">Seoul, KR</p>
-		</div>
-
-		<div class="journey__span">
-			<span class="journey__dot journey__dot--start" aria-hidden="true"></span>
-			<p class="journey__distance">~8,200 km</p>
-			<span class="journey__dot journey__dot--end" aria-hidden="true"></span>
-		</div>
-
-		<div class="journey__stop journey__stop--end">
-			<p class="journey__place">Vancouver, CA</p>
-		</div>
-	</div>
-	<!-- /wp:html -->
 
 </section>
 <!-- /wp:group -->
