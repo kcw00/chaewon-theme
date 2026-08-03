@@ -26,10 +26,6 @@
 		<!-- wp:paragraph {"className":"chapter-rule__label"} -->
 		<p class="chapter-rule__label">Selected work</p>
 		<!-- /wp:paragraph -->
-
-		<!-- wp:paragraph {"className":"chapter-rule__meta"} -->
-		<p class="chapter-rule__meta">2022 &rarr; now</p>
-		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 

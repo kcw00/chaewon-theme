@@ -22,10 +22,6 @@
 		<!-- wp:paragraph {"className":"chapter-rule__label"} -->
 		<p class="chapter-rule__label">About me</p>
 		<!-- /wp:paragraph -->
-
-		<!-- wp:paragraph {"className":"chapter-rule__meta"} -->
-		<p class="chapter-rule__meta">37.5&deg;N &rarr; 49.3&deg;N</p>
-		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 
@@ -57,7 +53,6 @@
 	<div class="journey">
 		<div class="journey__stop">
 			<p class="journey__place">Seoul, KR</p>
-			<p class="journey__coord">37.5&deg;N 127.0&deg;E</p>
 		</div>
 
 		<div class="journey__span">
@@ -68,7 +63,6 @@
 
 		<div class="journey__stop journey__stop--end">
 			<p class="journey__place">Vancouver, CA</p>
-			<p class="journey__coord">49.3&deg;N 123.1&deg;W</p>
 		</div>
 	</div>
 	<!-- /wp:html -->

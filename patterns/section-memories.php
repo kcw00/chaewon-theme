@@ -27,10 +27,6 @@
 		<!-- wp:paragraph {"className":"chapter-rule__label"} -->
 		<p class="chapter-rule__label">Memories</p>
 		<!-- /wp:paragraph -->
-
-		<!-- wp:paragraph {"className":"chapter-rule__meta"} -->
-		<p class="chapter-rule__meta">Seoul &middot; Vancouver</p>
-		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 

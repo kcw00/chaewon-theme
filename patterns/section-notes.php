@@ -27,10 +27,6 @@
 		<!-- wp:paragraph {"className":"chapter-rule__label"} -->
 		<p class="chapter-rule__label">Notes &amp; writing</p>
 		<!-- /wp:paragraph -->
-
-		<!-- wp:paragraph {"className":"chapter-rule__meta"} -->
-		<p class="chapter-rule__meta">Field observations</p>
-		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 

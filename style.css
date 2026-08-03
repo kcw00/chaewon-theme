@@ -214,12 +214,12 @@ p {
 
    Every section opens with a numbered rule:
 
-     01 ─────────────────────────────  FIELD NOTES   [49.1°N]
+     01 ──────────────────────────────────────────────  ABOUT ME
 
    The number sits left, a hairline stretches across, the label sits
-   right, and an optional chip trails it. The line is a pseudo-element
-   on the label, so it always fills exactly the space between the two,
-   at any viewport, with no JavaScript.
+   right. The line is a pseudo-element on the label, so it always fills
+   exactly the space between the two, at any viewport, with no
+   JavaScript.
    ------------------------------------------------------------------- */
 
 .chapter {
@@ -266,24 +266,6 @@ p {
   background: var(--wp--preset--color--rule);
 }
 
-.chapter-rule__meta {
-  flex: none;
-  font-family: var(--wp--preset--font-family--mono);
-  font-size: var(--wp--preset--font-size--small);
-  letter-spacing: 0.08em;
-  color: var(--wp--preset--color--muted);
-  padding: 0.25rem 0.6rem;
-  border: 1px solid var(--wp--preset--color--rule);
-  border-radius: var(--wp--custom--radius--sm);
-  white-space: nowrap;
-}
-
-/* The chip is the first thing to go when there is no room for it. */
-@media (max-width: 700px) {
-  .chapter-rule__meta {
-    display: none;
-  }
-}
 
 
 /* --- Chapter heading block ----------------------------------------
@@ -868,12 +850,6 @@ body:has(.site-header.is-scrolled) .hero__cue {
   border-top: 1px solid var(--wp--preset--color--rule);
 }
 
-.journey__stop {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
 .journey__stop--end {
   text-align: right;
 }
@@ -885,14 +861,6 @@ body:has(.site-header.is-scrolled) .hero__cue {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--wp--preset--color--ink);
-}
-
-.journey__coord {
-  margin: 0;
-  font-family: var(--wp--preset--font-family--mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.06em;
-  color: var(--wp--preset--color--muted);
 }
 
 .journey__span {

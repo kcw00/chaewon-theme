@@ -26,10 +26,6 @@
 		<!-- wp:paragraph {"className":"chapter-rule__label"} -->
 		<p class="chapter-rule__label">Say hello</p>
 		<!-- /wp:paragraph -->
-
-		<!-- wp:paragraph {"className":"chapter-rule__meta"} -->
-		<p class="chapter-rule__meta">The last page</p>
-		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 
