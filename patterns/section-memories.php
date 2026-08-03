@@ -51,8 +51,8 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:group {"className":"memory-plate memory-plate--square","layout":{"type":"default"}} -->
-		<div class="wp-block-group memory-plate memory-plate--square">
+		<!-- wp:group {"className":"memory-plate memory-plate--short","layout":{"type":"default"}} -->
+		<div class="wp-block-group memory-plate memory-plate--short">
 			<!-- wp:paragraph {"className":"label"} -->
 			<p class="label">Morning</p>
 			<!-- /wp:paragraph -->
