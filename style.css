@@ -1,0 +1,147 @@
+/*
+Theme Name: Chaewon
+Theme URI: https://chaewon.ca
+Author: Chaewon Kim
+Author URI: https://chaewon.ca
+Description: A custom block theme for an engineering portfolio. Built from scratch, no page builder.
+Requires at least: 6.4
+Tested up to: 6.8
+Requires PHP: 7.4
+Version: 0.1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: chaewon
+Tags: portfolio, full-site-editing, block-theme, one-column
+*/
+
+/* ---------------------------------------------------------------
+   The comment block above is not decoration. WordPress parses it to
+   populate Appearance > Themes. Remove "Theme Name" and the theme
+   disappears from the admin entirely.
+
+   Everything below is normal CSS. Most of your colors, fonts, and
+   spacing should live in theme.json instead, which generates CSS
+   custom properties automatically. Use this file for the things
+   theme.json cannot express: pseudo-elements, transitions,
+   keyframes, and media queries.
+   --------------------------------------------------------------- */
+
+
+/* --- Scroll reveal ------------------------------------------------
+   Add the class "reveal" to any block via Advanced > Additional CSS
+   class(es). assets/js/reveal.js adds "is-visible" when it scrolls
+   into view. Elements start hidden ONLY when JS is present, so the
+   content stays readable if the script fails.
+   ------------------------------------------------------------------ */
+
+.js-reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.js-reveal-ready .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Children stagger in sequence rather than all at once. */
+.js-reveal-ready .reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.js-reveal-ready .reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 60ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 120ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 180ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 240ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 300ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 360ms; }
+.js-reveal-ready .reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 420ms; }
+
+
+/* --- Section eyebrow ----------------------------------------------
+   The small "01 / SELECTED WORK" label. Uses the mono font so it
+   reads as metadata rather than prose.
+   ------------------------------------------------------------------ */
+
+.section-eyebrow {
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-eyebrow::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--wp--preset--color--rule);
+}
+
+
+/* --- Skill icons ---------------------------------------------------
+   Full colour at rest. Motion is the reward, not the information.
+   ------------------------------------------------------------------ */
+
+.skills-grid img {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skills-grid img:hover {
+  transform: translateY(-8px) scale(1.1);
+}
+
+
+/* --- Project card --------------------------------------------------- */
+
+.project-card {
+  border-top: 1px solid var(--wp--preset--color--rule);
+  padding-top: var(--wp--preset--spacing--40);
+  transition: border-color 0.3s ease;
+}
+
+.project-card:hover {
+  border-color: var(--wp--preset--color--signal);
+}
+
+
+/* --- Accessibility floor -------------------------------------------
+   Non-negotiable. Anyone who has set "reduce motion" at the OS level
+   has usually done so for a reason.
+   ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .js-reveal-ready .reveal,
+  .js-reveal-ready .reveal-stagger > * {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Keyboard users must be able to see where they are. */
+:where(a, button, input, textarea, summary):focus-visible {
+  outline: 2px solid var(--wp--preset--color--signal);
+  outline-offset: 3px;
+}
