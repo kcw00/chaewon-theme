@@ -1800,21 +1800,16 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
    About section uses, and headings that read as the numbered chapter
    rules used everywhere else. */
 /* Family, size, and leading all come from the root now that the whole
-   site is mono. What is left here is the measure, the prose colour,
-   and the alignment. `max-width` is in `ch`, which is measured in the
-   element's own font, so this is 60 characters wide whatever the
-   family.
-
-   Flush left rather than the constrained layout's centring: the phone
-   shot holds the right half of the article, and the prose shares its
-   left edge with the title above instead of floating between the two.
-   `!important` because the layout engine's auto pair is `!important`. */
+   site is mono. What is left here is the measure and the prose colour.
+   `max-width` is in `ch`, which is measured in the element's own font,
+   so this is 60 characters wide whatever the family. Pages that carry
+   a phone shot re-margin the whole body — see the phone-shot section;
+   pages without one keep the constrained layout's centring. */
 .project__body > p,
 .project__body > ul,
 .project__body > ol {
   max-width: 60ch;
   color: var(--wp--preset--color--ink-soft);
-  margin-inline: 0 !important;
 }
 
 .project__body > ul,
@@ -1846,8 +1841,12 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
 
    `flow-root` contains the float. On a short project the phone is
    taller than everything after it, and without this it runs over the
-   closing rule and the footer. */
-.project__body {
+   closing rule and the footer.
+
+   Everything in this section is scoped with `:has(.project__phone)`,
+   so the seven projects without a phone shot keep the plain centred
+   body they always had. */
+.project__body:has(.project__phone) {
   display: flow-root;
 }
 
@@ -1861,15 +1860,30 @@ html[data-theme="dark"] .project__phone img {
   filter: drop-shadow(0 18px 36px rgb(0 0 0 / 0.55));
 }
 
-/* The chapter rules inside the body follow the prose to the left edge
-   and give up the content-size cap, so they behave like the year rule
-   at the top of the article: full width where the phone is absent,
-   stopping at the phone where it is not. Without this they centre
-   themselves in whatever space the float leaves, and the 01 number
-   lands on a different left edge than the paragraph below it. */
-.project__body > .chapter-rule {
+/* The chapter rules start at the article's left edge and give up the
+   content-size cap, so they behave like the year rule at the top:
+   full width where the phone is absent, stopping at the phone where
+   it is not. Without this they centre themselves in whatever space
+   the float leaves, and the 01 number wanders between sections. */
+.project__body:has(.project__phone) > .chapter-rule {
   max-width: none;
   margin-inline: 0 !important;
+}
+
+/* The prose sits in the middle of the space between the article's
+   left edge — where the 01 number starts — and the left side of the
+   phone. The margin is that gap computed by hand: container width
+   minus the float's outer width minus the 60ch column, halved. It
+   cannot be an auto margin, because auto centres on the container and
+   ignores the float entirely; and the layout engine's own auto pair
+   is `!important`, so this has to be too. max() guards the viewports
+   just above the breakpoint where the gap dips under 60ch. */
+@media (min-width: 900px) {
+  .project__body:has(.project__phone) > p,
+  .project__body:has(.project__phone) > ul,
+  .project__body:has(.project__phone) > ol {
+    margin-inline: max(0px, calc((100% - min(19rem, 26vw) - var(--wp--preset--spacing--50) - 60ch) / 2)) auto !important;
+  }
 }
 
 /* The prose column is 60ch on the left of the wide article; the float
@@ -2100,13 +2114,15 @@ html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
   max-width: 72ch;
   padding-block: var(--wp--preset--spacing--30);
   border-top: 1px solid var(--wp--preset--color--rule);
-  /* Flush left like the prose, not the constrained layout's auto pair.
-     A grid is a formatting-context root, so beside the phone float an
-     auto-centred one re-centres in the leftover space — rows alongside
-     the phone would sit on a different left edge than rows below it.
-     Zero margins ignore the float, so every row lines up with the
-     prose and only the chip wrapping changes. `!important` because the
-     layout engine's auto margins are `!important` themselves. */
+}
+
+/* On phone-shot pages only, the 03 rows hold the article's left edge.
+   A grid is a formatting-context root, so an auto-centred one
+   re-centres in whatever space the float leaves — rows alongside the
+   phone would sit on a different left edge than rows below it. Zero
+   margins ignore the float, so every row stays put. `!important`
+   because the layout engine's auto margins are `!important` too. */
+.project__body:has(.project__phone) .stack-group {
   margin-inline: 0 !important;
 }
 
