@@ -1591,6 +1591,121 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
 }
 
 
+/* --- Copied confirmation --------------------------------------------
+   `site.js` sets data-copied on any mailto link it has just copied to
+   the clipboard, and clears it after two seconds. Without it a visitor
+   with no mail client clicks and sees nothing at all — see the comment
+   on initEmailCopy().
+
+   The badge is a pseudo-element on a relatively positioned anchor, so
+   it costs no markup and cannot reflow the label it belongs to. It is
+   deliberately not `position: fixed` toast: the confirmation belongs
+   next to the thing that was clicked.
+
+   The rule is unscoped so it covers all three: the address, the button,
+   and the footer icon. Only the anchor needs position, which the
+   `:where()` keeps at zero specificity so nothing has to fight it. */
+a[href^="mailto:"] {
+  position: relative;
+}
+
+a[href^="mailto:"][data-copied]::after {
+  content: "Copied";
+  position: absolute;
+  /* Below, not above. Above collides with whatever the control sits
+     under — on the contact section that is the address itself, set at
+     heading scale, and the badge lands right on top of it. Below every
+     one of the three is either a gap or the end of a row. */
+  top: calc(100% + 0.5rem);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 2;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--wp--custom--radius--sm);
+  background: var(--wp--preset--color--ink);
+  color: var(--wp--preset--color--paper);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--wp--custom--tracking--label);
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: chaewon-copied var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+@keyframes chaewon-copied {
+  from {
+    opacity: 0;
+    translate: -50% -0.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: -50% 0;
+  }
+}
+
+/* The button already has a background, so the badge needs to clear its
+   own chrome rather than sit on the label's descender line. */
+.wp-block-button__link[href^="mailto:"][data-copied]::after {
+  top: calc(100% + 0.75rem);
+}
+
+/* The footer icons are the last row on the page, so a badge below them
+   would hang into the bottom padding and, on a short viewport, off the
+   end. This is the one place where above is the clear side. */
+.wp-block-social-link-anchor[href^="mailto:"][data-copied]::after {
+  top: auto;
+  bottom: calc(100% + 0.5rem);
+}
+
+/* The address is boxed in vertically — prose above it, the button
+   below — so neither side is free. It is a centred line in a wide
+   section, though, so the room is horizontal. */
+.contact__address a[data-copied]::after {
+  top: 50%;
+  left: calc(100% + 0.75rem);
+  translate: 0 -50%;
+  animation-name: chaewon-copied-inline;
+}
+
+@keyframes chaewon-copied-inline {
+  from {
+    opacity: 0;
+    translate: -0.25rem -50%;
+  }
+  to {
+    opacity: 1;
+    translate: 0 -50%;
+  }
+}
+
+/* Under about 560px the space beside the address is gone, and both
+   stacked sides are 12–16px gaps that a 22px badge cannot sit in
+   without landing on the prose above or the button below. So the
+   address alone drops its badge here.
+
+   That is a real gap in feedback, and it is acceptable for one
+   reason: this only bites where `mailto:` fails, and `mailto:` does
+   not fail on a phone — iOS and Android both ship a registered mail
+   handler. The copy still happens; only the badge is suppressed. The
+   button and the footer icon keep theirs at every width. */
+@media (max-width: 559.98px) {
+  .contact__address a[data-copied]::after {
+    content: none;
+  }
+}
+
+/* The badge still appears — it is the whole point of the interaction,
+   and confirmation is information, not decoration. Only the movement
+   goes. */
+@media (prefers-reduced-motion: reduce) {
+  a[href^="mailto:"][data-copied]::after {
+    animation: none;
+  }
+}
+
+
 /* ===================================================================
    13  PROJECTS ARCHIVE AND SINGLE
    ===================================================================

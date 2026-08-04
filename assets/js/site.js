@@ -1,12 +1,14 @@
 /**
  * Chaewon theme behaviour.
  *
- * Four small things, no dependencies, no build step:
+ * A few small things, no dependencies, no build step:
  *
  *   1. Colour scheme toggle
  *   2. Scroll reveal
  *   3. Scroll progress for the left rail
  *   4. Header scrolled state
+ *   5. Taxonomy links
+ *   6. Email copy fallback
  *
  * Everything here is an enhancement. The page is complete and readable
  * with this file removed — that is the constraint the whole design works
@@ -240,11 +242,82 @@
 		} );
 	}
 
+	/* ---------------------------------------------------------------
+	 * 6. Email copy fallback
+	 *
+	 * `mailto:` is handed to the OS, which needs a registered mail
+	 * client to do anything with it. A visitor reading webmail in a
+	 * browser tab has none, so the click is swallowed in silence — no
+	 * error, no tab, no feedback. That is the worst possible outcome
+	 * for the one control on the site whose entire job is "contact me".
+	 *
+	 * So: copy the address on every click and say so. Anyone with a
+	 * mail client still gets their compose window, because the href is
+	 * untouched and this never calls preventDefault. Anyone without one
+	 * now has the address on their clipboard instead of nothing.
+	 *
+	 * The confirmation is a data attribute rather than swapped text —
+	 * replacing the label would reflow the button mid-click, and on the
+	 * icon link there is no text to swap.
+	 * --------------------------------------------------------------- */
+
+	function initEmailCopy() {
+		var links = document.querySelectorAll( 'a[href^="mailto:"]' );
+
+		if ( ! links.length || ! navigator.clipboard ) {
+			// No clipboard API (or an insecure origin, where it is not
+			// exposed). Leave the links exactly as authored.
+			return;
+		}
+
+		var RESET_AFTER = 2000;
+
+		Array.prototype.forEach.call( links, function ( link ) {
+			var timer = null;
+
+			// Strip any ?subject=… so the clipboard gets a bare address.
+			var address = link
+				.getAttribute( 'href' )
+				.replace( /^mailto:/, '' )
+				.split( '?' )[ 0 ];
+
+			if ( ! address ) {
+				return;
+			}
+
+			link.addEventListener( 'click', function () {
+				navigator.clipboard.writeText( address ).then(
+					function () {
+						link.setAttribute( 'data-copied', '' );
+
+						// A live region announces the copy to a screen
+						// reader; the visual state alone would be silent.
+						link.setAttribute(
+							'aria-label',
+							address + ' copied to clipboard'
+						);
+
+						window.clearTimeout( timer );
+						timer = window.setTimeout( function () {
+							link.removeAttribute( 'data-copied' );
+							link.removeAttribute( 'aria-label' );
+						}, RESET_AFTER );
+					},
+					function () {
+						// Permission denied or document not focused.
+						// The mailto still fires; nothing to report.
+					}
+				);
+			} );
+		} );
+	}
+
 	function init() {
 		initScheme();
 		initReveal();
 		initScroll();
 		initCardTerms();
+		initEmailCopy();
 	}
 
 	if ( document.readyState === 'loading' ) {
