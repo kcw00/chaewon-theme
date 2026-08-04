@@ -327,18 +327,26 @@ p {
    position, plus two place labels. Pure chrome — it carries no
    information that is not already in the page.
 
-   It only appears at 1360px and up. Below that the viewport cannot fit
-   an 88px rail beside a 1180px content column without overlapping it,
-   and an overlapping decoration is worse than no decoration. The media
+   It only appears at 1400px and up. Below that the viewport cannot fit
+   the rail beside a 1180px content column without overlapping it, and
+   an overlapping decoration is worse than no decoration. The media
    query is the single source of truth; site.js has no matching
    breakpoint to drift out of sync with.
+
+   The number is set by the widest label, not by the rail's own width.
+   "South Korea" sets 79px of tracked mono, which starts at the 20px
+   inset and so ends at 99px — past the 88px rail. That overhang is
+   fine over the page margin and not fine over the text: at 1360px the
+   content column starts at 90px and the label would sit on it; at
+   1400px the column starts at 110px and clears. Lengthen a label again
+   and this number moves again.
    ------------------------------------------------------------------- */
 
 .site-rail {
   display: none;
 }
 
-@media (min-width: 1360px) {
+@media (min-width: 1400px) {
   .site-rail {
     display: block;
     position: fixed;
@@ -388,9 +396,18 @@ p {
     color: var(--wp--preset--color--muted);
     line-height: 1.5;
     opacity: 0.75;
+    /* The label is allowed to overhang the rail, but never to break a
+       place name across lines — "SOUTH / KOREA" reads as a mistake.
+       The breakpoint above is what keeps the overhang off the text. */
+    white-space: nowrap;
   }
 
-  .site-rail__label--start { top: calc(18vh - 2.75rem); }
+  /* Both offsets clear the track by the same 14px. They differ because
+     the labels differ in height: the start label carries a country line
+     and so is three lines to the end label's two. Add a line to either
+     and its own offset grows by 0.9375rem, one line at this size and
+     leading. */
+  .site-rail__label--start { top: calc(18vh - 3.6875rem); }
   .site-rail__label--end   { bottom: calc(18vh - 2.75rem); }
 }
 
