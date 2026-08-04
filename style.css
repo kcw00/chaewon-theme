@@ -1824,6 +1824,55 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   color: var(--wp--preset--color--signal);
 }
 
+/* --- Phone shot ------------------------------------------------------
+   One figure per project that has something to show on a phone. The
+   image is cropped to the device with the corner rounding baked into
+   the PNG's alpha, and floated right so the 02 and 03 sections run down
+   its left — the chapter hairlines and the stack grid are flex and grid
+   containers, so they narrow beside the float instead of sliding under
+   it.
+
+   The shadow is a drop-shadow() filter rather than a box-shadow: the
+   filter follows the alpha channel, a box-shadow would paint the
+   clipped corners straight back in.
+
+   `flow-root` contains the float. On a short project the phone is
+   taller than everything after it, and without this it runs over the
+   closing rule and the footer. */
+.project__body {
+  display: flow-root;
+}
+
+.project__phone img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 36px rgb(20 22 26 / 0.18));
+}
+
+html[data-theme="dark"] .project__phone img {
+  filter: drop-shadow(0 18px 36px rgb(0 0 0 / 0.55));
+}
+
+/* The prose column is 60ch centred in the wide article, which leaves a
+   gutter either side on desktop; the float sits in the right one. The
+   26vw ceiling keeps it from crowding the text while the gutter is
+   still closing in. */
+.project__body .project__phone.alignright {
+  width: min(19rem, 26vw);
+  margin-inline-start: var(--wp--preset--spacing--50);
+  margin-block: 0 var(--wp--preset--spacing--50);
+}
+
+/* Below 900px the gutter is gone: the figure leaves the float and joins
+   the flow, centred between sections. */
+@media (max-width: 899.98px) {
+  .project__body .project__phone.alignright {
+    float: none;
+    width: min(17rem, 72vw);
+    margin: var(--wp--preset--spacing--50) auto;
+  }
+}
+
 .project__rule {
   margin-block: var(--wp--preset--spacing--70) var(--wp--preset--spacing--40);
   border: 0;
@@ -2033,6 +2082,14 @@ html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
   max-width: 72ch;
   padding-block: var(--wp--preset--spacing--30);
   border-top: 1px solid var(--wp--preset--color--rule);
+  /* Explicit margins, not the constrained layout's auto pair. A grid is
+     a formatting-context root, so beside the phone float an auto-centred
+     one re-centres in the leftover space — rows alongside the phone end
+     up further left than rows below it. Percentages resolve against the
+     container and ignore floats, so every row keeps the same left edge
+     and only the chip wrapping changes. `!important` because the layout
+     engine's auto margins are `!important` themselves. */
+  margin-inline: calc((100% - min(72ch, 100%)) / 2) !important;
 }
 
 .project__body .stack-group > * {
