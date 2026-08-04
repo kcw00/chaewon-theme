@@ -47,26 +47,52 @@ add_action( 'after_setup_theme', 'chaewon_setup' );
 /**
  * Load the front-end stylesheet and script.
  *
- * filemtime() is the version string so the browser cache busts every time
- * a file is saved. In development this removes the entire class of "I
+ * The version string is the file's mtime, so the browser cache busts every
+ * time a file is saved. In development this removes the entire class of "I
  * changed the CSS and nothing happened" confusion.
+ *
+ * In production it removed nothing, because something in front of this —
+ * a CDN, an optimiser, a host's page cache — replaced the stylesheet's
+ * version with the *theme* version and left the script's mtime alone. A
+ * static version means a static URL, and a static URL behind a CDN means
+ * the old file is served until someone purges by hand. That is exactly
+ * what happened: a theme upload landed and the site kept rendering the
+ * previous stylesheet for half an hour.
+ *
+ * So the version is now mtime *or the theme version, whichever is newer
+ * to change* — concretely, both, joined. Whatever upstream rewrites, the
+ * theme version still moves on every release, so the URL still moves.
+ * Bump `Version:` in style.css when shipping and the cache cannot hold.
  */
 function chaewon_enqueue_assets(): void {
 	$dir = get_template_directory();
 	$uri = get_template_directory_uri();
 
+	$theme_version = wp_get_theme()->get( 'Version' );
+
+	/**
+	 * filemtime() emits a warning and returns false if the file is
+	 * unreadable, which is survivable — fall back to the theme version
+	 * rather than shipping a versionless URL that caches forever.
+	 */
+	$asset_version = static function ( string $path ) use ( $theme_version ): string {
+		$mtime = is_readable( $path ) ? filemtime( $path ) : false;
+
+		return false === $mtime ? $theme_version : $theme_version . '.' . $mtime;
+	};
+
 	wp_enqueue_style(
 		'chaewon-style',
 		$uri . '/style.css',
 		array(),
-		filemtime( $dir . '/style.css' )
+		$asset_version( $dir . '/style.css' )
 	);
 
 	wp_enqueue_script(
 		'chaewon-site',
 		$uri . '/assets/js/site.js',
 		array(),
-		filemtime( $dir . '/assets/js/site.js' ),
+		$asset_version( $dir . '/assets/js/site.js' ),
 		array(
 			'strategy'  => 'defer',
 			'in_footer' => true,
