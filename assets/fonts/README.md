@@ -50,6 +50,9 @@ All three families are licensed under the SIL Open Font License 1.1, which
 permits bundling and redistribution. See `OFL.txt`.
 
 - Instrument Serif — Rodrigo Fuenzalida, Jordan Egstad
-- Inter — Rasmus Andersson
 - JetBrains Mono — JetBrains s.r.o.
 - Cardo — David J. Perry
+
+`OFL.txt` still carries Inter's copyright line. It is left in place because
+the licence text is shared and the file is append-only in spirit; removing a
+copyright notice from a bundled licence is not a tidy-up worth making.
