@@ -5,3 +5,6 @@ node_modules/
 
 # Conductor scratch space — agent notes, attachments, working files.
 .context/
+
+# Personal study notes.
+notes/
