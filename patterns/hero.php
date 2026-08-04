@@ -31,14 +31,6 @@
 	<p class="hero__tagline">Software engineer &mdash; I build the systems I run, and run the systems I build.</p>
 	<!-- /wp:paragraph -->
 
-	<!-- wp:separator {"className":"hero__divider is-style-wide"} -->
-	<hr class="wp-block-separator has-alpha-channel-opacity hero__divider is-style-wide" />
-	<!-- /wp:separator -->
-
-	<!-- wp:paragraph {"className":"hero__body"} -->
-	<p class="hero__body">Backend services, the infrastructure underneath them, and the unglamorous parts in between &mdash; deployments, monitoring, the 3am page. Most of what I know came from breaking something in production and having to explain why.</p>
-	<!-- /wp:paragraph -->
-
 	<!-- wp:group {"className":"hero__actions","layout":{"type":"default"}} -->
 	<div class="wp-block-group hero__actions">
 
