@@ -1,14 +1,21 @@
 # Fonts
 
-Self-hosted, latin subset, `woff2`. 132 KB total.
+Self-hosted, latin subset, `woff2`. 84 KB total.
 
 | File | Family | Slug | Used for |
 |---|---|---|---|
 | `InstrumentSerif-Regular.woff2` | Instrument Serif 400 | `display` | Headings, About prose, contact address |
-| `Inter-Variable.woff2` | Inter wght 400–600 | `body` | Body copy |
-| `JetBrainsMono-Variable.woff2` | JetBrains Mono wght 400–500 | `mono` | Labels, metadata |
+| `JetBrainsMono-Variable.woff2` | JetBrains Mono wght 400–500 | `mono` | Everything that is not a heading or an italic |
 | `Cardo-Regular.woff2` | Cardo 400 | `lead` | — |
 | `Cardo-Italic.woff2` | Cardo 400 italic | `lead` | Hero tagline, section leads, card taglines, memory notes, contact eyebrow, quotes |
+
+**There is no sans.** `mono` is the site default —
+`styles.typography.fontFamily` points at it — so body copy, buttons, links,
+list items, and excerpts are all JetBrains Mono. Inter was removed on
+2026-08-04; there is no `body` family and no
+`--wp--preset--font-family--body` custom property. A rule still referencing
+that variable resolves to nothing and the element drops to the browser
+default, which looks like Times.
 
 `lead` is the italic voice of the whole site. In practice only the italic
 face is used; the roman is bundled so the family is complete and the
@@ -27,8 +34,8 @@ inside Docker).
 Registered in `theme.json` under `settings.typography.fontFamilies[].fontFace`.
 WordPress emits the `@font-face` rules; do not hand-write them in `style.css`.
 
-Inter and JetBrains Mono are variable. One file covers the whole weight range,
-which is why there is no separate Medium or SemiBold file.
+JetBrains Mono is variable. One file covers the whole weight range, which is
+why there is no separate Medium or SemiBold file.
 
 ## Replacing a font
 

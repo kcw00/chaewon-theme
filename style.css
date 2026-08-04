@@ -1749,7 +1749,7 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   border-radius: 0;
   background: none;
   color: var(--wp--preset--color--signal);
-  font-family: var(--wp--preset--font-family--body);
+  font-family: var(--wp--preset--font-family--mono);
   font-size: var(--wp--preset--font-size--medium);
   font-weight: 500;
   line-height: 1.4;
@@ -1799,23 +1799,15 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
    anyone applying classes: prose measure, the ink-soft text colour the
    About section uses, and headings that read as the numbered chapter
    rules used everywhere else. */
+/* Family, size, and leading all come from the root now that the whole
+   site is mono. What is left here is the measure and the prose colour.
+   `max-width` is in `ch`, which is measured in the element's own font,
+   so this is 60 characters wide whatever the family. */
 .project__body > p,
 .project__body > ul,
 .project__body > ol {
   max-width: 60ch;
   color: var(--wp--preset--color--ink-soft);
-  line-height: 1.7;
-}
-
-/* The story runs in mono, the same face as the chips under 03. A
-   monospace at the same px reads optically larger than Inter, so the
-   size steps down and the line-height opens up to keep it prose rather
-   than a code block. `max-width` stays in `ch`, which is measured in
-   the current font, so the measure is still 60 characters. */
-.project__body > p {
-  font-family: var(--wp--preset--font-family--mono);
-  font-size: 0.9375rem;
-  line-height: 1.8;
 }
 
 .project__body > ul,
