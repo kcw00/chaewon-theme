@@ -2060,6 +2060,65 @@ html[data-theme="dark"] .project__phone img {
 }
 
 
+/* --- Note body -------------------------------------------------------
+   A single post. Unlike a project page, the whole body is authored as
+   long-form prose, so it needs paragraph rhythm rather than layout.
+
+   The root `blockGap` is 0.75rem, which is the right gap between the
+   parts of a component and the wrong one between paragraphs: at the
+   1.8 leading this site runs, a line is 27px and the gap was 12px, so
+   the space *inside* a paragraph was more than twice the space
+   *between* two. Paragraphs stopped reading as paragraphs.
+
+   The gap here is one full line. That is the oldest rule in setting
+   body copy and it is the one the default violated.
+
+   Headings then need to beat the paragraph gap by enough to read as a
+   break rather than a wide paragraph — hence the step up for h2, and a
+   smaller one for h3 which subdivides rather than separates.
+   ------------------------------------------------------------------- */
+
+/* The title is display serif at heading scale; 12px under it reads as
+   a caption gap rather than the end of the masthead. */
+.note__title {
+  margin-block: var(--wp--preset--spacing--20) 0;
+}
+
+.note__body {
+  margin-block-start: var(--wp--preset--spacing--60);
+}
+
+.note__body > * + * {
+  margin-block-start: 1.8em;
+}
+
+.note__body > h2 {
+  margin-block-start: var(--wp--preset--spacing--70);
+}
+
+.note__body > h3 {
+  margin-block-start: var(--wp--preset--spacing--60);
+}
+
+/* A heading owns the thing under it: the gap below is the paragraph
+   gap, not another section break. */
+.note__body > :is(h2, h3, h4) + * {
+  margin-block-start: var(--wp--preset--spacing--40);
+}
+
+/* Blocks that already carry their own padding — code, quote, table —
+   need air around the box, not around the text inside it. */
+.note__body > :is(.wp-block-code, .wp-block-quote, .wp-block-table) {
+  margin-block: var(--wp--preset--spacing--50);
+}
+
+/* Lists are prose here, so their items follow the paragraph rhythm at
+   half strength: enough to separate, not enough to read as paragraphs. */
+.note__body > :is(ul, ol) li + li {
+  margin-block-start: 0.9em;
+}
+
+
 /* ===================================================================
    14  WRITING ARCHIVE
    ===================================================================
