@@ -1818,6 +1818,17 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   line-height: 1.7;
 }
 
+/* The story runs in mono, the same face as the chips under 03. A
+   monospace at the same px reads optically larger than Inter, so the
+   size steps down and the line-height opens up to keep it prose rather
+   than a code block. `max-width` stays in `ch`, which is measured in
+   the current font, so the measure is still 60 characters. */
+.project__body > p {
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
 .project__body > ul,
 .project__body > ol {
   padding-left: 1.1rem;
