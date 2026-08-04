@@ -2078,10 +2078,24 @@ html[data-theme="dark"] .project__phone img {
    smaller one for h3 which subdivides rather than separates.
    ------------------------------------------------------------------- */
 
-/* The title is display serif at heading scale; 12px under it reads as
-   a caption gap rather than the end of the masthead. */
+/* A note title is a sentence, not a name. The h1 element style is
+   `display` (7rem) with 0.95 leading, which is built for the one or two
+   words a project is called — "Minion" fills a line and stops. A
+   sentence at that size ran to four lines and 426px, so the reader met
+   a wall of serif before a word of the note.
+
+   `xx-large` is the step that still reads as a headline. The leading
+   opens to 1.1 because 0.95 is set for a line or two of big type and
+   collides on three, and the tracking comes off: negative tracking is
+   for display sizes, and at this one it just tightens the words.
+
+   12px under it read as a caption gap rather than the end of the
+   masthead, hence the margin. */
 .note__title {
   margin-block: var(--wp--preset--spacing--20) 0;
+  font-size: var(--wp--preset--font-size--xx-large);
+  line-height: 1.1;
+  letter-spacing: normal;
 }
 
 .note__body {
@@ -2092,12 +2106,29 @@ html[data-theme="dark"] .project__phone img {
   margin-block-start: 1.8em;
 }
 
+/* Headings step down one preset inside a note. The global scale is
+   built for a page whose h1 is `display` at 7rem; a note's title is
+   `xx-large`, so an untouched h2 matches it exactly and the hierarchy
+   flattens — section headings the same size as the title of the piece
+   they sit inside. Each level drops one step to restore the gap. */
 .note__body > h2 {
   margin-block-start: var(--wp--preset--spacing--70);
+  font-size: var(--wp--preset--font-size--x-large);
+  line-height: 1.15;
 }
 
 .note__body > h3 {
   margin-block-start: var(--wp--preset--spacing--60);
+  font-size: var(--wp--preset--font-size--large);
+  line-height: 1.25;
+}
+
+.note__body > h4 {
+  font-size: var(--wp--preset--font-size--medium);
+  line-height: 1.4;
+  letter-spacing: var(--wp--custom--tracking--label);
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
 }
 
 /* A heading owns the thing under it: the gap below is the paragraph
