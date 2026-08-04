@@ -1800,14 +1800,21 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
    About section uses, and headings that read as the numbered chapter
    rules used everywhere else. */
 /* Family, size, and leading all come from the root now that the whole
-   site is mono. What is left here is the measure and the prose colour.
-   `max-width` is in `ch`, which is measured in the element's own font,
-   so this is 60 characters wide whatever the family. */
+   site is mono. What is left here is the measure, the prose colour,
+   and the alignment. `max-width` is in `ch`, which is measured in the
+   element's own font, so this is 60 characters wide whatever the
+   family.
+
+   Flush left rather than the constrained layout's centring: the phone
+   shot holds the right half of the article, and the prose shares its
+   left edge with the title above instead of floating between the two.
+   `!important` because the layout engine's auto pair is `!important`. */
 .project__body > p,
 .project__body > ul,
 .project__body > ol {
   max-width: 60ch;
   color: var(--wp--preset--color--ink-soft);
+  margin-inline: 0 !important;
 }
 
 .project__body > ul,
@@ -1827,10 +1834,11 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
 /* --- Phone shot ------------------------------------------------------
    One figure per project that has something to show on a phone. The
    image is cropped to the device with the corner rounding baked into
-   the PNG's alpha, and floated right so the 02 and 03 sections run down
-   its left — the chapter hairlines and the stack grid are flex and grid
-   containers, so they narrow beside the float instead of sliding under
-   it.
+   the PNG's alpha. It sits first in the post body, before the 01 rule,
+   so the float's top lines up with "01 — The story" and every section
+   runs down its left — the chapter hairlines and the stack grid are
+   flex and grid containers, so they narrow beside the float instead of
+   sliding under it.
 
    The shadow is a drop-shadow() filter rather than a box-shadow: the
    filter follows the alpha channel, a box-shadow would paint the
@@ -1853,10 +1861,20 @@ html[data-theme="dark"] .project__phone img {
   filter: drop-shadow(0 18px 36px rgb(0 0 0 / 0.55));
 }
 
-/* The prose column is 60ch centred in the wide article, which leaves a
-   gutter either side on desktop; the float sits in the right one. The
-   26vw ceiling keeps it from crowding the text while the gutter is
-   still closing in. */
+/* The chapter rules inside the body follow the prose to the left edge
+   and give up the content-size cap, so they behave like the year rule
+   at the top of the article: full width where the phone is absent,
+   stopping at the phone where it is not. Without this they centre
+   themselves in whatever space the float leaves, and the 01 number
+   lands on a different left edge than the paragraph below it. */
+.project__body > .chapter-rule {
+  max-width: none;
+  margin-inline: 0 !important;
+}
+
+/* The prose column is 60ch on the left of the wide article; the float
+   holds the right side. The 26vw ceiling keeps it from crowding the
+   text while the viewport is closing in. */
 .project__body .project__phone.alignright {
   width: min(19rem, 26vw);
   margin-inline-start: var(--wp--preset--spacing--50);
@@ -2082,14 +2100,14 @@ html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
   max-width: 72ch;
   padding-block: var(--wp--preset--spacing--30);
   border-top: 1px solid var(--wp--preset--color--rule);
-  /* Explicit margins, not the constrained layout's auto pair. A grid is
-     a formatting-context root, so beside the phone float an auto-centred
-     one re-centres in the leftover space — rows alongside the phone end
-     up further left than rows below it. Percentages resolve against the
-     container and ignore floats, so every row keeps the same left edge
-     and only the chip wrapping changes. `!important` because the layout
-     engine's auto margins are `!important` themselves. */
-  margin-inline: calc((100% - min(72ch, 100%)) / 2) !important;
+  /* Flush left like the prose, not the constrained layout's auto pair.
+     A grid is a formatting-context root, so beside the phone float an
+     auto-centred one re-centres in the leftover space — rows alongside
+     the phone would sit on a different left edge than rows below it.
+     Zero margins ignore the float, so every row lines up with the
+     prose and only the chip wrapping changes. `!important` because the
+     layout engine's auto margins are `!important` themselves. */
+  margin-inline: 0 !important;
 }
 
 .project__body .stack-group > * {
