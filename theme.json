@@ -45,20 +45,6 @@
           ]
         },
         {
-          "slug": "body",
-          "name": "Body",
-          "fontFamily": "\"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
-          "fontFace": [
-            {
-              "fontFamily": "Inter",
-              "fontWeight": "400 600",
-              "fontStyle": "normal",
-              "fontDisplay": "swap",
-              "src": [ "file:./assets/fonts/Inter-Variable.woff2" ]
-            }
-          ]
-        },
-        {
           "slug": "mono",
           "name": "Mono",
           "fontFamily": "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -96,7 +82,7 @@
       ],
       "fontSizes": [
         { "slug": "small",    "name": "Small",    "size": "0.8125rem", "fluid": false },
-        { "slug": "medium",   "name": "Medium",   "size": "1.0625rem", "fluid": { "min": "1rem",      "max": "1.0625rem" } },
+        { "slug": "medium",   "name": "Medium",   "size": "0.9375rem", "fluid": { "min": "0.875rem",  "max": "0.9375rem" } },
         { "slug": "large",    "name": "Large",    "size": "1.375rem",  "fluid": { "min": "1.1875rem", "max": "1.375rem" } },
         { "slug": "x-large",  "name": "X Large",  "size": "2rem",      "fluid": { "min": "1.5rem",    "max": "2rem" } },
         { "slug": "xx-large", "name": "XX Large", "size": "3.25rem",   "fluid": { "min": "2.125rem",  "max": "3.25rem" } },
@@ -171,11 +157,11 @@
     },
 
     "typography": {
-      "fontFamily": "var(--wp--preset--font-family--body)",
+      "fontFamily": "var(--wp--preset--font-family--mono)",
       "fontSize": "var(--wp--preset--font-size--medium)",
       "fontWeight": "400",
-      "lineHeight": "1.65",
-      "letterSpacing": "-0.005em"
+      "lineHeight": "1.8",
+      "letterSpacing": "0"
     },
 
     "elements": {
@@ -223,7 +209,7 @@
         "border": { "radius": "var(--wp--custom--radius--pill)" },
         "spacing": { "padding": { "top": "0.9rem", "bottom": "0.9rem", "left": "1.75rem", "right": "1.75rem" } },
         "typography": {
-          "fontFamily": "var(--wp--preset--font-family--body)",
+          "fontFamily": "var(--wp--preset--font-family--mono)",
           "fontSize": "var(--wp--preset--font-size--medium)",
           "fontWeight": "500",
           "lineHeight": "1"

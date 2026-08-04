@@ -119,10 +119,22 @@ midpoint of the other two in both schemes.
 All pairs clear WCAG AA against their background. Re-check with the script in
 `changelog.d/` before changing a value.
 
-Four families: `display` (Instrument Serif) for headings, `body` (Inter) for
-prose, `mono` (JetBrains Mono) for metadata and labels, `lead` (Cardo italic)
-for taglines, section leads, and quotes. Mono is doing real work here — it is
-the visual signal for "this is data, not prose."
+Three families: `display` (Instrument Serif) for headings, `lead` (Cardo
+italic) for taglines, section leads, and quotes, and `mono` (JetBrains Mono)
+for **everything else** — body copy, buttons, links, list items, excerpts,
+metadata, labels.
+
+**There is no sans.** `styles.typography.fontFamily` in `theme.json` points at
+`mono`, so it is the site default and new content inherits it with no work.
+Inter was removed on 2026-08-04; the `body` slug and the
+`--wp--preset--font-family--body` custom property no longer exist. A rule that
+still references that variable resolves to nothing and the element drops to
+the browser default, which looks like Times.
+
+Mono at a sans's size reads optically larger and, at a sans's leading, reads
+as a code block. That is why the `medium` preset is `0.9375rem` and the root
+`lineHeight` is `1.8`. Those two numbers are a pair — raising one without the
+other is what makes long-form mono unreadable.
 
 `lead` is the site's italic voice. Every italic on the page is Cardo; every
 upright serif is Instrument Serif. Instrument Serif is bundled **roman only**,

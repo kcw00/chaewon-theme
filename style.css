@@ -327,18 +327,26 @@ p {
    position, plus two place labels. Pure chrome — it carries no
    information that is not already in the page.
 
-   It only appears at 1360px and up. Below that the viewport cannot fit
-   an 88px rail beside a 1180px content column without overlapping it,
-   and an overlapping decoration is worse than no decoration. The media
+   It only appears at 1400px and up. Below that the viewport cannot fit
+   the rail beside a 1180px content column without overlapping it, and
+   an overlapping decoration is worse than no decoration. The media
    query is the single source of truth; site.js has no matching
    breakpoint to drift out of sync with.
+
+   The number is set by the widest label, not by the rail's own width.
+   "South Korea" sets 79px of tracked mono, which starts at the 20px
+   inset and so ends at 99px — past the 88px rail. That overhang is
+   fine over the page margin and not fine over the text: at 1360px the
+   content column starts at 90px and the label would sit on it; at
+   1400px the column starts at 110px and clears. Lengthen a label again
+   and this number moves again.
    ------------------------------------------------------------------- */
 
 .site-rail {
   display: none;
 }
 
-@media (min-width: 1360px) {
+@media (min-width: 1400px) {
   .site-rail {
     display: block;
     position: fixed;
@@ -388,9 +396,18 @@ p {
     color: var(--wp--preset--color--muted);
     line-height: 1.5;
     opacity: 0.75;
+    /* The label is allowed to overhang the rail, but never to break a
+       place name across lines — "SOUTH / KOREA" reads as a mistake.
+       The breakpoint above is what keeps the overhang off the text. */
+    white-space: nowrap;
   }
 
-  .site-rail__label--start { top: calc(18vh - 2.75rem); }
+  /* Both offsets clear the track by the same 14px. They differ because
+     the labels differ in height: the start label carries a country line
+     and so is three lines to the end label's two. Add a line to either
+     and its own offset grows by 0.9375rem, one line at this size and
+     leading. */
+  .site-rail__label--start { top: calc(18vh - 3.6875rem); }
   .site-rail__label--end   { bottom: calc(18vh - 2.75rem); }
 }
 
@@ -572,6 +589,38 @@ p {
      fill above, which is still legible. */
   -webkit-backdrop-filter: blur(16px) saturate(1.6);
   backdrop-filter: blur(16px) saturate(1.6);
+}
+
+/* --- Avatar mark -----------------------------------------------------
+   One PNG, drawn in pure black on transparency, inverted for the dark
+   scheme. Two files would eventually disagree with each other; a filter
+   cannot.
+
+   The source art was normalised to #000 exactly for this reason —
+   invert(1) on a near-black stroke returns a dirty off-white rather than
+   the paper colour.
+   ------------------------------------------------------------------- */
+
+.site-avatar {
+  display: block;
+  flex: none;
+  line-height: 0;
+}
+
+.site-avatar img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  transition: filter var(--wp--custom--duration--base) ease,
+              opacity var(--wp--custom--duration--fast) ease;
+}
+
+html[data-theme="dark"] .site-avatar img {
+  filter: invert(1);
+}
+
+.site-avatar:hover img {
+  opacity: 0.7;
 }
 
 .site-header .wp-block-site-title a {
@@ -778,7 +827,14 @@ html[data-theme="dark"] .scheme-toggle .icon-moon {
 
 /* Same Cardo italic as every other lead on the page, one size up. The
    hero tagline is the loudest instance of that voice, not a different
-   voice. */
+   voice.
+
+   The bottom margin is the only gap between the title block and the
+   buttons, so it is three times the name-to-tagline gap: name and
+   tagline are one unit, the actions are a second one. Each hero child
+   owns its own bottom margin rather than leaning on the flow layout's
+   block gap — that keeps the rhythm readable in this file instead of
+   split between here and theme.json. */
 .hero__tagline {
   font-family: var(--wp--preset--font-family--lead);
   font-style: italic;
@@ -786,25 +842,7 @@ html[data-theme="dark"] .scheme-toggle .icon-moon {
   line-height: 1.35;
   color: var(--wp--preset--color--muted);
   max-width: 34ch;
-  margin-block: 0;
-}
-
-/* Short rule between the tagline and the body copy. Reads as a breath.
-   core/separator ships with margin-inline: auto, which would centre a
-   3rem rule in a 1180px column and leave it stranded mid-air. */
-.hero__divider {
-  width: 3rem;
-  height: 1px;
-  border: 0;
-  margin-block: var(--wp--preset--spacing--30);
-  margin-inline: 0;
-  background: var(--wp--preset--color--rule);
-}
-
-.hero__body {
-  max-width: 52ch;
-  margin-block: 0 var(--wp--preset--spacing--40);
-  color: var(--wp--preset--color--ink);
+  margin-block: 0 var(--wp--preset--spacing--60);
 }
 
 .hero__actions {
@@ -1420,127 +1458,68 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   margin: 0 0 var(--wp--preset--spacing--30);
 }
 
-/* --- Zoom on hover ---------------------------------------------------
-   The frame is clipped and the picture inside it grows. Scaling the tile
-   itself would push it into the column gap and nudge its neighbours;
-   scaling the contents inside a fixed frame keeps every edge still and
-   reads as looking closer rather than as the card growing.
+/* --- Photos ----------------------------------------------------------
+   Each tile is cropped to a ratio rather than shown at its natural
+   aspect. The source photos are nearly all 3:4, so without this the
+   board would be six near-identical portraits in three columns; the
+   ratios are what create the variety and object-fit does the cropping.
 
-   Both tile kinds are listed together so a plate swapped for a real
-   Image block behaves identically. `.memory-plate::before` is the
-   stand-in for the picture that is not there yet.
+   The frame is clipped and the picture inside it grows on hover.
+   Scaling the tile itself would push it into the column gap and nudge
+   its neighbours; scaling the contents inside a fixed frame keeps every
+   edge still and reads as looking closer.
    ------------------------------------------------------------------- */
 
-.memory-board .wp-block-image,
-.memory-plate {
+.memory-photo {
   position: relative;
   overflow: hidden;
   border-radius: var(--wp--custom--radius--md);
-}
-
-.memory-board .wp-block-image img,
-.memory-plate::before {
-  transition: transform 0.7s var(--wp--custom--ease--out);
-}
-
-.memory-board .wp-block-image:hover img,
-.memory-plate:hover::before {
-  transform: scale(1.06);
-}
-
-.memory-board .wp-block-image img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-
-/* --- Plate ---------------------------------------------------------
-   A photo that does not exist yet.
-
-   An empty core/image block renders to nothing on the front end — it
-   has no markup to save until an image is attached — so a board built
-   from empty ones silently collapses. A plate is a real group that holds
-   its space and reads as deliberate.
-
-   To use a real photo: select the plate in the editor and replace it
-   with an Image block. The aspect ratio comes from the modifier class,
-   so the board keeps its rhythm either way.
-   ------------------------------------------------------------------- */
-
-.memory-plate {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 5;
-  border: 1px dashed var(--wp--preset--color--rule);
-  background: transparent;
-  transition: border-color var(--wp--custom--duration--base) ease;
-}
-
-/* The surface is a pseudo-element rather than a background on the plate
-   itself, so it has something to scale that is not the border. */
-.memory-plate::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   background: var(--wp--preset--color--surface);
 }
 
-.memory-plate > * {
-  position: relative;
-  z-index: 1;
+.memory-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--wp--custom--ease--out);
 }
 
-.memory-plate:hover {
-  border-color: var(--wp--preset--color--signal);
+.memory-photo:hover img {
+  transform: scale(1.06);
 }
 
-/* Five heights at a fixed column width, tallest first. Each modifier is
-   used by more than one tile, so retuning one moves every tile carrying
-   it — to change a single tile, move it to a different modifier or add
-   one. The pixel values are what these ratios produce in a 385px column
-   at 1440px, recorded so the ladder can be reasoned about without
-   measuring again. */
-.memory-plate--square   { aspect-ratio: 1 / 1; }    /* 385 -> 385 */
-.memory-plate--short    { aspect-ratio: 5 / 4; }    /* 385 -> 308 */
-.memory-plate--wide     { aspect-ratio: 4 / 3; }    /* 385 -> 289 */
-.memory-plate--panorama { aspect-ratio: 16 / 9; }   /* 385 -> 217 */
+/* Four heights at a fixed column width, tallest first. */
+.memory-photo--tall   { aspect-ratio: 4 / 5; }   /* 385 -> 481 */
+.memory-photo--square { aspect-ratio: 1 / 1; }   /* 385 -> 385 */
+.memory-photo--short  { aspect-ratio: 5 / 4; }   /* 385 -> 308 */
+.memory-photo--wide   { aspect-ratio: 4 / 3; }   /* 385 -> 289 */
 
-/* Starts a tile lower than the tiles beside it, and carries everything
-   below it in the same column down with it. Purely for rhythm — a board
-   where every column starts on the same line reads as a table.
+
+/* --- Column cascade --------------------------------------------------
+   Starts a tile lower than the tiles beside it, and carries everything
+   below it in the same column down with it, so the three columns step
+   down 0 / 28 / 56 instead of all starting on the same line.
 
    This is a translate plus a matching bottom margin, not a top margin.
-   Multicol truncates margins that land on a column boundary, and a tile
-   that begins a column is exactly that case — `margin-top` computes
-   correctly and then does nothing at all. The transform does the visual
-   move; the extra bottom margin makes the flow account for it, so the
-   next tile in the column comes down too and the gap below stays right.
+   Multicol truncates a margin that lands on a column boundary, and a
+   tile that begins a column is exactly that case — `margin-top`
+   computes correctly and then does nothing at all.
    ------------------------------------------------------------------- */
 
-.memory-board > .memory-plate--offset,
-.memory-board > .memory-plate--offset-sm {
+.memory-board > .memory-photo--offset,
+.memory-board > .memory-photo--offset-sm {
   transform: translateY(var(--plate-offset));
   margin-bottom: calc(var(--wp--preset--spacing--30) + var(--plate-offset));
 }
 
-/* Two depths, one source value, so the columns step down evenly:
-   0 · 28 · 56. Deriving the half from the full means they cannot drift
-   apart when either is retuned. */
-.memory-board > .memory-plate--offset    { --plate-offset: var(--wp--preset--spacing--70); }
-.memory-board > .memory-plate--offset-sm { --plate-offset: calc(var(--wp--preset--spacing--70) / 2); }
-
-.memory-plate p {
-  margin: 0;
-  font-size: 0.6875rem;
-}
+.memory-board > .memory-photo--offset    { --plate-offset: var(--wp--preset--spacing--70); }
+.memory-board > .memory-photo--offset-sm { --plate-offset: calc(var(--wp--preset--spacing--70) / 2); }
 
 /* A zoom is motion for its own sake — the tile carries the same
    information either way, so it goes entirely under reduced motion. */
 @media (prefers-reduced-motion: reduce) {
-  .memory-board .wp-block-image:hover img,
-  .memory-plate:hover::before {
+  .memory-photo:hover img {
     transform: none;
   }
 }
@@ -1551,8 +1530,8 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   /* The offsets exist to break up three columns that would otherwise
      start on the same line. Below three they have nothing to break up —
      in a single stack they are just tiles sitting in holes. */
-  .memory-board > .memory-plate--offset,
-  .memory-board > .memory-plate--offset-sm {
+  .memory-board > .memory-photo--offset,
+  .memory-board > .memory-photo--offset-sm {
     transform: none;
     margin-bottom: var(--wp--preset--spacing--30);
   }
@@ -1617,6 +1596,121 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   font-size: var(--wp--preset--font-size--x-large);
   line-height: 1.2;
   margin-block: 0 var(--wp--preset--spacing--30);
+}
+
+
+/* --- Copied confirmation --------------------------------------------
+   `site.js` sets data-copied on any mailto link it has just copied to
+   the clipboard, and clears it after two seconds. Without it a visitor
+   with no mail client clicks and sees nothing at all — see the comment
+   on initEmailCopy().
+
+   The badge is a pseudo-element on a relatively positioned anchor, so
+   it costs no markup and cannot reflow the label it belongs to. It is
+   deliberately not `position: fixed` toast: the confirmation belongs
+   next to the thing that was clicked.
+
+   The rule is unscoped so it covers all three: the address, the button,
+   and the footer icon. Only the anchor needs position, which the
+   `:where()` keeps at zero specificity so nothing has to fight it. */
+a[href^="mailto:"] {
+  position: relative;
+}
+
+a[href^="mailto:"][data-copied]::after {
+  content: "Copied";
+  position: absolute;
+  /* Below, not above. Above collides with whatever the control sits
+     under — on the contact section that is the address itself, set at
+     heading scale, and the badge lands right on top of it. Below every
+     one of the three is either a gap or the end of a row. */
+  top: calc(100% + 0.5rem);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 2;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--wp--custom--radius--sm);
+  background: var(--wp--preset--color--ink);
+  color: var(--wp--preset--color--paper);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--wp--custom--tracking--label);
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: chaewon-copied var(--wp--custom--duration--base) var(--wp--custom--ease--out);
+}
+
+@keyframes chaewon-copied {
+  from {
+    opacity: 0;
+    translate: -50% -0.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: -50% 0;
+  }
+}
+
+/* The button already has a background, so the badge needs to clear its
+   own chrome rather than sit on the label's descender line. */
+.wp-block-button__link[href^="mailto:"][data-copied]::after {
+  top: calc(100% + 0.75rem);
+}
+
+/* The footer icons are the last row on the page, so a badge below them
+   would hang into the bottom padding and, on a short viewport, off the
+   end. This is the one place where above is the clear side. */
+.wp-block-social-link-anchor[href^="mailto:"][data-copied]::after {
+  top: auto;
+  bottom: calc(100% + 0.5rem);
+}
+
+/* The address is boxed in vertically — prose above it, the button
+   below — so neither side is free. It is a centred line in a wide
+   section, though, so the room is horizontal. */
+.contact__address a[data-copied]::after {
+  top: 50%;
+  left: calc(100% + 0.75rem);
+  translate: 0 -50%;
+  animation-name: chaewon-copied-inline;
+}
+
+@keyframes chaewon-copied-inline {
+  from {
+    opacity: 0;
+    translate: -0.25rem -50%;
+  }
+  to {
+    opacity: 1;
+    translate: 0 -50%;
+  }
+}
+
+/* Under about 560px the space beside the address is gone, and both
+   stacked sides are 12–16px gaps that a 22px badge cannot sit in
+   without landing on the prose above or the button below. So the
+   address alone drops its badge here.
+
+   That is a real gap in feedback, and it is acceptable for one
+   reason: this only bites where `mailto:` fails, and `mailto:` does
+   not fail on a phone — iOS and Android both ship a registered mail
+   handler. The copy still happens; only the badge is suppressed. The
+   button and the footer icon keep theirs at every width. */
+@media (max-width: 559.98px) {
+  .contact__address a[data-copied]::after {
+    content: none;
+  }
+}
+
+/* The badge still appears — it is the whole point of the interaction,
+   and confirmation is information, not decoration. Only the movement
+   goes. */
+@media (prefers-reduced-motion: reduce) {
+  a[href^="mailto:"][data-copied]::after {
+    animation: none;
+  }
 }
 
 
@@ -1787,7 +1881,7 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
   border-radius: 0;
   background: none;
   color: var(--wp--preset--color--signal);
-  font-family: var(--wp--preset--font-family--body);
+  font-family: var(--wp--preset--font-family--mono);
   font-size: var(--wp--preset--font-size--medium);
   font-weight: 500;
   line-height: 1.4;
@@ -1837,12 +1931,17 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
    anyone applying classes: prose measure, the ink-soft text colour the
    About section uses, and headings that read as the numbered chapter
    rules used everywhere else. */
+/* Family, size, and leading all come from the root now that the whole
+   site is mono. What is left here is the measure and the prose colour.
+   `max-width` is in `ch`, which is measured in the element's own font,
+   so this is 60 characters wide whatever the family. Pages that carry
+   a phone shot re-margin the whole body — see the phone-shot section;
+   pages without one keep the constrained layout's centring. */
 .project__body > p,
 .project__body > ul,
 .project__body > ol {
   max-width: 60ch;
   color: var(--wp--preset--color--ink-soft);
-  line-height: 1.7;
 }
 
 .project__body > ul,
@@ -1857,6 +1956,85 @@ html[data-theme="dark"] .notes-list .wp-block-post:has(.wp-block-post-title a:fo
 
 .project__body > ul li::marker {
   color: var(--wp--preset--color--signal);
+}
+
+/* --- Phone shot ------------------------------------------------------
+   One figure per project that has something to show on a phone. The
+   image is cropped to the device with the corner rounding baked into
+   the PNG's alpha. It sits first in the post body, before the 01 rule,
+   so the float's top lines up with "01 — The story" and every section
+   runs down its left — the chapter hairlines and the stack grid are
+   flex and grid containers, so they narrow beside the float instead of
+   sliding under it.
+
+   The shadow is a drop-shadow() filter rather than a box-shadow: the
+   filter follows the alpha channel, a box-shadow would paint the
+   clipped corners straight back in.
+
+   `flow-root` contains the float. On a short project the phone is
+   taller than everything after it, and without this it runs over the
+   closing rule and the footer.
+
+   Everything in this section is scoped with `:has(.project__phone)`,
+   so the seven projects without a phone shot keep the plain centred
+   body they always had. */
+.project__body:has(.project__phone) {
+  display: flow-root;
+}
+
+.project__phone img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 36px rgb(20 22 26 / 0.18));
+}
+
+html[data-theme="dark"] .project__phone img {
+  filter: drop-shadow(0 18px 36px rgb(0 0 0 / 0.55));
+}
+
+/* The chapter rules start at the article's left edge and give up the
+   content-size cap, so they behave like the year rule at the top:
+   full width where the phone is absent, stopping at the phone where
+   it is not. Without this they centre themselves in whatever space
+   the float leaves, and the 01 number wanders between sections. */
+.project__body:has(.project__phone) > .chapter-rule {
+  max-width: none;
+  margin-inline: 0 !important;
+}
+
+/* The prose sits in the middle of the space between the article's
+   left edge — where the 01 number starts — and the left side of the
+   phone. The margin is that gap computed by hand: container width
+   minus the float's outer width minus the 60ch column, halved. It
+   cannot be an auto margin, because auto centres on the container and
+   ignores the float entirely; and the layout engine's own auto pair
+   is `!important`, so this has to be too. max() guards the viewports
+   just above the breakpoint where the gap dips under 60ch. */
+@media (min-width: 900px) {
+  .project__body:has(.project__phone) > p,
+  .project__body:has(.project__phone) > ul,
+  .project__body:has(.project__phone) > ol {
+    margin-inline: max(0px, calc((100% - min(19rem, 26vw) - var(--wp--preset--spacing--50) - 60ch) / 2)) auto !important;
+  }
+}
+
+/* The prose column is 60ch on the left of the wide article; the float
+   holds the right side. The 26vw ceiling keeps it from crowding the
+   text while the viewport is closing in. */
+.project__body .project__phone.alignright {
+  width: min(19rem, 26vw);
+  margin-inline-start: var(--wp--preset--spacing--50);
+  margin-block: 0 var(--wp--preset--spacing--50);
+}
+
+/* Below 900px the gutter is gone: the figure leaves the float and joins
+   the flow, centred between sections. */
+@media (max-width: 899.98px) {
+  .project__body .project__phone.alignright {
+    float: none;
+    width: min(17rem, 72vw);
+    margin: var(--wp--preset--spacing--50) auto;
+  }
 }
 
 .project__rule {
@@ -2048,5 +2226,73 @@ html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
 
   .writing-row__media {
     aspect-ratio: 16 / 9;
+  }
+}
+
+
+/* --- Stack groups ----------------------------------------------------
+   The "Built with" section on a project page. Authored in the post body
+   rather than generated from the taxonomy, because a real stack has
+   shape — backend, frontend, delivery — and a single flat row throws
+   that away. The taxonomy still drives the compact chips on cards,
+   which is the job it is actually good at.
+   ------------------------------------------------------------------- */
+
+.project__body .stack-group {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: var(--wp--preset--spacing--30);
+  align-items: baseline;
+  max-width: 72ch;
+  padding-block: var(--wp--preset--spacing--30);
+  border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+/* No margin override: the rows centre through the constrained
+   layout's auto pair, on every page. A grid is a formatting-context
+   root, so a row beside the phone float centres in the space the
+   float leaves and a row below it centres in the full width — safe
+   here because on each of the three phone pages the whole 03 section
+   is on one side of the float's bottom edge (past it on Minion and
+   Discord Bot, entirely alongside on Smart Diagnosis). If a phone
+   ever ends mid-section again, rows above and below the seam will
+   sit on different centres, and 03 needs an explicit margin like the
+   prose has. */
+
+.project__body .stack-group > * {
+  margin-block: 0;
+  max-width: none;
+}
+
+/* A wrapped row of chips rather than a sentence. The right column is
+   named tools now, one per chip, which scans; the prose it replaced
+   had to be read. Grid baseline alignment resolves a flex container to
+   its first item's baseline, so the label still sits on the same line
+   as the first chip's text despite the chip's padding. */
+.project__body .stack-group__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* Matches the chips on the work cards. Deliberately not `.label`,
+   which uppercases — "pnpm", "shadcn/ui", and "next-themes" mean their
+   own casing, and TYPESCRIPT is not a thing anyone writes. */
+.project__body .stack-group__items p {
+  margin-block: 0;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--wp--preset--color--rule);
+  border-radius: var(--wp--custom--radius--sm);
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: var(--wp--preset--color--muted);
+}
+
+@media (max-width: 700px) {
+  .project__body .stack-group {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 }

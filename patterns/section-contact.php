@@ -42,7 +42,7 @@
 	<!-- /wp:paragraph -->
 
 	<!-- wp:paragraph {"className":"contact__address"} -->
-	<p class="contact__address"><a href="mailto:hello@example.com">hello@example.com</a></p>
+	<p class="contact__address"><a href="mailto:kimchaewon877@gmail.com">kimchaewon877@gmail.com</a></p>
 	<!-- /wp:paragraph -->
 
 	<!-- wp:group {"className":"contact__actions","layout":{"type":"default"}} -->
@@ -51,13 +51,13 @@
 		<!-- wp:buttons -->
 		<div class="wp-block-buttons">
 			<!-- wp:button -->
-			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="mailto:hello@example.com">Send an email</a></div>
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="mailto:kimchaewon877@gmail.com">Send an email</a></div>
 			<!-- /wp:button -->
 		</div>
 		<!-- /wp:buttons -->
 
 		<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"0","bottom":"0"}}}} -->
-		<p style="margin-top:0;margin-bottom:0"><a class="link-arrow" href="https://github.com/kcw00">GitHub</a></p>
+		<p style="margin-top:0;margin-bottom:0"><a class="link-arrow" href="https://www.linkedin.com/in/chaewon-kim-6b145825b/">LinkedIn</a></p>
 		<!-- /wp:paragraph -->
 
 	</div>

@@ -36,15 +36,15 @@
 	<!-- wp:group {"className":"about__prose prose","layout":{"type":"default"}} -->
 	<div class="wp-block-group about__prose prose">
 		<!-- wp:paragraph -->
-		<p>I grew up in Seoul and moved to Vancouver, which is a longer story than it sounds and a shorter one than it felt. Most of what I know about being patient with a problem started somewhere in that gap.</p>
+		<p>I grew up in Seoul and moved to Vancouver, which is a longer story than it sounds and a shorter one than it felt. Most of what I know about not giving up on a problem until I&rsquo;ve solved it started somewhere in that gap.</p>
 		<!-- /wp:paragraph -->
 
 		<!-- wp:paragraph -->
-		<p>I write backend services and then I run them. That second part is the one that changed how I write the first part &mdash; it is hard to ship something careless when you are the person who gets paged for it at 3am.</p>
+		<p>I like building things consistently and trying out different kinds of experiences along the way. Lately I&rsquo;ve been putting that to use volunteering for a local barbershop, building and running their booking platform in production.</p>
 		<!-- /wp:paragraph -->
 
 		<!-- wp:paragraph -->
-		<p>These days that means Django and Postgres, containers and Kubernetes, and a home cluster I keep breaking on purpose so I understand it before it breaks on its own. Still building. That part has not changed.</p>
+		<p>Right now I&rsquo;m looking for a team to build that kind of thing with full-time.</p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
