@@ -914,28 +914,37 @@ body:has(.site-header.is-scrolled) .hero__cue {
   padding-top: var(--wp--preset--spacing--60);
 }
 
-/* Set in the display serif, one step lighter than the heading and one
-   step darker than the italic lead — `ink-soft` exists for exactly this
-   middle position in the text hierarchy.
+/* Set in mono, `ink-soft` — one step lighter than the heading and one
+   step darker than the italic lead.
+
+   Size and measure were both retuned when this moved off the display
+   serif. A monospace sets every glyph on the same advance, so the same
+   rem width holds far fewer characters: 64rem was about 100 characters
+   of serif and would be 78 of mono, and 1.375rem of mono outweighed the
+   heading above it. 48rem at 1.125rem lands at roughly 71 characters,
+   which is inside the comfortable range rather than past it.
+
+   The size is fluid because the fixed 1.125rem gave 34 characters a
+   line at 390px. The floor matches the 0.9375rem the rest of the site's
+   mono prose runs at.
 
    The measure is in rem, not ch, on purpose. `ch` is the width of a
    zero, so it silently rescales whenever the family changes; this
-   paragraph has already been resized twice by that. A rem value means
+   paragraph has now been resized three times by that. A rem value means
    the width is what it says it is.
 
-   64rem is a long line — roughly 100 characters — which is past the
-   usual comfort range. The 1.7 leading is what makes it work: the wider
-   the column, the more vertical separation the eye needs to find the
-   start of the next line. Do not reduce one without the other.
+   1.8 leading is the pair to the measure. The wider the column, the
+   more vertical separation the eye needs to find the start of the next
+   line — do not reduce one without the other.
 
    The block is centred while the text stays flush left. Centred ragged
    text over four lines is measurably harder to read. */
 .about__prose > p {
-  font-family: var(--wp--preset--font-family--display);
-  font-size: var(--wp--preset--font-size--large);
-  line-height: 1.7;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: clamp(0.9375rem, 0.8rem + 0.55vw, 1.125rem);
+  line-height: 1.8;
   color: var(--wp--preset--color--ink-soft);
-  max-width: 64rem;
+  max-width: 48rem;
   margin-block: 0 var(--wp--preset--spacing--30);
   margin-inline: auto;
 }
