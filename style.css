@@ -2116,15 +2116,16 @@ html[data-theme="dark"] .writing-row:has(.writing-row__title a:focus-visible) {
   border-top: 1px solid var(--wp--preset--color--rule);
 }
 
-/* On phone-shot pages only, the 03 rows hold the article's left edge.
-   A grid is a formatting-context root, so an auto-centred one
-   re-centres in whatever space the float leaves — rows alongside the
-   phone would sit on a different left edge than rows below it. Zero
-   margins ignore the float, so every row stays put. `!important`
-   because the layout engine's auto margins are `!important` too. */
-.project__body:has(.project__phone) .stack-group {
-  margin-inline: 0 !important;
-}
+/* No margin override: the rows centre through the constrained
+   layout's auto pair, on every page. A grid is a formatting-context
+   root, so a row beside the phone float centres in the space the
+   float leaves and a row below it centres in the full width — safe
+   here because on each of the three phone pages the whole 03 section
+   is on one side of the float's bottom edge (past it on Minion and
+   Discord Bot, entirely alongside on Smart Diagnosis). If a phone
+   ever ends mid-section again, rows above and below the seam will
+   sit on different centres, and 03 needs an explicit margin like the
+   prose has. */
 
 .project__body .stack-group > * {
   margin-block: 0;
