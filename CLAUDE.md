@@ -177,6 +177,19 @@ To go back to the file: Appearance > Editor > Templates > pick it > Reset.
 
 This surprises everyone once.
 
+## New pattern files need a cache clear
+
+WordPress caches pattern file headers against the theme version, so a *newly
+added* `patterns/*.php` file will not appear until that cache clears. Bump
+`Version:` in `style.css`, or:
+
+    docker exec chaewon-wp-wp-1 php -r 'require "/var/www/html/wp-load.php";
+      $t = wp_get_theme();
+      $m = new ReflectionMethod("WP_Theme", "delete_pattern_cache");
+      $m->setAccessible(true); $m->invoke($t);'
+
+Editing an existing pattern needs none of this.
+
 ## Changelog
 
 Every change gets a new fragment under `changelog.d/`, named
